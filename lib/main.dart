@@ -8,20 +8,20 @@ import 'package:staybay/test.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-
-  runApp(
-    BlocProvider(
-      create: (_) => LocaleCubit(),
-      child: BlocBuilder<LocaleCubit, LocaleState>(
-        builder: (context, state) {
-          return Directionality(
-            textDirection: state.textDirection,
-            child: const MyApp(),
-          );
-        },
-      ),
-    ),
-  );
+  runApp(MyApp());
+  // runApp(
+  //   BlocProvider(
+  //     create: (_) => LocaleCubit(),
+  //     child: BlocBuilder<LocaleCubit, LocaleState>(
+  //       builder: (context, state) {
+  //         return Directionality(
+  //           textDirection: state.textDirection,
+  //           child: const MyApp(),
+  //         );
+  //       },
+  //     ),
+  //   ),
+  // );
 }
 
 class MyApp extends StatelessWidget {
@@ -29,6 +29,21 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: Test());
+    return BlocProvider(
+      create: (context) => LocaleCubit(),
+      child: MaterialApp(
+        builder: (context, child) {
+          return BlocBuilder<LocaleCubit, LocaleState>(
+            builder: (context, state) {
+              return Directionality(
+                textDirection: state.textDirection,
+                child: child!,
+              );
+            },
+          );
+        },
+        home: Test(),
+      ),
+    );
   }
 }
