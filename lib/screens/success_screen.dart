@@ -47,17 +47,20 @@ class SuccessScreen extends StatelessWidget {
 
                   SizedBox(height: screenHeight * 0.05),
 
-                  Text(
-                    isLoginSuccess
-                        ? state.localizedStrings['Success']['login succeeded'] ??
-                              'Thank you, login succeeded!'
-                        : state.localizedStrings['Success']['registration succeeded'] ??
-                              'Thank you, registration succeeded!',
-                    textAlign: TextAlign.center,
-                    style: AppStyles.titleStyle.copyWith(
-                      fontSize: AppSizes.fontSizeSubtitle * 1.2,
-                      color: theme.textTheme.titleLarge!.color,
-                    ),
+    return Scaffold(
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(AppSizes.paddingLarge),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,   
+                  border: Border.all(
+                    color: primaryColor,
+                    width: 3.0, 
                   ),
                   const SizedBox(height: AppSizes.paddingSmall),
 
