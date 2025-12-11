@@ -13,8 +13,8 @@ import 'screens/apartment_details_screen.dart';
 import 'screens/my_bookings_screen.dart'; 
 import '../models/apartment_model.dart';
 
-
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
