@@ -1,22 +1,26 @@
-import 'dart:convert';
-// import 'package:sta';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:staybay/my_color.dart';
+import 'package:staybay/screens/account_screen.dart';
+import 'package:staybay/screens/add_apartment_screen.dart';
+import 'package:staybay/screens/apartment_details_screen.dart';
+import 'package:staybay/screens/favorites_screen.dart';
+import 'package:staybay/widgets/app_bottom_nav_bar.dart';
 
-void main() {
+import 'app_theme.dart';
+
+import 'cubits/locale/locale_state.dart';
+import 'cubits/locale/locale_cubit.dart';
+import 'cubits/theme/theme_cubit.dart';
+import 'cubits/theme/theme_state.dart';
+
+import 'screens/welcome_screen.dart';
+import 'screens/login_screen.dart';
+import 'screens/sign_up_screen.dart';
+import 'screens/success_screen.dart';
+import 'screens/home_page_screen.dart';
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // final String responseEN = await rootBundle.loadString(
-  //   'assets/locales/EN.json',
-  // );
-  // final Map<String, dynamic> en = jsonDecode(responseEN);
-  // final String responseAR = await rootBundle.loadString(
-  //   'assets/locales/AR.json',
-  // );
-  // final Map<String, dynamic> ar = jsonDecode(responseAR);
-  // final Map<String, dynamic> local = en;
   runApp(const MyApp());
 }
 
@@ -25,25 +29,71 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localeCubit = LocaleCubit();
+
     return MultiBlocProvider(
       providers: [
-        //BlocProvider(create: (context) => LocaleCubit()),
-        // BlocProvider(create: (context) => SubjectBloc()),
+        BlocProvider<LocaleCubit>.value(value: localeCubit),
+        BlocProvider(create: (context) => ThemeCubit()),
       ],
-      child: MaterialApp(
-        theme: ThemeData.light().copyWith(
-          extensions: <ThemeExtension<dynamic>>[
-            const MyColors(brandColor: Colors.blue, danger: Colors.red),
-          ],
-        ),
-        darkTheme: ThemeData.dark().copyWith(
-          extensions: <ThemeExtension<dynamic>>[
-            const MyColors(
-              brandColor: Colors.lightBlue,
-              danger: Colors.redAccent,
-            ),
-          ],
-        ),
+      child: FutureBuilder(
+        future: localeCubit.init(), // ⬅ wait for JSON here
+        builder: (context, snapshot) {
+          if (snapshot.connectionState != ConnectionState.done) {
+            // Show splash or loading widget
+            return const MaterialApp(
+              home: Scaffold(body: Center(child: CircularProgressIndicator())),
+            );
+          }
+
+          // Continue with your code EXACTLY as you wrote it
+          return BlocBuilder<LocaleCubit, LocaleState>(
+            builder: (context, localeState) {
+              return BlocBuilder<ThemeCubit, ThemeState>(
+                builder: (context, themeState) {
+                  return MaterialApp(
+                    builder: (context, child) {
+                      return Directionality(
+                        textDirection: localeState.textDirection,
+                        child: child!,
+                      );
+                    },
+                    debugShowCheckedModeBanner: false,
+                    theme: AppTheme.lightTheme,
+                    darkTheme: AppTheme.darkTheme,
+                    themeMode: themeState is DarkModeState
+                        ? ThemeMode.dark
+                        : ThemeMode.light,
+                    initialRoute: AppBottomNavBar.routeName,
+                    routes: {
+                      WelcomeScreen.routeName: (context) =>
+                          const WelcomeScreen(),
+                      LoginScreen.routeName: (context) => const LoginScreen(),
+                      SignUpScreen.routeName: (context) => const SignUpScreen(),
+                      HomePage.routeName: (context) => const HomePage(),
+                      AppBottomNavBar.routeName: (context) =>
+                          const AppBottomNavBar(),
+                      SuccessScreen.routeName: (context) {
+                        final isLogin =
+                            ModalRoute.of(context)?.settings.arguments
+                                as bool? ??
+                            true;
+                        return SuccessScreen(isLoginSuccess: isLogin);
+                      },
+                      AddApartmentScreen.routeName: (context) =>
+                          const AddApartmentScreen(),
+                      FavoritesScreen.routeName: (context) =>
+                          const FavoritesScreen(),
+
+                      AccountScreen.routeName: (context) =>
+                          const AccountScreen(),
+                    },
+                  );
+                },
+              );
+            },
+          );
+        },
       ),
     );
   }
