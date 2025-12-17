@@ -62,10 +62,10 @@ class MyApp extends StatelessWidget {
                     debugShowCheckedModeBanner: false,
                     theme: AppTheme.lightTheme,
                     darkTheme: AppTheme.darkTheme,
-                    // themeMode: themeState is DarkModeState
-                    //     ? ThemeMode.dark
-                    //     : ThemeMode.light,
-                    themeMode: ThemeMode.dark,
+                    themeMode: themeState is DarkModeState
+                        ? ThemeMode.dark
+                        : ThemeMode.light,
+                    // themeMode: ThemeMode.dark,
                     initialRoute: WelcomeScreen.routeName,
                     routes: {
                       WelcomeScreen.routeName: (context) =>

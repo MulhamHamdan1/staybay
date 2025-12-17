@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 class LoginService {
-  static Future<Response?> logIn(context) async {
+  static Future<Response?> logIn(context, String phone, String password) async {
     final Dio dio = Dio();
     final String baseUrl = 'http://10.0.2.2:8000/api';
     final String login = '/user/login';
@@ -19,20 +19,22 @@ class LoginService {
             'Accept': 'application/json',
           },
         ),
-        data: {"phone": '1234567890', "password": 'passwor'},
+        data: {"phone": phone, "password": password},
       );
 
       log('Response data: ${response.data}');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(response.data['message'] ?? 'Login successful'),
+          backgroundColor: Colors.green,
+        ),
+      );
       return response;
     } on DioException catch (e) {
       log('Dio error: ${e.response?.data ?? e.message}');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            // context.read<LocaleCubit>().state.localizedStrings['login']
-            // ['invalidCredentials'] ??
-            e.response!.statusMessage ?? 'Invalid credentials',
-          ),
+          content: Text(e.response!.data['message'] ?? 'Invalid credentials'),
           backgroundColor: Colors.red,
         ),
       );

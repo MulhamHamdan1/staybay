@@ -19,7 +19,6 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
 
@@ -35,21 +34,18 @@ class _LoginScreenState extends State<LoginScreen> {
   // }
 
   void _handleLogin() async {
-    // var responce = await LoginService.logIn(context);
-    // if (responce != null) {
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(
-    //       content: Text(
-    //         // context.read<LocaleCubit>().state.localizedStrings['login']
-    //         // ['invalidCredentials'] ??
-    //         responce.statusMessage ?? 'Invalid credentials',
-    //       ),
-    //       backgroundColor: Colors.red,
-    //     ),
-    //   );
-    // }
     if (_formKey.currentState?.validate() ?? false) {
-      Navigator.of(context).pushNamed(SuccessScreen.routeName, arguments: true);
+      var response = await LoginService.logIn(
+        context,
+        _phoneController.text,
+        _passwordController.text,
+      );
+
+      if (response != null && response.statusCode == 200) {
+        Navigator.of(
+          context,
+        ).pushNamed(SuccessScreen.routeName, arguments: true);
+      }
     }
   }
 
