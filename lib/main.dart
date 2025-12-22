@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_theme.dart';
 import 'cubits/locale/locale_cubit.dart';
@@ -21,11 +22,15 @@ import 'widgets/app_bottom_nav_bar.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MyApp());
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  final bool islogin = prefs.getBool('isLoggedIn') ?? false;
+  runApp(MyApp(isLoggedIn: islogin));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool isLoggedIn;
+
+  const MyApp({super.key, required this.isLoggedIn});
 
   @override
   Widget build(BuildContext context) {
@@ -41,9 +46,7 @@ class MyApp extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.connectionState != ConnectionState.done) {
             return const MaterialApp(
-              home: Scaffold(
-                body: Center(child: CircularProgressIndicator()),
-              ),
+              home: Scaffold(body: Center(child: CircularProgressIndicator())),
             );
           }
 
@@ -62,7 +65,9 @@ class MyApp extends StatelessWidget {
                     themeMode: themeState is DarkModeState
                         ? ThemeMode.dark
                         : ThemeMode.light,
-                    initialRoute: AppBottomNavBar.routeName,
+                    initialRoute: isLoggedIn
+                        ? HomePage.routeName
+                        : WelcomeScreen.routeName,
                     routes: _buildAppRoutes(),
                   );
                 },
@@ -76,7 +81,7 @@ class MyApp extends StatelessWidget {
 
   /// Returns a map of all application routes
   Map<String, WidgetBuilder> _buildAppRoutes() {
-    return {  
+    return {
       WelcomeScreen.routeName: (context) => const WelcomeScreen(),
       LoginScreen.routeName: (context) => const LoginScreen(),
       SignUpScreen.routeName: (context) => const SignUpScreen(),
