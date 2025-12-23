@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:staybay/screens/my_apartments_screen.dart';
 
 import 'app_theme.dart';
 import 'cubits/locale/locale_cubit.dart';
@@ -8,7 +9,6 @@ import 'cubits/theme/theme_cubit.dart';
 import 'cubits/theme/theme_state.dart';
 import 'screens/account_screen.dart';
 import 'screens/add_apartment_screen.dart';
-import 'screens/apartment_details_screen.dart';
 import 'screens/booking_details_screen.dart';
 import 'screens/bookings_screen.dart';
 import 'screens/favorites_screen.dart';
@@ -87,11 +87,12 @@ class MyApp extends StatelessWidget {
             ModalRoute.of(context)?.settings.arguments as bool? ?? true;
         return SuccessScreen(isLoginSuccess: isLogin);
       },
-      AddApartmentScreen.routeName: (context) => const AddApartmentScreen(),
+      AddApartmentScreen.routeName: (context) =>  AddApartmentScreen(),
       FavoritesScreen.routeName: (context) => const FavoritesScreen(),
       AccountScreen.routeName: (context) => const AccountScreen(),
       BookingsScreen.routeName: (context) => const BookingsScreen(),
       BookingDetailsScreen.routeName: (context) => BookingsScreen(),
+      MyApartmentsScreen.routeName: (context) =>  MyApartmentsScreen(),
     };
   }
 }

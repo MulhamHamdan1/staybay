@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:staybay/screens/bookings_screen.dart';
 import 'package:staybay/screens/favorites_screen.dart';
+import 'package:staybay/screens/my_apartments_screen.dart';
 import 'package:staybay/screens/welcome_screen.dart';
 
 class AccountScreen extends StatelessWidget {
@@ -119,14 +120,13 @@ class AccountScreen extends StatelessWidget {
               child: Column(
                 children: [
                   _profileTile(
-                    icon: Icons.favorite_border,
-                    title: 'المفضلة',
+                    icon: Icons.apartment,
+                    title: 'عقاراتي',
                     onTap: () {
                       Navigator.of(context)
-                          .pushNamed(FavoritesScreen.routeName);
+                          .pushNamed(MyApartmentsScreen.routeName);
                     },
                   ),
-
                   _profileTile(
                     icon: Icons.bookmark_border,
                     title: 'حجوزاتي',
