@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_theme.dart';
 import 'cubits/locale/locale_cubit.dart';
@@ -21,7 +22,14 @@ import 'widgets/app_bottom_nav_bar.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MyApp());
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  final bool islogin = prefs.getBool('isLoggedIn') ?? false;
+  if (islogin) {
+    AppBottomNavBar.routeName = '/';
+  } else {
+    WelcomeScreen.routeName = '/';
+  }
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -59,10 +67,18 @@ class MyApp extends StatelessWidget {
                     debugShowCheckedModeBanner: false,
                     theme: AppTheme.lightTheme,
                     darkTheme: AppTheme.darkTheme,
+<<<<<<< HEAD
                     themeMode: themeState is DarkModeState
                         ? ThemeMode.dark
                         : ThemeMode.light,
                     initialRoute: AppBottomNavBar.routeName,
+=======
+                    themeMode: ThemeMode.dark,
+
+                    //  themeState is DarkModeState
+                    //     ? ThemeMode.dark
+                    //     : ThemeMode.light,
+>>>>>>> 9473d48d8b197490307bbf8f31dd53d47abc0e48
                     routes: _buildAppRoutes(),
                   );
                 },
@@ -76,7 +92,11 @@ class MyApp extends StatelessWidget {
 
   /// Returns a map of all application routes
   Map<String, WidgetBuilder> _buildAppRoutes() {
+<<<<<<< HEAD
     return {  
+=======
+    return {
+>>>>>>> 9473d48d8b197490307bbf8f31dd53d47abc0e48
       WelcomeScreen.routeName: (context) => const WelcomeScreen(),
       LoginScreen.routeName: (context) => const LoginScreen(),
       SignUpScreen.routeName: (context) => const SignUpScreen(),

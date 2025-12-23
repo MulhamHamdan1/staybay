@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:staybay/cubits/locale/locale_cubit.dart';
 import 'package:staybay/cubits/locale/locale_state.dart';
+import 'package:staybay/services/login_service.dart';
 import '../app_theme.dart';
 import '../widgets/custom_primary_button.dart';
 import '../widgets/custom_text_field.dart';
@@ -10,7 +12,6 @@ import 'sign_up_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String routeName = '/login';
-
   const LoginScreen({super.key});
 
   @override
@@ -19,7 +20,6 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
 
@@ -34,9 +34,26 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  void _handleLogin() {
+  Future<void> saveToken(String token) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('token', token);
+    await prefs.setBool('isLoggedIn', true);
+  }
+
+  void _handleLogin() async {
     if (_formKey.currentState?.validate() ?? false) {
-      Navigator.of(context).pushNamed(SuccessScreen.routeName, arguments: true);
+      var response = await LoginService.logIn(
+        context,
+        _phoneController.text,
+        _passwordController.text,
+      );
+
+      if (response != null && response.statusCode == 200) {
+        saveToken(response.data['data']['token']);
+        Navigator.of(
+          context,
+        ).pushNamed(SuccessScreen.routeName, arguments: true);
+      }
     }
   }
 

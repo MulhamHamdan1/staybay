@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:staybay/cubits/locale/locale_cubit.dart';
 import 'package:staybay/cubits/locale/locale_state.dart';
+import 'package:staybay/services/register_service.dart';
 import '../app_theme.dart';
 import '../widgets/custom_text_field.dart';
 import '../widgets/custom_primary_button.dart';
@@ -23,15 +24,18 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
   bool _isPasswordObscured = true;
+  bool _isPasswordObscuredCon = true;
 
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _passwordConController = TextEditingController();
   final TextEditingController _dateOfBirthController = TextEditingController();
 
   Map<String, dynamic> get locale =>
       context.read<LocaleCubit>().state.localizedStrings['singup'];
+<<<<<<< HEAD
   // late var locale = BlocProvider.of<LocaleCubit>(
   //   context,
   
@@ -47,6 +51,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   //   _dateOfBirthController.dispose();
   //   super.dispose();
   // }
+=======
+>>>>>>> 9473d48d8b197490307bbf8f31dd53d47abc0e48
 
   Future<void> _selectDateOfBirth() async {
     final theme = Theme.of(context);
@@ -88,7 +94,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     if (pickedDate != null) {
       setState(() {
         _dateOfBirthController.text =
-            "${pickedDate.day.toString().padLeft(2, '0')}/${pickedDate.month.toString().padLeft(2, '0')}/${pickedDate.year}";
+            "${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.day.toString().padLeft(2, '0')}";
       });
     }
   }
@@ -98,7 +104,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final picker = ImagePicker();
 
   Future<void> _pickImage(bool isProfileImage) async {
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    final pickedFile = await picker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 85,
+      maxWidth: 1024,
+    );
 
     if (pickedFile != null) {
       setState(() {
@@ -127,7 +137,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
   }
 
-  void _handleSignUp() {
+  void _handleSignUp() async {
     if (_formKey.currentState?.validate() ?? false) {
       if (_profileImageString == null) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -149,10 +159,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
         );
         return;
       }
-
-      Navigator.of(
+      var response = await RegisterService.register(
         context,
-      ).pushNamed(SuccessScreen.routeName, arguments: false);
+        _profileImage!,
+        _firstNameController.text,
+        _lastNameController.text,
+        _phoneController.text,
+        _passwordController.text,
+        _passwordConController.text,
+        _dateOfBirthController.text,
+        _idImage!,
+      );
+      if (response != null && response.statusCode == 201) {
+        Navigator.of(
+          // ignore: use_build_context_synchronously
+          context,
+        ).pushNamed(SuccessScreen.routeName, arguments: false);
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -402,7 +425,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 },
                               ),
                               const SizedBox(height: AppSizes.paddingMedium),
-
                               CustomTextField(
                                 controller: _lastNameController,
                                 hintText: locale['lastName'] ?? 'Last Name',
@@ -425,7 +447,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 },
                               ),
                               const SizedBox(height: AppSizes.paddingMedium),
-
                               CustomTextField(
                                 controller: _phoneController,
                                 hintText: locale['phone'] ?? 'Phone Number',
@@ -448,7 +469,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 },
                               ),
                               const SizedBox(height: AppSizes.paddingMedium),
-
                               CustomTextField(
                                 controller: _passwordController,
                                 hintText: locale['password'] ?? 'Password',
@@ -476,6 +496,40 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     setState(() {
                                       _isPasswordObscured =
                                           !_isPasswordObscured;
+                                    });
+                                  },
+                                ),
+                              ),
+                              const SizedBox(height: AppSizes.paddingMedium),
+                              CustomTextField(
+                                controller: _passwordConController,
+                                hintText:
+                                    locale['passwordCon'] ??
+                                    'Password confirmation',
+                                isPassword: _isPasswordObscuredCon,
+                                maxLength: 16,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return locale['passwordRequired'] ??
+                                        'Please enter password';
+                                  }
+                                  if (value.length < 8 || value.length > 16) {
+                                    return locale['passwordLengthError'] ??
+                                        'Password must be between 8 and 16 characters';
+                                  }
+                                  return null;
+                                },
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    _isPasswordObscuredCon
+                                        ? Icons.visibility_off_outlined
+                                        : Icons.visibility_outlined,
+                                    color: theme.colorScheme.onSurfaceVariant,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _isPasswordObscuredCon =
+                                          !_isPasswordObscuredCon;
                                     });
                                   },
                                 ),

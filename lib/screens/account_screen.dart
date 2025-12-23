@@ -1,4 +1,11 @@
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
+=======
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:staybay/cubits/locale/locale_cubit.dart';
+import 'package:staybay/cubits/locale/locale_state.dart';
+>>>>>>> 9473d48d8b197490307bbf8f31dd53d47abc0e48
 import 'package:staybay/screens/bookings_screen.dart';
 import 'package:staybay/screens/favorites_screen.dart';
 import 'package:staybay/screens/welcome_screen.dart';
@@ -10,6 +17,7 @@ class AccountScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
 
@@ -81,10 +89,109 @@ class AccountScreen extends StatelessWidget {
                             size: 20,
                             color: Colors.white,
                           ),
+=======
+    var theme = Theme.of(context);
+    return BlocBuilder<LocaleCubit, LocaleState>(
+      builder: (context, localeState) {
+        return Scaffold(
+          backgroundColor: theme.scaffoldBackgroundColor,
+
+          appBar: AppBar(
+            elevation: 0,
+            backgroundColor: theme.scaffoldBackgroundColor,
+            centerTitle: true,
+            title: Text(
+              'الملف الشخصي',
+              style: TextStyle(fontWeight: FontWeight.w600),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  String newLanguage = localeState.currentLanguage == 'EN'
+                      ? 'AR'
+                      : 'EN';
+                  context.read<LocaleCubit>().changeLanguage(newLanguage);
+                },
+                child: Text(
+                  localeState.currentLanguage,
+                  style: TextStyle(
+                    color: theme.primaryColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                /// ===== PROFILE HEADER =====
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 32),
+                  decoration: BoxDecoration(
+                    color: theme.scaffoldBackgroundColor,
+                    borderRadius: BorderRadius.vertical(
+                      bottom: Radius.circular(32),
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      /// Profile Image
+                      Stack(
+                        alignment: Alignment.bottomRight,
+                        children: [
+                          const CircleAvatar(
+                            radius: 68,
+                            backgroundImage: AssetImage('assets/profile.jpg'),
+                          ),
+                          InkWell(
+                            borderRadius: BorderRadius.circular(30),
+                            onTap: () {
+                              // تغيير الصورة لاحقًا
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(9),
+                              decoration: const BoxDecoration(
+                                color: Colors.blue,
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.camera_alt,
+                                size: 20,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      const SizedBox(height: 16),
+
+                      /// Name
+                      const Text(
+                        'الاسم الكامل',
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+
+                      const SizedBox(height: 6),
+
+                      /// Phone
+                      Text(
+                        '+963 9XX XXX XXX',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey.shade600,
+>>>>>>> 9473d48d8b197490307bbf8f31dd53d47abc0e48
                         ),
                       ),
                     ],
                   ),
+<<<<<<< HEAD
 
                   const SizedBox(height: 16),
 
@@ -158,11 +265,73 @@ class AccountScreen extends StatelessWidget {
           ],
         ),
       ),
+=======
+                ),
+
+                const SizedBox(height: 30),
+
+                /// ===== ACTIONS =====
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    children: [
+                      _profileTile(
+                        icon: Icons.favorite_border,
+                        title: 'المفضلة',
+                        onTap: () {
+                          Navigator.of(
+                            context,
+                          ).pushNamed(FavoritesScreen.routeName);
+                        },
+                      ),
+
+                      _profileTile(
+                        icon: Icons.bookmark_border,
+                        title: 'حجوزاتي',
+                        onTap: () {
+                          Navigator.of(
+                            context,
+                          ).pushNamed(BookingsScreen.routeName);
+                        },
+                      ),
+
+                      _profileTile(
+                        icon: Icons.dark_mode_outlined,
+                        title: 'تبديل الوضع',
+                        onTap: () {
+                          // تبديل الثيم لاحقًا
+                        },
+                      ),
+
+                      _profileTile(
+                        icon: Icons.logout,
+                        title: 'تسجيل الخروج',
+                        onTap: () async {
+                          final prefs = await SharedPreferences.getInstance();
+                          await prefs.setBool('isLoggedIn', false);
+                          Navigator.of(
+                            context,
+                          ).pushNamed(WelcomeScreen.routeName);
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+>>>>>>> 9473d48d8b197490307bbf8f31dd53d47abc0e48
     );
   }
 
   /// ===== PROFILE TILE =====
   Widget _profileTile({
+<<<<<<< HEAD
+=======
+    context,
+>>>>>>> 9473d48d8b197490307bbf8f31dd53d47abc0e48
     required IconData icon,
     required String title,
     required VoidCallback onTap,
@@ -173,6 +342,7 @@ class AccountScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(18),
         onTap: onTap,
         child: Container(
+<<<<<<< HEAD
           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 18),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -180,12 +350,24 @@ class AccountScreen extends StatelessWidget {
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.05),
+=======
+          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 18),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(18),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.white.withValues(alpha: 0.05),
+>>>>>>> 9473d48d8b197490307bbf8f31dd53d47abc0e48
                 blurRadius: 12,
                 offset: const Offset(0, 6),
               ),
             ],
           ),
           child: Row(
+<<<<<<< HEAD
+=======
+            crossAxisAlignment: CrossAxisAlignment.center,
+>>>>>>> 9473d48d8b197490307bbf8f31dd53d47abc0e48
             children: [
               Icon(icon, size: 26, color: Colors.blue),
               const SizedBox(width: 16),
@@ -197,11 +379,15 @@ class AccountScreen extends StatelessWidget {
                 ),
               ),
               const Spacer(),
+<<<<<<< HEAD
               const Icon(
                 Icons.arrow_forward_ios,
                 size: 16,
                 color: Colors.grey,
               ),
+=======
+              const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
+>>>>>>> 9473d48d8b197490307bbf8f31dd53d47abc0e48
             ],
           ),
         ),
