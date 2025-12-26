@@ -4,9 +4,23 @@ import 'package:staybay/cubits/locale/locale_cubit.dart';
 import 'package:staybay/cubits/locale/locale_state.dart';
 import 'package:staybay/cubits/theme/theme_cubit.dart';
 import 'package:staybay/cubits/theme/theme_state.dart';
+import 'package:staybay/models/user.dart';
+import 'package:staybay/services/get_me_service.dart';
 
-class Test extends StatelessWidget {
+class Test extends StatefulWidget {
   const Test({super.key});
+
+  @override
+  State<Test> createState() => _TestState();
+}
+
+class _TestState extends State<Test> {
+  late final User user;
+  @override
+  void initState() {
+    user = GetMeService.getMe() as User;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,42 +29,12 @@ class Test extends StatelessWidget {
         return BlocBuilder<LocaleCubit, LocaleState>(
           builder: (context, localestate) {
             return Scaffold(
-              body: Center(
-                child: Row(
-                  children: [
-                    Text(
-                      localestate.localizedStrings['welcome']['WELCOME'] ?? '',
-                      style: TextStyle(color: Theme.of(context).primaryColor),
-                    ),
-                    Text(
-                      localestate.localizedStrings['des'] ?? '',
-                      style: TextStyle(
-                        color: Theme.of(context).primaryColorLight,
-                      ),
-                    ),
-                    MaterialButton(
-                      color: Theme.of(context).primaryColorDark,
-                      onPressed: () {
-                        String newLanguage = localestate.currentLanguage == 'EN'
-                            ? 'AR'
-                            : 'EN';
-                        context.read<LocaleCubit>().changeLanguage(newLanguage);
-                      },
-                      child: Text(
-                        localestate.localizedStrings['change language'] ?? '',
-                      ),
-                    ),
-                    MaterialButton(
-                      color: Theme.of(context).primaryColorDark,
-                      onPressed: () {
-                        context.read<ThemeCubit>().toggleTheme();
-                      },
-                      child: Text(
-                        localestate.localizedStrings['toggle theme'] ?? '',
-                      ),
-                    ),
-                  ],
-                ),
+              body: Row(
+                children: [
+                  Text(user.avatar),
+                  Text(user.firstName),
+                  Text(user.lastName),
+                ],
               ),
             );
           },
