@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:staybay/consetans.dart';
 import 'package:staybay/cubits/user/user_cubit.dart';
 import 'package:staybay/screens/my_apartments_screen.dart';
-import 'package:staybay/test.dart';
+// import 'package:staybay/test.dart';
 
 import 'app_theme.dart';
 import 'cubits/locale/locale_cubit.dart';

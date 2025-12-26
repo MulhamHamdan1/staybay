@@ -3,9 +3,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:staybay/models/apartment_model.dart';
+import 'package:staybay/models/city_model.dart';
+import 'package:staybay/models/governorate_model.dart';
 import 'package:staybay/services/add_apartment_service.dart';
+import 'package:staybay/services/get_governorates_and_cities_service.dart';
 import 'package:staybay/widgets/app_bottom_nav_bar.dart';
-import '../services/apartment_service.dart';
 
 class AddApartmentScreen extends StatefulWidget {
   static const String routeName = '/add';
@@ -21,8 +23,18 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
   /// ===== FORM =====
   final _formKey = GlobalKey<FormState>();
 
+  final GetGovernatesAndCities _getGovernatesAndCities =
+      GetGovernatesAndCities();
+
+  Governorate? selectedGov;
+  City? selectedCity;
+  List<Governorate> governorates = [];
+  List<City> cities = [];
+
+  bool isLoadingGovs = true;
+  bool isLoadingCities = false;
+
   final _titleController = TextEditingController();
-  final _locationController = TextEditingController();
   final _priceController = TextEditingController();
   final _bedsController = TextEditingController();
   final _bathsController = TextEditingController();
@@ -42,11 +54,11 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
   @override
   void initState() {
     super.initState();
+    _loadGovernorates(); // جلب المحافظات فور فتح الـ Dialog
 
     if (widget.apartmentToEdit != null) {
       final a = widget.apartmentToEdit!;
       _titleController.text = a.title;
-      _locationController.text = a.location;
       _priceController.text = a.pricePerNight.toString();
       _bedsController.text = a.beds.toString();
       _bathsController.text = a.baths.toString();
@@ -56,10 +68,43 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
     }
   }
 
+  Future<void> _loadGovernorates() async {
+    try {
+      final data = await _getGovernatesAndCities.getGovernorates();
+      setState(() {
+        governorates = data;
+        isLoadingGovs = false;
+      });
+    } catch (e) {
+      setState(() => isLoadingGovs = false);
+      // يمكن إظهار رسالة خطأ هنا
+    }
+  }
+
+  Future<void> _onGovernorateChanged(Governorate? gov) async {
+    if (gov == null) return;
+
+    setState(() {
+      selectedGov = gov;
+      selectedCity = null; // تصفير المدينة المختارة سابقاً
+      cities = [];
+      isLoadingCities = true;
+    });
+
+    try {
+      final data = await _getGovernatesAndCities.getCities(gov.id);
+      setState(() {
+        cities = data;
+        isLoadingCities = false;
+      });
+    } catch (e) {
+      setState(() => isLoadingCities = false);
+    }
+  }
+
   @override
   void dispose() {
     _titleController.dispose();
-    _locationController.dispose();
     _priceController.dispose();
     _bedsController.dispose();
     _bathsController.dispose();
@@ -215,6 +260,50 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
     }
   }
 
+  Widget _buildFilterRow({
+    required String label,
+    required String? value,
+    required Widget child,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 2,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(label, style: TextStyle(fontSize: 12, color: Colors.grey)),
+                child,
+              ],
+            ),
+          ),
+          SizedBox(width: 15),
+          Expanded(
+            flex: 1,
+            child: Container(
+              alignment: Alignment.center,
+              padding: EdgeInsets.symmetric(vertical: 8),
+              decoration: BoxDecoration(
+                color: Colors.blue.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: Text(
+                value ?? '-',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   /// ===== AMENITIES UI =====
   Widget _amenitiesSection() {
     return Column(
@@ -290,7 +379,50 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
               _imagesPreview(),
               const SizedBox(height: 16),
               _field(_titleController, 'Title', Icons.home),
-              _field(_locationController, 'Location', Icons.location_on),
+              _buildFilterRow(
+                label: 'المحافظة',
+                value: selectedGov?.name,
+                child: isLoadingGovs
+                    ? CircularProgressIndicator(strokeWidth: 2)
+                    : DropdownButton<Governorate>(
+                        isExpanded: true,
+                        hint: Text('اختر محافظة'),
+                        value: selectedGov,
+                        items: governorates.map((gov) {
+                          return DropdownMenuItem(
+                            value: gov,
+                            child: Text(gov.name),
+                          );
+                        }).toList(),
+                        onChanged: _onGovernorateChanged,
+                      ),
+              ),
+
+              // 2. قائمة المدن
+              _buildFilterRow(
+                label: 'المدينة',
+                value: selectedCity?.name,
+                child: isLoadingCities
+                    ? LinearProgressIndicator()
+                    : DropdownButton<City>(
+                        isExpanded: true,
+                        hint: Text(
+                          selectedGov == null
+                              ? 'اختر محافظة أولاً'
+                              : 'اختر مدينة',
+                        ),
+                        value: selectedCity,
+                        items: cities.map((city) {
+                          return DropdownMenuItem(
+                            value: city,
+                            child: Text(city.name),
+                          );
+                        }).toList(),
+                        onChanged: (val) => setState(() => selectedCity = val),
+                      ),
+              ),
+
+              // _field(_locationController, 'Location', Icons.location_on),
               _field(
                 _priceController,
                 'Price per night',

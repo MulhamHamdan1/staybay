@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:staybay/models/apartment_model.dart';
-import 'package:staybay/screens/add_apartment_screen.dart';
-import 'package:staybay/services/apartment_service.dart';
 import 'package:staybay/services/get_apartment_service.dart';
-import 'package:staybay/widgets/apartment_card.dart';
 import 'package:staybay/widgets/compact_apartment_card.dart';
 
 class MyApartmentsScreen extends StatefulWidget {
   static const routeName = '/my-apartments';
 
-  MyApartmentsScreen({super.key});
+  const MyApartmentsScreen({super.key});
 
   @override
   State<MyApartmentsScreen> createState() => _MyApartmentsScreenState();
