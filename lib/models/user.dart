@@ -15,14 +15,18 @@ class User {
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
+    String avatar = json['avatar'];
+    if (avatar.contains("https")) {
+      avatar = avatar;
+    } else {
+      avatar = '$kBaseUrlImage/${json['avatar']}';
+    }
     return User(
-      firstName: json['first_name'] != null ? json['first_name'] : "",
-      lastName: json['last_name'] != null ? json['last_name'] : "",
-      phone: json['phone'] != null ? json['phone'] : "",
-      balance: json['balance'] != null
-          ? double.parse(json['balance'].toString())
-          : 0.0,
-      avatar: json['avatar'] != null ? '$kBaseUrlImage/${json['avatar']}' : '',
+      firstName: json['first_name'],
+      lastName: json['last_name'],
+      phone: json['phone'],
+      balance: double.parse(json['balance'].toString()),
+      avatar: avatar,
     );
   }
 }

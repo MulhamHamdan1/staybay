@@ -50,8 +50,12 @@ class Apartment {
     var images = json['images'] as List<dynamic>;
     List<String> imagesPaths = [];
     for (var image in images) {
-      var path = image['path'];
-      imagesPaths.add('$kBaseUrlImage/$path');
+      String path = image['path'];
+      if (path.contains("https")) {
+        imagesPaths.add(path);
+      } else {
+        imagesPaths.add('$kBaseUrlImage/$path');
+      }
     }
 
     var ownerFirstName = json['owner']['first_name'];
