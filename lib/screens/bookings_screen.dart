@@ -22,10 +22,7 @@ class _BookingsScreenState extends State<BookingsScreen> {
     final bookings = BookingService.bookings;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('My Bookings'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('My Bookings'), centerTitle: true),
       body: bookings.isEmpty
           ? const _EmptyBookings()
           : ListView.builder(
@@ -35,13 +32,14 @@ class _BookingsScreenState extends State<BookingsScreen> {
                 final apartment = bookings[index];
                 return BookedCard(
                   apartment: apartment,
-                  onDelete: () => _deleteBooking(apartment.id),
+                  onDelete: () => _deleteBooking(apartment.id!),
                 );
               },
             ),
     );
   }
 }
+
 class _EmptyBookings extends StatelessWidget {
   const _EmptyBookings();
 

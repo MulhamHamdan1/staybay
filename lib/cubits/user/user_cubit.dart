@@ -12,7 +12,7 @@ class UserCubit extends Cubit<UserState> {
       if (user != null) {
         emit(UserLoaded(user));
       } else {
-        emit(UserError('there is an error'));
+        emit(UserError("Unauthenticated please try logout and login again"));
       }
     } catch (e) {
       emit(UserError(e.toString()));

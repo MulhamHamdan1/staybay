@@ -73,7 +73,7 @@ class MyApp extends StatelessWidget {
                         ? ThemeMode.dark
                         : ThemeMode.light,
                     // home: Test(),
-                    initialRoute: HomePage.routeName,
+                    initialRoute: AppBottomNavBar.routeName,
                     routes: _buildAppRoutes(),
                   );
                 },

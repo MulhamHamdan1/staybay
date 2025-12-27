@@ -30,7 +30,35 @@ class AccountScreen extends StatelessWidget {
             }
 
             if (state is UserError) {
-              return Scaffold(body: Center(child: Text(state.message)));
+              return Scaffold(
+                body: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(state.message),
+                      _profileTile(
+                        context,
+                        icon: Icons.refresh,
+                        title: "refresh",
+                        onTap: () {
+                          context.read<UserCubit>().getMe();
+                        },
+                      ),
+                      _profileTile(
+                        context,
+                        icon: Icons.logout,
+                        title: 'تسجيل الخروج',
+                        onTap: () async {
+                          LogoutService.logout();
+                          Navigator.of(
+                            context,
+                          ).pushNamed(WelcomeScreen.routeName);
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              );
             }
 
             if (state is UserLoaded) {
@@ -146,7 +174,11 @@ class AccountScreen extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(height: 30),
+            // const SizedBox(height: 30),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 15, left: 20, right: 20),
+              child: Divider(color: theme.primaryColor, thickness: 2),
+            ),
 
             /// ===== ACTIONS =====
             Padding(

@@ -106,7 +106,7 @@ class _BookedCardState extends State<BookedCard> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    widget.apartment.location,
+                    widget.apartment.location!,
                     style: const TextStyle(color: Colors.grey),
                   ),
                   const SizedBox(height: 8),

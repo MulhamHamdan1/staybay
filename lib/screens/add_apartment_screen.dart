@@ -234,18 +234,23 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
         );
         return;
       }
+      Apartment apartment = Apartment(
+        title: _titleController.text,
+        pricePerNight: double.parse(_priceController.text),
+        imagePath: _pickedImages.first.path,
+        rating: '0',
+        ratingCount: 0,
+        beds: int.parse(_bedsController.text),
+        baths: int.parse(_bathsController.text),
+        areaSqft: double.parse(_areaController.text),
+        description: _descriptionController.text,
+        imagesPaths: _pickedImages.map((e) => e.path).toList(),
+        amenities: _selectedAmenities,
+      );
       var response = await AddApartmentService.addApartment(
         context: context,
-        title: _titleController.text,
-        description: _descriptionController.text,
-        cityId: selectedCity!.id.toString(),
-        price: _priceController.text,
-        bedrooms: _bedsController.text,
-        bathrooms: _bathsController.text,
-        size: _areaController.text,
-        hasPool: _selectedAmenities.contains('pool') ? '1' : '0',
-        hasWifi: _selectedAmenities.contains('wifi') ? '1' : '0',
-        imageFiles: _pickedImages,
+        apartment: apartment,
+        cityId: selectedCity!.id,
       );
 
       if (response != null && response.statusCode == 201) {

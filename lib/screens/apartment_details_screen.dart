@@ -141,7 +141,7 @@ class _ApartmentDetailsScreenState extends State<ApartmentDetailsScreen> {
                       ),
                       const SizedBox(width: AppSizes.paddingSmall / 2),
                       Text(
-                        apartmentDetails.location,
+                        apartmentDetails.location!,
                         style: theme.textTheme.titleMedium?.copyWith(
                           color: theme.colorScheme.onSurfaceVariant,
                         ),

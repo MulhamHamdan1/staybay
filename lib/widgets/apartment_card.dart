@@ -94,7 +94,7 @@ class ApartmentCard extends StatelessWidget {
                       ),
                       const SizedBox(width: AppSizes.paddingSmall / 2),
                       Text(
-                        apartment.location,
+                        apartment.location!,
                         style: theme.textTheme.titleSmall?.copyWith(
                           color: theme.colorScheme.onSurfaceVariant,
                         ),

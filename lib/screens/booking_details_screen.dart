@@ -72,7 +72,7 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
             style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 4),
-          Text(apt.location, style: const TextStyle(color: Colors.grey)),
+          Text(apt.location!, style: const TextStyle(color: Colors.grey)),
 
           const SizedBox(height: 16),
           Row(
