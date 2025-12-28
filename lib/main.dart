@@ -5,6 +5,7 @@ import 'package:staybay/consetans.dart';
 import 'package:staybay/cubits/apartments/aparment_cubit.dart';
 import 'package:staybay/cubits/user/user_cubit.dart';
 import 'package:staybay/screens/my_apartments_screen.dart';
+import 'package:staybay/test.dart';
 // import 'package:staybay/test.dart';
 
 import 'app_theme.dart';
@@ -71,12 +72,13 @@ class MyApp extends StatelessWidget {
                     debugShowCheckedModeBanner: false,
                     theme: AppTheme.lightTheme,
                     darkTheme: AppTheme.darkTheme,
-                    themeMode: themeState is DarkModeState
-                        ? ThemeMode.dark
-                        : ThemeMode.light,
-                    // home: Test(),
-                    initialRoute: AppBottomNavBar.routeName,
-                    routes: _buildAppRoutes(),
+                    // themeMode: ThemeMode.dark,
+                    // themeMode: themeState is DarkModeState
+                    //     ? ThemeMode.dark
+                    //     : ThemeMode.light,
+                    home: Test(),
+                    // initialRoute: AppBottomNavBar.routeName,
+                    // routes: _buildAppRoutes(),
                   );
                 },
               );
@@ -103,8 +105,9 @@ class MyApp extends StatelessWidget {
       AddApartmentScreen.routeName: (context) => AddApartmentScreen(),
       FavoritesScreen.routeName: (context) => const FavoritesScreen(),
       AccountScreen.routeName: (context) => const AccountScreen(),
-      BookingsScreen.routeName: (context) => const BookingsScreen(),
-      BookingDetailsScreen.routeName: (context) => BookingsScreen(),
+      // BookingsScreen.routeName: (context) => const BookingsScreen(),
+      BookingDetailsScreen.routeName: (context) =>
+          BookingDetailsScreen(apartment: null),
       MyApartmentsScreen.routeName: (context) => MyApartmentsScreen(),
     };
   }

@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:staybay/consetans.dart';
 import 'package:staybay/models/apartment_model.dart';
 
-class GetApartmentService {
+class GetFavoriteApartmentService {
   static Future<List<Apartment>> getFavorites() async {
     List<Apartment> favoriteApartments = [];
     final prefs = await SharedPreferences.getInstance();

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:staybay/models/apartment_model.dart';
-import 'package:staybay/services/booking_service.dart';
+import 'package:staybay/widgets/rating_dialog.dart';
 
 class BookingDetailsScreen extends StatefulWidget {
   static const routeName = '/bookingDetails';
-  final Apartment apartment;
+  final Apartment? apartment;
 
   const BookingDetailsScreen({Key? key, required this.apartment})
     : super(key: key);
@@ -14,9 +14,27 @@ class BookingDetailsScreen extends StatefulWidget {
 }
 
 class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
+  // TODO HAMZA
   late DateTime _checkIn;
   late DateTime _checkOut;
   String? _paymentMethod;
+  //!this is the fucker
+  void _showRatingDialog(BuildContext context) async {
+    final result = await showDialog<int>(
+      context: context,
+      builder: (context) => const RatingDialog(),
+    );
+
+    if (result != null) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Thank you! You gave a rating of $result stars.'),
+        ),
+      );
+    }
+  }
 
   @override
   void initState() {
@@ -30,7 +48,7 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
     return diff <= 0 ? 1 : diff;
   }
 
-  double get total => widget.apartment.pricePerNight * nights;
+  double get total => widget.apartment!.pricePerNight * nights;
 
   Future<void> _pickDate(bool isCheckIn) async {
     final picked = await showDatePicker(
@@ -58,7 +76,7 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
           ClipRRect(
             borderRadius: BorderRadius.circular(12),
             child: Image.network(
-              apt.imagePath,
+              apt!.imagePath,
               height: 200,
               fit: BoxFit.cover,
               errorBuilder: (_, __, ___) =>
@@ -112,15 +130,12 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
           const SizedBox(height: 24),
           ElevatedButton(
             onPressed: () {
-              BookingService.add(widget.apartment);
-
+              //TODO booking service
               Navigator.pop(context);
-
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Booking confirmed')),
               );
             },
-
             child: const Text('Confirm Booking'),
           ),
         ],

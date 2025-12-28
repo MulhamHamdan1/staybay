@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:staybay/models/apartment_model.dart';
 import 'package:staybay/services/add_favorite_service.dart';
-import 'package:staybay/services/apartment_service.dart';
 import 'package:staybay/services/remove_favorite_service.dart';
 import '../app_theme.dart';
 import '../widgets/details_image_carousel.dart';
@@ -55,23 +54,6 @@ class _ApartmentDetailsScreenState extends State<ApartmentDetailsScreen> {
         ),
       ],
     );
-  }
-
-  void _showRatingDialog(BuildContext context) async {
-    final result = await showDialog<int>(
-      context: context,
-      builder: (context) => const RatingDialog(),
-    );
-
-    if (result != null) {
-      if (!mounted) return;
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Thank you! You gave a rating of $result stars.'),
-        ),
-      );
-    }
   }
 
   void _navigateToBooking(BuildContext context) {
@@ -240,36 +222,30 @@ class _ApartmentDetailsScreenState extends State<ApartmentDetailsScreen> {
                   ),
                   const SizedBox(height: AppSizes.paddingSmall),
                   // todo from backend get rating and rating count
-                  InkWell(
-                    onTap: () => _showRatingDialog(context),
-                    borderRadius: BorderRadius.circular(
-                      AppSizes.borderRadiusLarge,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSizes.paddingSmall,
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppSizes.paddingSmall,
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          ...List.generate(5, (index) {
-                            return Icon(
-                              index < int.parse(apartmentDetails.rating)
-                                  ? Icons.star
-                                  : Icons.star_border,
-                              color: Colors.amber,
-                              size: 24,
-                            );
-                          }),
-                          const SizedBox(width: AppSizes.paddingSmall),
-                          Text(
-                            '(${apartmentDetails.ratingCount} Reviews)',
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              color: AppColors.secondaryText,
-                            ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ...List.generate(5, (index) {
+                          return Icon(
+                            index < int.parse(apartmentDetails.rating)
+                                ? Icons.star
+                                : Icons.star_border,
+                            color: Colors.amber,
+                            size: 24,
+                          );
+                        }),
+                        const SizedBox(width: AppSizes.paddingSmall),
+                        Text(
+                          '(${apartmentDetails.ratingCount} Reviews)',
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: AppColors.secondaryText,
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ],

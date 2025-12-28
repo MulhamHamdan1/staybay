@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:staybay/models/apartment_model.dart';
-import 'package:staybay/services/get_apartment_service.dart';
+import 'package:staybay/services/get_favorite_apartment_service.dart';
 import 'package:staybay/widgets/compact_apartment_card.dart';
 
 class MyApartmentsScreen extends StatefulWidget {
@@ -17,7 +17,7 @@ class _MyApartmentsScreenState extends State<MyApartmentsScreen> {
   @override
   void initState() {
     super.initState();
-    future = GetApartmentService.getMy();
+    future = GetFavoriteApartmentService.getMy();
   }
 
   @override

@@ -36,7 +36,7 @@ class ApartmentCubit extends Cubit<ApartmentState> {
     }
 
     try {
-      final response = await ApartmentService.getApartments(
+      final response = await GetApartmentService.getApartments(
         page: currentPage,
         governorateId: filters?['governorate_id'],
         cityId: filters?['city_id'],

@@ -201,7 +201,7 @@ class AccountScreen extends StatelessWidget {
                     icon: Icons.bookmark_border,
                     title: 'حجوزاتي',
                     onTap: () {
-                      Navigator.of(context).pushNamed(BookingsScreen.routeName);
+                      // Navigator.of(context).pushNamed(BookingsScreen.routeName);
                     },
                   ),
 
@@ -220,7 +220,10 @@ class AccountScreen extends StatelessWidget {
                     title: 'تسجيل الخروج',
                     onTap: () async {
                       LogoutService.logout();
-                      Navigator.of(context).pushNamed(WelcomeScreen.routeName);
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                        WelcomeScreen.routeName,
+                        (Route<dynamic> route) => false,
+                      );
                     },
                   ),
                 ],

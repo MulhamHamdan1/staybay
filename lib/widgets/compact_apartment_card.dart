@@ -1,22 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:staybay/services/add_favorite_service.dart';
+import 'package:staybay/services/remove_favorite_service.dart';
 import '../app_theme.dart';
 import '../models/apartment_model.dart';
 import '../screens/apartment_details_screen.dart';
 
-class CompactApartmentCard extends StatelessWidget {
+class CompactApartmentCard extends StatefulWidget {
   final Apartment apartment;
   const CompactApartmentCard({super.key, required this.apartment});
 
   @override
+  State<CompactApartmentCard> createState() => _CompactApartmentCardState();
+}
+
+class _CompactApartmentCardState extends State<CompactApartmentCard> {
+  late bool _isFavorite;
+
+  @override
+  initState() {
+    _isFavorite = widget.apartment.isFavorite;
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final heartColor = theme.colorScheme.error;
 
     return InkWell(
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => ApartmentDetailsScreen(apartment: apartment),
+            builder: (context) =>
+                ApartmentDetailsScreen(apartment: widget.apartment),
           ),
         );
       },
@@ -27,7 +42,7 @@ class CompactApartmentCard extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppSizes.borderRadiusLarge),
           side: BorderSide(
-            color: theme.colorScheme.primary.withOpacity(0.6),
+            color: theme.colorScheme.primary.withValues(alpha: 0.6),
             width: 1.5,
           ),
         ),
@@ -40,7 +55,7 @@ class CompactApartmentCard extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(AppSizes.borderRadiusSmall),
                 child: Image.network(
-                  apartment.imagePath,
+                  widget.apartment.imagePath,
                   fit: BoxFit.cover,
                   height: 100,
                   width: 100,
@@ -64,7 +79,7 @@ class CompactApartmentCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      apartment.title,
+                      widget.apartment.title,
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: theme.colorScheme.onSurface,
@@ -82,7 +97,7 @@ class CompactApartmentCard extends StatelessWidget {
                         ),
                         const SizedBox(width: AppSizes.paddingSmall / 2),
                         Text(
-                          apartment.location!,
+                          widget.apartment.location!,
                           style: theme.textTheme.bodyMedium?.copyWith(
                             color: theme.colorScheme.onSurfaceVariant,
                           ),
@@ -97,7 +112,7 @@ class CompactApartmentCard extends StatelessWidget {
                         const Icon(Icons.star, size: 18, color: Colors.amber),
                         const SizedBox(width: AppSizes.paddingSmall / 2),
                         Text(
-                          '${apartment.rating} (${apartment.ratingCount})',
+                          '${widget.apartment.rating} (${widget.apartment.ratingCount})',
                           style: theme.textTheme.bodyMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                             color: theme.colorScheme.onSurface,
@@ -112,7 +127,7 @@ class CompactApartmentCard extends StatelessWidget {
                         children: [
                           TextSpan(
                             text:
-                                '\$${apartment.pricePerNight.toStringAsFixed(0)}',
+                                '\$${widget.apartment.pricePerNight.toStringAsFixed(0)}',
                             style: theme.textTheme.titleLarge?.copyWith(
                               fontWeight: FontWeight.w900,
                               color: theme.colorScheme.primary,
@@ -135,15 +150,26 @@ class CompactApartmentCard extends StatelessWidget {
                 alignment: Alignment.topRight,
                 padding: const EdgeInsets.only(left: AppSizes.paddingSmall),
                 child: IconButton(
-                  icon: Icon(Icons.favorite, color: heartColor, size: 30),
+                  icon: Icon(
+                    _isFavorite ? Icons.favorite : Icons.favorite_border,
+                    color: _isFavorite ? Colors.red : Colors.white,
+                  ),
                   onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          'Removed ${apartment.title} from favorites.',
-                        ),
-                      ),
-                    );
+                    setState(() {
+                      _isFavorite = !_isFavorite;
+                      widget.apartment.isFavorite = _isFavorite;
+                      if (_isFavorite) {
+                        AddFavoriteService.addFavorite(
+                          context,
+                          int.parse(widget.apartment.id!),
+                        );
+                      } else {
+                        RemoveFavoriteService.removeFavorite(
+                          context,
+                          int.parse(widget.apartment.id!),
+                        );
+                      }
+                    });
                   },
                 ),
               ),

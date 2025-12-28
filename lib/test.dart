@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:staybay/models/apartment_model.dart';
+import 'package:staybay/models/book_model.dart';
+import 'package:staybay/widgets/booking_card.dart';
 import 'package:staybay/widgets/filter_dialog.dart';
 
 class Test extends StatefulWidget {
@@ -27,6 +30,40 @@ class _TestState extends State<Test> {
             },
           ),
         ],
+      ),
+      body: ListView.builder(
+        itemBuilder: (context, index) => BookedCard(
+          book: BookModel(
+            apartment: Apartment(
+              id: "1",
+              isFavorite: false,
+              location: "location",
+              ownerName: "nabil",
+              title: "title",
+              pricePerNight: 0.0,
+              imagePath: "imagePath",
+              rating: "1",
+              ratingCount: 1,
+              beds: 1,
+              baths: 1,
+              areaSqft: 1,
+              description: "description",
+              imagesPaths: [],
+              amenities: [],
+            ),
+            startDate: '2026-1-28',
+            endDate: "2026-1-28",
+            status: "approved",
+            totalePrice: 0.0,
+            rating: 0.0,
+            ratedAt: "ratedAt",
+            userCanRate: true,
+            isPaid: true,
+            userCanPay: true,
+            createdAt: "createdAt",
+            updateAt: "updateAt",
+          ),
+        ),
       ),
     );
   }

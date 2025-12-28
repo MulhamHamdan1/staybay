@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:staybay/services/get_apartment_service.dart';
+import 'package:staybay/services/get_favorite_apartment_service.dart';
 import '../models/apartment_model.dart';
 import '../widgets/compact_apartment_card.dart';
 
@@ -15,13 +15,13 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   late Future<List<Apartment>> future;
   @override
   void initState() {
+    future = GetFavoriteApartmentService.getFavorites();
     super.initState();
-    future = GetApartmentService.getFavorites();
   }
 
   Future<void> _refreshFavorites() async {
     setState(() {
-      future = GetApartmentService.getFavorites();
+      future = GetFavoriteApartmentService.getFavorites();
     });
   }
 

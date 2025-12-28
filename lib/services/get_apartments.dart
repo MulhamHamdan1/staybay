@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:staybay/consetans.dart';
 
-class ApartmentService {
+class GetApartmentService {
   static final Dio _dio = Dio(
     BaseOptions(baseUrl: kBaseUrl, headers: {'Accept': 'application/json'}),
   );
