@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:staybay/models/apartment_model.dart';
+import 'package:staybay/services/add_favorite_service.dart';
 import 'package:staybay/services/apartment_service.dart';
+import 'package:staybay/services/remove_favorite_service.dart';
 import '../app_theme.dart';
 import '../widgets/details_image_carousel.dart';
 import '../widgets/custom_primary_button.dart';
@@ -20,7 +22,13 @@ class ApartmentDetailsScreen extends StatefulWidget {
 }
 
 class _ApartmentDetailsScreenState extends State<ApartmentDetailsScreen> {
-  // bool _isFavorite = false;
+  late bool _isFavorite;
+
+  @override
+  initState() {
+    _isFavorite = widget.apartment.isFavorite;
+    super.initState();
+  }
 
   Widget _buildFeatureIcon(
     BuildContext context, {
@@ -100,12 +108,24 @@ class _ApartmentDetailsScreenState extends State<ApartmentDetailsScreen> {
                     widget.apartment.isFavorite
                         ? Icons.favorite
                         : Icons.favorite_border,
-                    color: widget.apartment.isFavorite
-                        ? Colors.red
-                        : Colors.white,
+                    color: _isFavorite ? Colors.red : Colors.white,
                   ),
                   onPressed: () {
-                    // ! from backend update favorite status
+                    setState(() {
+                      _isFavorite = !_isFavorite;
+                      widget.apartment.isFavorite = _isFavorite;
+                      if (_isFavorite) {
+                        AddFavoriteService.addFavorite(
+                          context,
+                          int.parse(widget.apartment.id!),
+                        );
+                      } else {
+                        RemoveFavoriteService.removeFavorite(
+                          context,
+                          int.parse(widget.apartment.id!),
+                        );
+                      }
+                    });
                   },
                 ),
               ],

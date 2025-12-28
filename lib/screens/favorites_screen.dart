@@ -19,6 +19,12 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     future = GetApartmentService.getFavorites();
   }
 
+  Future<void> _refreshFavorites() async {
+    setState(() {
+      future = GetApartmentService.getFavorites();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -35,8 +41,9 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
           } else if (snapshot.hasData) {
             var favorites = snapshot.data!;
             if (favorites.isEmpty) {
-              return Center(
-                child: Column(
+              return RefreshIndicator(
+                onRefresh: _refreshFavorites,
+                child: ListView(
                   children: [
                     const SizedBox(height: 32),
                     Icon(
@@ -45,27 +52,27 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                       color: theme.colorScheme.primary,
                     ),
                     const SizedBox(height: 16),
-                    Text(
-                      'No Favorite items yet',
-                      style: theme.textTheme.headlineMedium,
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        setState(() {});
-                      },
-                      child: Text('Refresh'),
+                    Center(
+                      child: Text(
+                        'No Favorite items yet',
+                        style: theme.textTheme.headlineMedium,
+                      ),
                     ),
                   ],
                 ),
               );
             }
-            return ListView.builder(
-              padding: const EdgeInsets.all(16.0),
-              itemCount: favorites.length,
-              itemBuilder: (context, index) {
-                var apartment = favorites[index];
-                return CompactApartmentCard(apartment: apartment);
-              },
+
+            return RefreshIndicator(
+              onRefresh: _refreshFavorites,
+              child: ListView.builder(
+                padding: const EdgeInsets.all(16.0),
+                itemCount: favorites.length,
+                itemBuilder: (context, index) {
+                  var apartment = favorites[index];
+                  return CompactApartmentCard(apartment: apartment);
+                },
+              ),
             );
           } else {
             return Center(

@@ -76,7 +76,7 @@ class Apartment {
       amenities: amenities,
       description: json['description'] ?? '',
       imagesPaths: imagesPaths,
-      isFavorite: json['isFavorite'] ?? false,
+      isFavorite: json['is_favorite'],
     );
   }
 }

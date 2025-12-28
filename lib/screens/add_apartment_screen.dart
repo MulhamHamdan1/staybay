@@ -71,33 +71,39 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
   Future<void> _loadGovernorates() async {
     try {
       final data = await _getGovernatesAndCities.getGovernorates();
+      if (!mounted) return;
+
       setState(() {
         governorates = data;
         isLoadingGovs = false;
       });
     } catch (e) {
+      if (!mounted) return;
       setState(() => isLoadingGovs = false);
-      // يمكن إظهار رسالة خطأ هنا
     }
   }
 
   Future<void> _onGovernorateChanged(Governorate? gov) async {
     if (gov == null) return;
 
+    if (!mounted) return;
     setState(() {
       selectedGov = gov;
-      selectedCity = null; // تصفير المدينة المختارة سابقاً
+      selectedCity = null;
       cities = [];
       isLoadingCities = true;
     });
 
     try {
       final data = await _getGovernatesAndCities.getCities(gov.id);
+      if (!mounted) return;
+
       setState(() {
         cities = data;
         isLoadingCities = false;
       });
     } catch (e) {
+      if (!mounted) return;
       setState(() => isLoadingCities = false);
     }
   }
@@ -135,6 +141,8 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
         _webImageBytes[img.name] = await img.readAsBytes();
       }
     }
+
+    if (!mounted) return;
     setState(() => _pickedImages.addAll(images));
   }
 
