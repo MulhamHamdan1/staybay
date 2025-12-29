@@ -13,7 +13,7 @@ import 'login_screen.dart';
 import 'success_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
-  static const String routeName = '/signup';
+  static const String routeName = 'signup';
 
   const SignUpScreen({super.key});
 

@@ -59,7 +59,7 @@ class _TestState extends State<Test> {
             ratedAt: "ratedAt",
             userCanRate: true,
             isPaid: true,
-            userCanPay: true,
+            userCanPay: false,
             createdAt: "createdAt",
             updateAt: "updateAt",
           ),

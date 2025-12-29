@@ -10,7 +10,7 @@ import 'package:staybay/services/get_governorates_and_cities_service.dart';
 import 'package:staybay/widgets/app_bottom_nav_bar.dart';
 
 class AddApartmentScreen extends StatefulWidget {
-  static const String routeName = '/add';
+  static const String routeName = 'add';
 
   final Apartment? apartmentToEdit;
   const AddApartmentScreen({super.key, this.apartmentToEdit});

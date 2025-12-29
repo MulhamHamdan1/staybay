@@ -29,17 +29,13 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   final bool islogin = prefs.getBool(kIsLoggedIn) ?? false;
-  if (islogin) {
-    AppBottomNavBar.routeName = '/';
-  } else {
-    WelcomeScreen.routeName = '/';
-  }
-  runApp(MyApp());
+
+  runApp(MyApp(islogin: islogin));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
+  const MyApp({super.key, required this.islogin});
+  final bool islogin;
   @override
   Widget build(BuildContext context) {
     final localeCubit = LocaleCubit();
@@ -73,12 +69,14 @@ class MyApp extends StatelessWidget {
                     theme: AppTheme.lightTheme,
                     darkTheme: AppTheme.darkTheme,
                     // themeMode: ThemeMode.dark,
-                    // themeMode: themeState is DarkModeState
-                    //     ? ThemeMode.dark
-                    //     : ThemeMode.light,
-                    home: Test(),
-                    // initialRoute: AppBottomNavBar.routeName,
-                    // routes: _buildAppRoutes(),
+                    themeMode: themeState is DarkModeState
+                        ? ThemeMode.dark
+                        : ThemeMode.light,
+                    // home: Test(),
+                    initialRoute: islogin
+                        ? AppBottomNavBar.routeName
+                        : WelcomeScreen.routeName,
+                    routes: _buildAppRoutes(),
                   );
                 },
               );

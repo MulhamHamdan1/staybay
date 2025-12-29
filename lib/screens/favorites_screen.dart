@@ -4,7 +4,7 @@ import '../models/apartment_model.dart';
 import '../widgets/compact_apartment_card.dart';
 
 class FavoritesScreen extends StatefulWidget {
-  static const String routeName = '/favorites';
+  static const String routeName = 'favorites';
   const FavoritesScreen({super.key});
 
   @override

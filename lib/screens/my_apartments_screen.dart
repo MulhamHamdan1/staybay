@@ -4,7 +4,7 @@ import 'package:staybay/services/get_favorite_apartment_service.dart';
 import 'package:staybay/widgets/compact_apartment_card.dart';
 
 class MyApartmentsScreen extends StatefulWidget {
-  static const routeName = '/my-apartments';
+  static const routeName = 'my-apartments';
 
   const MyApartmentsScreen({super.key});
 

@@ -86,10 +86,7 @@ class _BookedCardState extends State<BookedCard> {
                           "total : ${widget.book.totalePrice.toStringAsFixed(0)}",
                           style: const TextStyle(fontWeight: FontWeight.w600),
                         ),
-                        // Text(
-                        //   '\$${widget.book.apartment.pricePerNight.toStringAsFixed(0)} / night',
-                        //   style: const TextStyle(fontWeight: FontWeight.w600),
-                        // ),
+
                         Spacer(),
                         ...List.generate(5, (index) {
                           return Icon(

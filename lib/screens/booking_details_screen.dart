@@ -3,7 +3,7 @@ import 'package:staybay/models/apartment_model.dart';
 import 'package:staybay/widgets/rating_dialog.dart';
 
 class BookingDetailsScreen extends StatefulWidget {
-  static const routeName = '/bookingDetails';
+  static const routeName = 'bookingDetails';
   final Apartment? apartment;
 
   const BookingDetailsScreen({Key? key, required this.apartment})

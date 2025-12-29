@@ -8,7 +8,7 @@ import '../app_theme.dart';
 import '../widgets/custom_primary_button.dart';
 
 class SuccessScreen extends StatelessWidget {
-  static const String routeName = '/success';
+  static const String routeName = 'success';
   final bool isLoginSuccess;
 
   const SuccessScreen({super.key, this.isLoginSuccess = true});

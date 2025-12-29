@@ -11,7 +11,7 @@ import 'package:staybay/widgets/filter_dialog.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
-  static const String routeName = '/home';
+  static const String routeName = 'home';
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -76,6 +76,10 @@ class _HomePageState extends State<HomePage> {
     return cleaned;
   }
 
+  Future<void> _Refresh() async {
+    await context.read<ApartmentCubit>().refreshApartments(filters);
+  }
+
   @override
   void dispose() {
     _scrollController.dispose();
@@ -107,13 +111,14 @@ class _HomePageState extends State<HomePage> {
                 .toList();
 
             if (apartments.isEmpty) {
-              return const Center(child: Text('No apartments found'));
+              return RefreshIndicator(
+                onRefresh: _Refresh,
+                child: const Center(child: Text('No apartments found')),
+              );
             }
 
             return RefreshIndicator(
-              onRefresh: () async {
-                await context.read<ApartmentCubit>().refreshApartments(filters);
-              },
+              onRefresh: _Refresh,
               child: Column(
                 children: [
                   /// ===== Active Filters =====

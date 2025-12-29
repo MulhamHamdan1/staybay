@@ -10,7 +10,7 @@ import 'booking_details_screen.dart';
 import '../widgets/rating_dialog.dart';
 
 class ApartmentDetailsScreen extends StatefulWidget {
-  static const String routeName = '/details';
+  static const String routeName = 'details';
 
   final Apartment apartment;
 

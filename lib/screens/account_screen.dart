@@ -12,7 +12,7 @@ import 'package:staybay/screens/welcome_screen.dart';
 import 'package:staybay/services/logout_service.dart';
 
 class AccountScreen extends StatelessWidget {
-  static const routeName = '/account';
+  static const routeName = 'account';
 
   const AccountScreen({super.key});
 
