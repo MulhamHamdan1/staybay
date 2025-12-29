@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -29,13 +31,16 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   final bool islogin = prefs.getBool(kIsLoggedIn) ?? false;
-
-  runApp(MyApp(islogin: islogin));
+  final bool isDark = prefs.getBool(kIsDark) ?? false;
+  log(isDark.toString());
+  runApp(MyApp(islogin: islogin, isDark: isDark));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key, required this.islogin});
+  const MyApp({super.key, required this.islogin, required this.isDark});
   final bool islogin;
+  final bool isDark;
+
   @override
   Widget build(BuildContext context) {
     final localeCubit = LocaleCubit();
@@ -71,6 +76,10 @@ class MyApp extends StatelessWidget {
                     // themeMode: ThemeMode.dark,
                     themeMode: themeState is DarkModeState
                         ? ThemeMode.dark
+                        : themeState is ThemeInitial
+                        ? isDark
+                              ? ThemeMode.dark
+                              : ThemeMode.light
                         : ThemeMode.light,
                     // home: Test(),
                     initialRoute: islogin

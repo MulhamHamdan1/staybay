@@ -209,7 +209,7 @@ class AccountScreen extends StatelessWidget {
                     context,
                     icon: Icons.dark_mode_outlined,
                     title: 'تبديل الوضع',
-                    onTap: () {
+                    onTap: () async {
                       context.read<ThemeCubit>().toggleTheme();
                     },
                   ),
