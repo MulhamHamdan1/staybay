@@ -7,7 +7,7 @@ import '../widgets/details_image_carousel.dart';
 import '../widgets/custom_primary_button.dart';
 import '../widgets/amenities_responsive_grid.dart';
 import 'booking_details_screen.dart';
-import '../widgets/rating_dialog.dart';
+// import '../widgets/rating_dialog.dart';
 
 class ApartmentDetailsScreen extends StatefulWidget {
   static const String routeName = 'details';
@@ -221,7 +221,7 @@ class _ApartmentDetailsScreenState extends State<ApartmentDetailsScreen> {
                     ],
                   ),
                   const SizedBox(height: AppSizes.paddingSmall),
-                  // todo from backend get rating and rating count
+                  // done from backend get rating and rating count
                   Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: AppSizes.paddingSmall,

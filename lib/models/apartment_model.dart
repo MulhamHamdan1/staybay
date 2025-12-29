@@ -65,7 +65,7 @@ class Apartment {
       id: json['id'].toString(),
       title: json['title'],
       location: location,
-      pricePerNight: json['price'].toDouble(),
+      pricePerNight: (json['price'] ?? 0).toDouble(),
       imagePath: imagesPaths.first,
       rating: json['rating'].toString(),
       ratingCount: json['rating_count'],

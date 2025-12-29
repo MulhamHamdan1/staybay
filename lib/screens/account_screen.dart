@@ -201,7 +201,7 @@ class AccountScreen extends StatelessWidget {
                     icon: Icons.bookmark_border,
                     title: 'حجوزاتي',
                     onTap: () {
-                      // Navigator.of(context).pushNamed(BookingsScreen.routeName);
+                      Navigator.of(context).pushNamed(BookingsScreen.routeName);
                     },
                   ),
 

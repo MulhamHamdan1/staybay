@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:staybay/models/apartment_model.dart';
+import 'package:staybay/models/book_model.dart';
+import 'package:staybay/screens/bookings_screen.dart';
+import 'package:staybay/services/create_booking_service.dart';
 import 'package:staybay/services/get_apartment_not_available_dates_service.dart';
+import 'package:staybay/services/user_update_booking_service.dart';
 
 class BookingDetailsScreen extends StatefulWidget {
   static const routeName = 'bookingDetails';
   final Apartment? apartment;
+  final BookModel? booking;
 
-  const BookingDetailsScreen({super.key, required this.apartment});
+  const BookingDetailsScreen({super.key, this.apartment, this.booking});
 
   @override
   State<BookingDetailsScreen> createState() => _BookingDetailsScreenState();
@@ -19,15 +24,26 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
   List<DateTime> _blockedDates = [];
   bool _isLoadingDates = true;
 
+  bool get isEditing => widget.booking != null;
+
   @override
   void initState() {
     super.initState();
+    if (isEditing) {
+      _selectedRange = DateTimeRange(
+        start: DateTime.parse(widget.booking!.startDate),
+        end: DateTime.parse(widget.booking!.endDate),
+      );
+    }
     _fetchBlockedDates();
   }
 
   Future<void> _fetchBlockedDates() async {
+    final targetId = widget.apartment?.id ?? widget.booking?.apartment.id;
+    if (targetId == null) return;
+
     final dates = await GetApartmentNotAvailableDatesService.getDisabledDates(
-      widget.apartment!.id,
+      targetId,
     );
     setState(() {
       _blockedDates = dates;
@@ -35,9 +51,23 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
     });
   }
 
-  
-  bool _isDayAvailable(DateTime date) {
-    return !_blockedDates.any((blocked) => DateUtils.isSameDay(blocked, date));
+  bool _isDayAvailable(DateTime date) { 
+    bool isBlocked = _blockedDates.any(
+      (blocked) => DateUtils.isSameDay(blocked, date),
+    );
+
+    if (isEditing && widget.booking != null) {
+      DateTime currentStart = DateTime.parse(widget.booking!.startDate);
+      DateTime currentEnd = DateTime.parse(widget.booking!.endDate);
+
+      bool isPartCurrentBooking =
+          (date.isAfter(currentStart.subtract(const Duration(days: 1))) &&
+          date.isBefore(currentEnd.add(const Duration(days: 1))));
+
+      if (isPartCurrentBooking) return true;
+    }
+
+    return !isBlocked;
   }
 
   Future<void> _pickDateRange() async {
@@ -47,7 +77,7 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
       lastDate: DateTime.now().add(const Duration(days: 365)),
       initialDateRange: _selectedRange,
       selectableDayPredicate: (DateTime date, DateTime? _, DateTime? _) =>
-          _isDayAvailable(date), 
+          _isDayAvailable(date),
     );
 
     if (picked == null) return;
@@ -76,13 +106,17 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
   }
 
   int get nights => (_selectedRange?.duration.inDays ?? 0) + 1;
-  double get total =>
-      (widget.apartment?.pricePerNight ?? 0) *
-      (nights == 0 ? 0 : nights.toDouble());
+  double get total {
+    final price =
+        widget.apartment?.pricePerNight ??
+        widget.booking?.apartment.pricePerNight ??
+        0;
+    return price * (nights == 0 ? 0 : nights.toDouble());
+  }
 
   @override
   Widget build(BuildContext context) {
-    final apt = widget.apartment;
+    final apt = widget.apartment ?? widget.booking?.apartment;
     if (apt == null) return const Scaffold(body: Center(child: Text("Error")));
 
     return Scaffold(
@@ -105,34 +139,94 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
-                      backgroundColor: Theme.of(context).primaryColor,
-                      foregroundColor: Colors.white,
+                      backgroundColor: Theme.of(context).cardColor,
+                      foregroundColor: Theme.of(context).primaryColor,
+                      //! colors need fix here
+                      // backgroundColor: Theme.of(context).primaryColor,
+                      // foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    onPressed:
-                        (_selectedRange == null
-                        // || _paymentMethod == null
-                        )
+                    onPressed: _selectedRange == null
                         ? null
-                        : () {
-                            Navigator.pop(context);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Booking Confirmed!'),
-                              ),
-                            );
+                        : () async {
+                            bool success;
+                            if (isEditing) {
+                              success =
+                                  await UserUpdateBookingService.updateBooking(
+                                    context: context,
+                                    bookingId: widget.booking!.id.toString(),
+                                    startDate: _selectedRange!.start,
+                                    endDate: _selectedRange!.end,
+                                  );
+                            } else {
+                              success =
+                                  await CreateBookingService.createBooking(
+                                    context: context,
+                                    apartmentId: apt.id.toString(),
+                                    startDate: _selectedRange!.start,
+                                    endDate: _selectedRange!.end,
+                                  );
+                            }
+
+                            if (success && mounted) {
+                              Navigator.pushNamedAndRemoveUntil(
+                                context,
+                                BookingsScreen.routeName,
+                                (route) => route.isFirst,
+                              );
+                              //! i think should not go back but go to the bookin page
+                            }
                           },
-                    child: const Text(
-                      'Confirm Booking',
-                      style: TextStyle(
+                    child: Text(
+                      isEditing ? 'Update Booking' : 'Confirm Booking',
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
                 ),
+                if (isEditing) ...[
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        side: const BorderSide(color: Colors.red),
+                        foregroundColor: Colors.red,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      onPressed: () async {
+                        bool success =
+                            await UserUpdateBookingService.updateBooking(
+                              context: context,
+                              bookingId: widget.booking!.id.toString(),
+                              status: 'cancelled',
+                            );
+
+                        if (success && mounted) {
+                          Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            BookingsScreen.routeName,
+                            (route) => route.isFirst,
+                          );
+                        }
+                      },
+                      child: const Text(
+                        'Cancel Booking',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ],
             ),
     );
@@ -194,6 +288,7 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                   style: TextStyle(
                     fontWeight: hasDate ? FontWeight.bold : FontWeight.normal,
                     fontSize: 16,
+                    color: Theme.of(context).primaryColor,
                   ),
                 ),
                 Text(
@@ -209,23 +304,6 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
       ),
     );
   }
-
-  // Widget _buildPaymentDropdown() {
-  //   return DropdownButtonFormField<String>(
-  //     value: _paymentMethod,
-  //     decoration: InputDecoration(
-  //       labelText: 'Payment Method',
-  //       prefixIcon: const Icon(Icons.payment),
-  //       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-  //     ),
-  //     items: const [
-  //       DropdownMenuItem(value: 'Cash', child: Text('Cash')),
-  //       DropdownMenuItem(value: 'Card', child: Text('Credit Card')),
-  //       DropdownMenuItem(value: 'PayPal', child: Text('PayPal')),
-  //     ],
-  //     onChanged: (val) => setState(() => _paymentMethod = val),
-  //   );
-  // }
 
   Widget _buildPriceSummary() {
     return Container(
