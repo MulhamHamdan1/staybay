@@ -15,7 +15,7 @@ class GetMyBookingService {
       dio.options.headers['Authorization'] =
           'Bearer ${prefs.getString(kToken)}';
 
-      var response = await dio.get('${kBaseUrl}/bookings');
+      var response = await dio.get('$kBaseUrl/bookings');
       dynamic jsonData = response.data;
       List<dynamic> booksJson = jsonData['data'];
       for (var bookJson in booksJson) {
