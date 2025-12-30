@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:staybay/consetans.dart';
+import 'package:staybay/constants.dart';
 import 'package:staybay/models/book_model.dart';
 import 'package:staybay/services/owner_update_booking_servcie.dart';
 
@@ -89,18 +89,18 @@ class _OwnerBookedCardState extends State<OwnerBookedCard> {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-child: Card(
+      child: Card(
         elevation: 3,
-        clipBehavior: Clip.antiAlias,  
+        clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [ 
+          children: [
             SizedBox(
               height: 140,
               width: double.infinity,
               child: Stack(
-                children: [ 
+                children: [
                   Positioned.fill(
                     child: ClipRRect(
                       borderRadius: const BorderRadius.vertical(
@@ -110,7 +110,7 @@ child: Card(
                         widget.book.apartment.imagePath.startsWith('http')
                             ? widget.book.apartment.imagePath
                             : '$kBaseUrlImage/${widget.book.apartment.imagePath}',
-                        fit: BoxFit.cover, 
+                        fit: BoxFit.cover,
                         loadingBuilder: (context, child, loadingProgress) {
                           if (loadingProgress == null) return child;
                           return Container(color: Colors.grey.shade200);
@@ -125,7 +125,7 @@ child: Card(
                       ),
                     ),
                   ),
-                  
+
                   Positioned(
                     top: 12,
                     right: 12,
