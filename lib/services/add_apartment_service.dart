@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:staybay/consetans.dart';
+import 'package:staybay/constants.dart';
 import 'package:staybay/models/apartment_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
