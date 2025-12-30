@@ -48,7 +48,7 @@ class _MyApartmentsScreenState extends State<MyApartmentsScreen> {
               itemCount: favorites.length,
               itemBuilder: (context, index) {
                 var apartment = favorites[index];
-                return CompactApartmentCard(apartment: apartment);
+                return CompactApartmentCard(apartment: apartment, edit: true);
               },
             );
           } else {

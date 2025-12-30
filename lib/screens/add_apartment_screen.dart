@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:dio/src/response.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -7,6 +8,7 @@ import 'package:staybay/models/city_model.dart';
 import 'package:staybay/models/governorate_model.dart';
 import 'package:staybay/services/add_apartment_service.dart';
 import 'package:staybay/services/get_governorates_and_cities_service.dart';
+import 'package:staybay/services/update_apartment_service.dart';
 import 'package:staybay/widgets/app_bottom_nav_bar.dart';
 
 class AddApartmentScreen extends StatefulWidget {
@@ -20,9 +22,7 @@ class AddApartmentScreen extends StatefulWidget {
 }
 
 class _AddApartmentScreenState extends State<AddApartmentScreen> {
-  /// ===== FORM =====
   final _formKey = GlobalKey<FormState>();
-
   final GetGovernatesAndCities _getGovernatesAndCities =
       GetGovernatesAndCities();
 
@@ -41,30 +41,30 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
   final _areaController = TextEditingController();
   final _descriptionController = TextEditingController();
 
-  /// ===== AMENITIES =====
   final List<String> _allAmenities = ['wifi', 'pool'];
-
   List<String> _selectedAmenities = [];
 
-  /// ===== IMAGES =====
+  /// ===== IMAGE STATE =====
   final ImagePicker _imagePicker = ImagePicker();
-  final List<XFile> _pickedImages = [];
+  final List<XFile> _pickedImages = []; // New local images
   final Map<String, Uint8List> _webImageBytes = {};
+  List<String> _existingImageUrls = []; // Images already on the server
 
   @override
   void initState() {
     super.initState();
-    _loadGovernorates(); // جلب المحافظات فور فتح الـ Dialog
+    _loadGovernorates();
 
     if (widget.apartmentToEdit != null) {
-      final a = widget.apartmentToEdit!;
-      _titleController.text = a.title;
-      _priceController.text = a.pricePerNight.toString();
-      _bedsController.text = a.beds.toString();
-      _bathsController.text = a.baths.toString();
-      _areaController.text = a.areaSqft.toString();
-      _descriptionController.text = a.description;
-      _selectedAmenities = List.from(a.amenities);
+      final apartment = widget.apartmentToEdit!;
+      _existingImageUrls = List.from(apartment.imagesPaths);
+      _titleController.text = apartment.title;
+      _priceController.text = apartment.pricePerNight.toString();
+      _bedsController.text = apartment.beds.toString();
+      _bathsController.text = apartment.baths.toString();
+      _areaController.text = apartment.areaSqft.toString();
+      _descriptionController.text = apartment.description;
+      _selectedAmenities = List.from(apartment.amenities);
     }
   }
 
@@ -76,6 +76,14 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
       setState(() {
         governorates = data;
         isLoadingGovs = false;
+        if (widget.apartmentToEdit != null &&
+            widget.apartmentToEdit!.governorate != null) {
+          selectedGov = governorates.firstWhere(
+            (g) => g.id == widget.apartmentToEdit!.governorate!.id,
+            orElse: () => governorates.first,
+          );
+          _onGovernorateChanged(selectedGov);
+        }
       });
     } catch (e) {
       if (!mounted) return;
@@ -85,8 +93,6 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
 
   Future<void> _onGovernorateChanged(Governorate? gov) async {
     if (gov == null) return;
-
-    if (!mounted) return;
     setState(() {
       selectedGov = gov;
       selectedCity = null;
@@ -101,6 +107,13 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
       setState(() {
         cities = data;
         isLoadingCities = false;
+        if (widget.apartmentToEdit != null &&
+            widget.apartmentToEdit!.city != null) {
+          var match = cities.where(
+            (c) => c.id == widget.apartmentToEdit!.city!.id,
+          );
+          if (match.isNotEmpty) selectedCity = match.first;
+        }
       });
     } catch (e) {
       if (!mounted) return;
@@ -119,19 +132,7 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
     super.dispose();
   }
 
-  /// ===== AMENITY ICON =====
-  IconData _getAmenityIcon(String amenity) {
-    switch (amenity.toLowerCase()) {
-      case 'wifi':
-        return Icons.wifi;
-      case 'pool':
-        return Icons.pool;
-      default:
-        return Icons.check_circle_outline;
-    }
-  }
-
-  /// ===== IMAGE PICKER =====
+  /// ===== IMAGE PICKER & PREVIEW =====
   Future<void> _pickImages() async {
     final images = await _imagePicker.pickMultiImage(imageQuality: 85);
     if (images.isEmpty) return;
@@ -141,8 +142,6 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
         _webImageBytes[img.name] = await img.readAsBytes();
       }
     }
-
-    if (!mounted) return;
     setState(() => _pickedImages.addAll(images));
   }
 
@@ -152,38 +151,22 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
     setState(() {});
   }
 
+  void _removeExistingImageAt(int index) {
+    setState(() => _existingImageUrls.removeAt(index));
+  }
+
   Widget _imagesPreview() {
-    if (_pickedImages.isEmpty) {
-      return GestureDetector(
-        onTap: _pickImages,
-        child: Container(
-          height: 120,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.grey.shade300),
-          ),
-          child: const Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.photo_library_outlined),
-                SizedBox(height: 6),
-                Text('Add images'),
-              ],
-            ),
-          ),
-        ),
-      );
-    }
+    final totalItems = _existingImageUrls.length + _pickedImages.length + 1;
 
     return SizedBox(
       height: 120,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
-        itemCount: _pickedImages.length + 1,
+        itemCount: totalItems,
         separatorBuilder: (_, __) => const SizedBox(width: 12),
         itemBuilder: (context, index) {
-          if (index == _pickedImages.length) {
+          // Add Button
+          if (index == totalItems - 1) {
             return InkWell(
               onTap: _pickImages,
               child: Container(
@@ -192,98 +175,131 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(color: Colors.grey.shade300),
                 ),
-                child: const Icon(Icons.add_a_photo),
+                child: const Icon(Icons.add_a_photo, color: Colors.blue),
               ),
             );
           }
 
-          final image = _pickedImages[index];
+          // Existing Images (URLs)
+          if (index < _existingImageUrls.length) {
+            return _buildImageStack(
+              image: Image.network(
+                _existingImageUrls[index],
+                fit: BoxFit.cover,
+              ),
+              onDelete: () => _removeExistingImageAt(index),
+            );
+          }
 
-          return Stack(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: SizedBox(
-                  width: 120,
-                  height: 120,
-                  child: kIsWeb
-                      ? Image.memory(
-                          _webImageBytes[image.name]!,
-                          fit: BoxFit.cover,
-                        )
-                      : Image.file(File(image.path), fit: BoxFit.cover),
-                ),
-              ),
-              Positioned(
-                top: 6,
-                right: 6,
-                child: InkWell(
-                  onTap: () => _removeImageAt(index),
-                  child: const CircleAvatar(
-                    radius: 14,
-                    backgroundColor: Colors.black54,
-                    child: Icon(Icons.close, size: 16, color: Colors.white),
-                  ),
-                ),
-              ),
-            ],
+          // Newly Picked Images (Files)
+          final pickedIndex = index - _existingImageUrls.length;
+          final image = _pickedImages[pickedIndex];
+          return _buildImageStack(
+            image: kIsWeb
+                ? Image.memory(_webImageBytes[image.name]!, fit: BoxFit.cover)
+                : Image.file(File(image.path), fit: BoxFit.cover),
+            onDelete: () => _removeImageAt(pickedIndex),
           );
         },
       ),
     );
   }
 
-  /// ===== SAVE =====
+  Widget _buildImageStack({
+    required Widget image,
+    required VoidCallback onDelete,
+  }) {
+    return Stack(
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: SizedBox(width: 120, height: 120, child: image),
+        ),
+        Positioned(
+          top: 4,
+          right: 4,
+          child: InkWell(
+            onTap: onDelete,
+            child: const CircleAvatar(
+              radius: 12,
+              backgroundColor: Colors.black54,
+              child: Icon(Icons.close, size: 14, color: Colors.white),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// ===== SAVE / UPDATE LOGIC =====
   void _saveApartment() async {
+    // 1. Combine all images to check if list is empty
+    final List<String> combinedImages = [
+      ..._existingImageUrls,
+      ..._pickedImages.map((e) => e.path).toList(),
+    ];
+
     if (_formKey.currentState?.validate() ?? false) {
       if (selectedGov == null || selectedCity == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please select governorate and city')),
-        );
+        _showSnackBar('Please select governorate and city');
         return;
       }
+
+      if (combinedImages.isEmpty) {
+        _showSnackBar('Please add at least one image');
+        return;
+      }
+
+      // Create Apartment object with combined images
       Apartment apartment = Apartment(
         title: _titleController.text,
         pricePerNight: double.parse(_priceController.text),
-        imagePath: _pickedImages.first.path,
-        rating: '0',
-        ratingCount: 0,
+        imagePath: combinedImages.first, // Main display image
+        rating: widget.apartmentToEdit?.rating ?? '0',
+        ratingCount: widget.apartmentToEdit?.ratingCount ?? 0,
         beds: int.parse(_bedsController.text),
         baths: int.parse(_bathsController.text),
         areaSqft: double.parse(_areaController.text),
         description: _descriptionController.text,
-        imagesPaths: _pickedImages.map((e) => e.path).toList(),
+        imagesPaths: combinedImages, // Send all (old + new)
         amenities: _selectedAmenities,
       );
-      var response = await AddApartmentService.addApartment(
-        context: context,
-        apartment: apartment,
-        cityId: selectedCity!.id,
-      );
 
-      if (response != null && response.statusCode == 201) {
+      Response<dynamic>? response;
+      if (widget.apartmentToEdit == null) {
+        response = await AddApartmentService.addApartment(
+          context: context,
+          apartment: apartment,
+          cityId: selectedCity!.id,
+        );
+      } else {
+        // Pass the original ID for updating
+        apartment.id = widget.apartmentToEdit!.id;
+        response = await UpdateApartmentService.updateApartment(
+          context: context,
+          apartment: apartment,
+          cityId: selectedCity!.id,
+        );
+      }
+
+      if (response != null &&
+          (response.statusCode == 201 || response.statusCode == 200)) {
         Navigator.of(
           context,
         ).pushNamedAndRemoveUntil(AppBottomNavBar.routeName, (_) => false);
       }
     } else {
-      if (_pickedImages.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please add at least one image')),
-        );
-        return;
-      }
-      if (selectedGov == null || selectedCity == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please select governorate and city')),
-        );
-        return;
-      }
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please fill all required fields')),
-      );
+      _showSnackBar('Please fill all required fields');
     }
   }
+
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  /// ===== UI COMPONENTS =====
 
   Widget _buildFilterRow({
     required String label,
@@ -299,24 +315,27 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(label, style: TextStyle(fontSize: 12, color: Colors.grey)),
+                Text(
+                  label,
+                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                ),
                 child,
               ],
             ),
           ),
-          SizedBox(width: 15),
+          const SizedBox(width: 15),
           Expanded(
             flex: 1,
             child: Container(
               alignment: Alignment.center,
-              padding: EdgeInsets.symmetric(vertical: 8),
+              padding: const EdgeInsets.symmetric(vertical: 8),
               decoration: BoxDecoration(
                 color: Colors.blue.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(5),
               ),
               child: Text(
                 value ?? '-',
-                style: TextStyle(
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.blue,
                 ),
@@ -329,7 +348,6 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
     );
   }
 
-  /// ===== AMENITIES UI =====
   Widget _amenitiesSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -363,18 +381,10 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
     );
   }
 
-  InputDecoration _decoration(String label, IconData icon) {
-    return InputDecoration(
-      labelText: label,
-      prefixIcon: Icon(icon),
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-    );
-  }
-
   Widget _field(
     TextEditingController controller,
-    String lable,
-    IconData icone, {
+    String label,
+    IconData icon, {
     TextInputType inputType = TextInputType.text,
     int maxlines = 1,
   }) {
@@ -384,9 +394,12 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
         controller: controller,
         keyboardType: inputType,
         maxLines: maxlines,
-        validator: (validation) =>
-            validation == null || validation.isEmpty ? 'Required' : null,
-        decoration: _decoration(lable, icone),
+        validator: (val) => val == null || val.isEmpty ? 'Required' : null,
+        decoration: InputDecoration(
+          labelText: label,
+          prefixIcon: Icon(icon),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+        ),
       ),
     );
   }
@@ -394,7 +407,11 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Add Apartment')),
+      appBar: AppBar(
+        title: Text(
+          widget.apartmentToEdit == null ? 'Add Apartment' : 'Edit Apartment',
+        ),
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Form(
@@ -408,10 +425,10 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
                 label: 'المحافظة',
                 value: selectedGov?.name,
                 child: isLoadingGovs
-                    ? CircularProgressIndicator(strokeWidth: 2)
+                    ? const CircularProgressIndicator(strokeWidth: 2)
                     : DropdownButton<Governorate>(
                         isExpanded: true,
-                        hint: Text('اختر محافظة'),
+                        hint: const Text('اختر محافظة'),
                         value: selectedGov,
                         items: governorates.map((gov) {
                           return DropdownMenuItem(
@@ -422,13 +439,11 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
                         onChanged: _onGovernorateChanged,
                       ),
               ),
-
-              // 2. قائمة المدن
               _buildFilterRow(
                 label: 'المدينة',
                 value: selectedCity?.name,
                 child: isLoadingCities
-                    ? LinearProgressIndicator()
+                    ? const LinearProgressIndicator()
                     : DropdownButton<City>(
                         isExpanded: true,
                         hint: Text(
@@ -446,8 +461,6 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
                         onChanged: (val) => setState(() => selectedCity = val),
                       ),
               ),
-
-              // _field(_locationController, 'Location', Icons.location_on),
               _field(
                 _priceController,
                 'Price per night',
@@ -503,5 +516,11 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
         ),
       ),
     );
+  }
+
+  IconData _getAmenityIcon(String amenity) {
+    if (amenity.toLowerCase() == 'wifi') return Icons.wifi;
+    if (amenity.toLowerCase() == 'pool') return Icons.pool;
+    return Icons.check_circle_outline;
   }
 }

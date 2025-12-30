@@ -70,7 +70,10 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                 itemCount: favorites.length,
                 itemBuilder: (context, index) {
                   var apartment = favorites[index];
-                  return CompactApartmentCard(apartment: apartment);
+                  return CompactApartmentCard(
+                    apartment: apartment,
+                    edit: false,
+                  );
                 },
               ),
             );
