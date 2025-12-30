@@ -8,6 +8,7 @@ import 'package:staybay/cubits/user/user_cubit.dart';
 import 'package:staybay/cubits/user/user_state.dart';
 import 'package:staybay/models/user.dart';
 import 'package:staybay/screens/bookings_screen.dart';
+import 'package:staybay/screens/owner_bookings_screen.dart';
 import 'package:staybay/screens/my_apartments_screen.dart';
 import 'package:staybay/screens/welcome_screen.dart';
 import 'package:staybay/services/logout_service.dart';
@@ -215,6 +216,17 @@ class _AccountScreenState extends State<AccountScreen> {
                         Navigator.of(
                           context,
                         ).pushNamed(MyApartmentsScreen.routeName);
+                      },
+                    ),
+
+                    _profileTile(
+                      context,
+                      icon: Icons.request_page_outlined,
+                      title: 'طلبات الحجز الواردة',
+                      onTap: () {
+                        Navigator.of(
+                          context,
+                        ).pushNamed(OwnerBookingsScreen.routeName);
                       },
                     ),
 
