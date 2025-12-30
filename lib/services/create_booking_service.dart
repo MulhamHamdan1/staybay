@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:staybay/consetans.dart';
+import 'package:staybay/constants.dart';
 
 class CreateBookingService {
   static Future<bool> createBooking({

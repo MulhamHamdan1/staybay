@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:staybay/consetans.dart';
+import 'package:staybay/constants.dart';
 
 class RateBookingService {
   static Future<bool> rateBooking({

@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:staybay/consetans.dart';
+import 'package:staybay/constants.dart';
 
 class LoginService {
   static Future<Response?> logIn(context, String phone, String password) async {

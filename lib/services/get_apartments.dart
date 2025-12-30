@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:staybay/consetans.dart';
+import 'package:staybay/constants.dart';
 
 class GetApartmentService {
   static final Dio _dio = Dio(

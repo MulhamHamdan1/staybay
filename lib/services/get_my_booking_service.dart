@@ -1,14 +1,14 @@
 import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:staybay/consetans.dart';
+import 'package:staybay/constants.dart';
 import 'package:staybay/models/book_model.dart';
 
 class GetMyBookingService {
   static Future<List<BookModel>> getMyBooking() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString(kToken);
-    
+
     try {
       Dio dio = Dio();
       dio.options.headers = {
@@ -17,7 +17,7 @@ class GetMyBookingService {
       };
 
       var response = await dio.get('$kBaseUrl/bookings');
-       
+
       if (response.statusCode == 200) {
         final List<BookModel> myBooking = [];
         final Map<String, dynamic> jsonData = response.data;
@@ -38,7 +38,7 @@ class GetMyBookingService {
       }
     } on DioException catch (e) {
       log('Dio error: ${e.response?.data ?? e.message}');
-      rethrow;  
+      rethrow;
     } catch (e) {
       log('General error in GetMyBookingService: $e');
       rethrow;

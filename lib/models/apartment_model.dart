@@ -1,4 +1,4 @@
-import 'package:staybay/consetans.dart';
+import 'package:staybay/constants.dart';
 
 class Apartment {
   final String? id;

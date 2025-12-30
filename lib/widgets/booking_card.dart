@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:staybay/consetans.dart';
+import 'package:staybay/constants.dart';
 import 'package:staybay/models/book_model.dart';
 import 'package:staybay/screens/booking_details_screen.dart';
 import 'package:staybay/services/pay_booking_service.dart';
