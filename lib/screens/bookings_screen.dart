@@ -77,7 +77,10 @@ class _BookingsScreenState extends State<BookingsScreen> {
               padding: const EdgeInsets.symmetric(vertical: 8),
               itemCount: bookings.length,
               itemBuilder: (context, index) {
-                return BookedCard(book: bookings[index]);
+                return BookedCard(
+                  book: bookings[index],
+                  onUpdate: _refreshMyBooking,
+                );
               },
             ),
           );
