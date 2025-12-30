@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:staybay/app_theme.dart';
 import 'package:staybay/cubits/locale/locale_cubit.dart';
 import 'package:staybay/cubits/locale/locale_state.dart';
 import 'package:staybay/cubits/theme/theme_cubit.dart';
@@ -11,10 +12,27 @@ import 'package:staybay/screens/my_apartments_screen.dart';
 import 'package:staybay/screens/welcome_screen.dart';
 import 'package:staybay/services/logout_service.dart';
 
-class AccountScreen extends StatelessWidget {
+class AccountScreen extends StatefulWidget {
   static const routeName = 'account';
 
   const AccountScreen({super.key});
+
+  @override
+  State<AccountScreen> createState() => _AccountScreenState();
+}
+
+class _AccountScreenState extends State<AccountScreen> {
+  @override
+  void initState() {
+    context.read<UserCubit>().getMe();
+    super.initState();
+  }
+
+  Future<void> _refreshFavorites() async {
+    setState(() {
+      context.read<UserCubit>().getMe();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,31 +49,27 @@ class AccountScreen extends StatelessWidget {
 
             if (state is UserError) {
               return Scaffold(
-                body: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(state.message),
-                      _profileTile(
-                        context,
-                        icon: Icons.refresh,
-                        title: "refresh",
-                        onTap: () {
-                          context.read<UserCubit>().getMe();
-                        },
-                      ),
-                      _profileTile(
-                        context,
-                        icon: Icons.logout,
-                        title: 'تسجيل الخروج',
-                        onTap: () async {
-                          LogoutService.logout();
-                          Navigator.of(
-                            context,
-                          ).pushNamed(WelcomeScreen.routeName);
-                        },
-                      ),
-                    ],
+                body: RefreshIndicator(
+                  onRefresh: _refreshFavorites,
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(state.message),
+                        SizedBox(height: AppSizes.paddingMedium),
+                        _profileTile(
+                          context,
+                          icon: Icons.logout,
+                          title: 'تسجيل الخروج',
+                          onTap: () async {
+                            LogoutService.logout();
+                            Navigator.of(
+                              context,
+                            ).pushNamed(WelcomeScreen.routeName);
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               );
@@ -111,125 +125,136 @@ class AccountScreen extends StatelessWidget {
         ],
       ),
 
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            /// ===== PROFILE HEADER =====
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 32),
-              decoration: BoxDecoration(
-                color: theme.scaffoldBackgroundColor,
-                borderRadius: BorderRadius.vertical(
-                  bottom: Radius.circular(32),
+      body: RefreshIndicator(
+        onRefresh: _refreshFavorites,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              /// ===== PROFILE HEADER =====
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 32),
+                decoration: BoxDecoration(
+                  color: theme.scaffoldBackgroundColor,
+                  borderRadius: BorderRadius.vertical(
+                    bottom: Radius.circular(32),
+                  ),
                 ),
-              ),
-              child: Column(
-                children: [
-                  /// Profile Image
-                  Stack(
-                    alignment: Alignment.bottomRight,
-                    children: [
-                      CircleAvatar(
-                        radius: 68,
-                        backgroundImage: NetworkImage(user.avatar),
-                      ),
-                      InkWell(
-                        borderRadius: BorderRadius.circular(30),
-                        onTap: () {
-                          // تغيير الصورة لاحقًا
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.all(9),
-                          decoration: const BoxDecoration(
-                            color: Colors.blue,
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.camera_alt,
-                            size: 20,
-                            color: Colors.white,
+                child: Column(
+                  children: [
+                    /// Profile Image
+                    Stack(
+                      alignment: Alignment.bottomRight,
+                      children: [
+                        CircleAvatar(
+                          radius: 68,
+                          backgroundImage: NetworkImage(user.avatar),
+                        ),
+                        InkWell(
+                          borderRadius: BorderRadius.circular(30),
+                          onTap: () {
+                            // تغيير الصورة لاحقًا
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(9),
+                            decoration: BoxDecoration(
+                              color: theme.primaryColor,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.camera_alt,
+                              size: 20,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    /// Name
+                    Text(
+                      '${user.firstName} ${user.lastName}',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
                       ),
-                    ],
-                  ),
+                    ),
 
-                  const SizedBox(height: 16),
+                    const SizedBox(height: 6),
 
-                  /// Name
-                  Text(
-                    '${user.firstName} ${user.lastName}',
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                  ),
-
-                  const SizedBox(height: 6),
-
-                  /// Phone
-                  Text(
-                    user.phone,
-                    style: TextStyle(fontSize: 16, color: Colors.grey.shade600),
-                  ),
-                ],
+                    /// Phone
+                    Text(
+                      user.phone,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
 
-            // const SizedBox(height: 30),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 15, left: 20, right: 20),
-              child: Divider(color: theme.primaryColor, thickness: 2),
-            ),
-
-            /// ===== ACTIONS =====
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                children: [
-                  _profileTile(
-                    context,
-                    icon: Icons.favorite_border,
-                    title: 'شققي',
-                    onTap: () {
-                      Navigator.of(
-                        context,
-                      ).pushNamed(MyApartmentsScreen.routeName);
-                    },
-                  ),
-
-                  _profileTile(
-                    context,
-                    icon: Icons.bookmark_border,
-                    title: 'حجوزاتي',
-                    onTap: () {
-                      Navigator.of(context).pushNamed(BookingsScreen.routeName);
-                    },
-                  ),
-
-                  _profileTile(
-                    context,
-                    icon: Icons.dark_mode_outlined,
-                    title: 'تبديل الوضع',
-                    onTap: () async {
-                      context.read<ThemeCubit>().toggleTheme();
-                    },
-                  ),
-
-                  _profileTile(
-                    context,
-                    icon: Icons.logout,
-                    title: 'تسجيل الخروج',
-                    onTap: () async {
-                      LogoutService.logout();
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                        WelcomeScreen.routeName,
-                        (Route<dynamic> route) => false,
-                      );
-                    },
-                  ),
-                ],
+              // const SizedBox(height: 30),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 15, left: 20, right: 20),
+                child: Divider(color: theme.primaryColor, thickness: 2),
               ),
-            ),
-          ],
+
+              /// ===== ACTIONS =====
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  children: [
+                    _profileTile(
+                      context,
+                      icon: Icons.favorite_border,
+                      title: 'شققي',
+                      onTap: () {
+                        Navigator.of(
+                          context,
+                        ).pushNamed(MyApartmentsScreen.routeName);
+                      },
+                    ),
+
+                    _profileTile(
+                      context,
+                      icon: Icons.bookmark_border,
+                      title: 'حجوزاتي',
+                      onTap: () {
+                        Navigator.of(
+                          context,
+                        ).pushNamed(BookingsScreen.routeName);
+                      },
+                    ),
+
+                    _profileTile(
+                      context,
+                      icon: Icons.dark_mode_outlined,
+                      title: 'تبديل الوضع',
+                      onTap: () async {
+                        context.read<ThemeCubit>().toggleTheme();
+                      },
+                    ),
+
+                    _profileTile(
+                      context,
+                      icon: Icons.logout,
+                      title: 'تسجيل الخروج',
+                      onTap: () async {
+                        LogoutService.logout();
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                          WelcomeScreen.routeName,
+                          (Route<dynamic> route) => false,
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

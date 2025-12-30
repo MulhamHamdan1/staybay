@@ -16,16 +16,6 @@ class BookedCard extends StatefulWidget {
 }
 
 class _BookedCardState extends State<BookedCard> {
-  // final Map<String, Color> statusColors = {
-  //   'pending': Colors.orange,
-  //   'approved': Colors.green,
-  //   'rejected': Colors.red,
-  //   'cancelled': Colors.grey,
-  //   'completed': Colors.blue,
-  //   'started': Colors.lightBlue,
-  //   'finished': Colors.teal,
-  //   'failed': Colors.deepOrange,
-  // };
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
       case 'pending':
@@ -79,7 +69,7 @@ class _BookedCardState extends State<BookedCard> {
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [ 
+            children: [
               ClipRRect(
                 borderRadius: const BorderRadius.vertical(
                   top: Radius.circular(16),
@@ -103,7 +93,7 @@ class _BookedCardState extends State<BookedCard> {
                 padding: const EdgeInsets.all(14),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [ 
+                  children: [
                     Row(
                       children: [
                         Expanded(
@@ -133,7 +123,7 @@ class _BookedCardState extends State<BookedCard> {
                     ),
 
                     const SizedBox(height: 10),
- 
+
                     Row(
                       children: [
                         Text(
@@ -159,7 +149,7 @@ class _BookedCardState extends State<BookedCard> {
                     ),
 
                     const SizedBox(height: 10),
- 
+
                     Row(
                       children: [
                         _DateItem(

@@ -4,7 +4,7 @@ import 'package:staybay/services/get_my_booking_service.dart';
 import 'package:staybay/widgets/booking_card.dart';
 
 class BookingsScreen extends StatefulWidget {
-  static const routeName = '/bookingsRoute';
+  static const routeName = 'bookingsRoute';
 
   const BookingsScreen({super.key});
 
@@ -69,7 +69,7 @@ class _BookingsScreenState extends State<BookingsScreen> {
               ),
             );
           }
- 
+
           return RefreshIndicator(
             onRefresh: _refreshMyBooking,
             child: ListView.builder(

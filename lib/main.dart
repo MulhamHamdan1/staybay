@@ -32,7 +32,7 @@ void main() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   final bool islogin = prefs.getBool(kIsLoggedIn) ?? false;
   final bool isDark = prefs.getBool(kIsDark) ?? false;
-  log(isDark.toString());
+  log(islogin.toString());
   runApp(MyApp(islogin: islogin, isDark: isDark));
 }
 
