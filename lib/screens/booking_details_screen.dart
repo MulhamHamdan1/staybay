@@ -73,7 +73,9 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
   Future<void> _pickDateRange() async {
     final DateTimeRange? picked = await showDateRangePicker(
       context: context,
-      firstDate: DateTime.now(),
+      firstDate: DateTime.now().add(
+        const Duration(days: 1),
+      ), //? from tomorrow not today
       lastDate: DateTime.now().add(const Duration(days: 365)),
       initialDateRange: _selectedRange,
       selectableDayPredicate: (DateTime date, DateTime? _, DateTime? _) =>

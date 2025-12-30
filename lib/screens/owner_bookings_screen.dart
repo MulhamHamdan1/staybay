@@ -1,29 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:staybay/models/book_model.dart';
-import 'package:staybay/services/get_my_booking_service.dart';
-import 'package:staybay/widgets/booking_card.dart';
+// import 'package:staybay/services/get_my_booking_service.dart';
+// import 'package:staybay/widgets/booking_card.dart';
+import 'package:staybay/services/get_own_booking_service.dart';
+import 'package:staybay/widgets/owner_booking_card.dart';
 
-class BookingsScreen extends StatefulWidget {
-  static const routeName = 'bookingsRoute';
+class OwnerBookingsScreen extends StatefulWidget {
+  static const routeName = 'ownerBookingsRoute';
 
-  const BookingsScreen({super.key});
+  const OwnerBookingsScreen({super.key});
 
   @override
-  State<BookingsScreen> createState() => _BookingsScreenState();
+  State<OwnerBookingsScreen> createState() => _OwnerBookingsScreenState();
 }
 
-class _BookingsScreenState extends State<BookingsScreen> {
+class _OwnerBookingsScreenState extends State<OwnerBookingsScreen> {
   late Future<List<BookModel>> future;
 
   @override
   void initState() {
     super.initState();
-    future = GetMyBookingService.getMyBooking();
+    future = GetOwnBookingService.getMyBooking();
   }
 
   Future<void> _refreshMyBooking() async {
     setState(() {
-      future = GetMyBookingService.getMyBooking();
+      future = GetOwnBookingService.getMyBooking();
     });
   }
 
@@ -32,7 +34,7 @@ class _BookingsScreenState extends State<BookingsScreen> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('My Bookings'), centerTitle: true),
+      appBar: AppBar(title: const Text('Bookings Request'), centerTitle: true),
       body: FutureBuilder<List<BookModel>>(
         future: future,
         builder: (context, snapshot) {
@@ -54,14 +56,14 @@ class _BookingsScreenState extends State<BookingsScreen> {
                 children: [
                   const SizedBox(height: 120),
                   Icon(
-                    Icons.bookmark_outline,
+                    Icons.request_page_outlined,
                     size: 80,
                     color: theme.colorScheme.primary,
                   ),
                   const SizedBox(height: 16),
                   Center(
                     child: Text(
-                      'You have no bookings yet',
+                      'You have no bookings request yet',
                       style: theme.textTheme.headlineSmall,
                     ),
                   ),
@@ -77,9 +79,9 @@ class _BookingsScreenState extends State<BookingsScreen> {
               padding: const EdgeInsets.symmetric(vertical: 8),
               itemCount: bookings.length,
               itemBuilder: (context, index) {
-                return BookedCard(
+                return OwnerBookedCard(
                   book: bookings[index],
-                  onUpdate: _refreshMyBooking,
+                  onUpdate: () => _refreshMyBooking(),
                 );
               },
             ),

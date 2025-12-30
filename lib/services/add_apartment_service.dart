@@ -6,9 +6,6 @@ import 'package:staybay/models/apartment_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AddApartmentService {
-  // Keep a mock list for local testing if needed
-  static List<Apartment> mockApartments = [];
-
   static Future<Response?> addApartment({
     required BuildContext context,
     required Apartment apartment,
@@ -92,9 +89,6 @@ class AddApartmentService {
           ),
         );
       }
-
-      // Add to mock list safely
-      mockApartments.add(apartment);
 
       return response;
     } on DioException catch (e) {

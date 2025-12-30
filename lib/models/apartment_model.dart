@@ -1,7 +1,9 @@
 import 'package:staybay/constants.dart';
+import 'package:staybay/models/city_model.dart';
+import 'package:staybay/models/governorate_model.dart';
 
 class Apartment {
-  final String? id;
+  String? id;
   final String title;
   final String? location;
   final double pricePerNight;
@@ -16,7 +18,8 @@ class Apartment {
   final String description;
   final List<String> imagesPaths;
   bool isFavorite;
-
+  City? city;
+  Governorate? governorate;
   Apartment({
     this.id,
     this.location,
@@ -33,6 +36,8 @@ class Apartment {
     required this.imagesPaths,
     this.isFavorite = false,
     required this.amenities,
+    this.city,
+    this.governorate,
   });
   factory Apartment.fromJson(Map<String, dynamic> json) {
     var hasWifi = json['has_wifi'] == 1 ? 'wifi' : null;
@@ -77,6 +82,8 @@ class Apartment {
       description: json['description'] ?? '',
       imagesPaths: imagesPaths,
       isFavorite: json['is_favorite'],
+      city: City.fromJson(json['city']),
+      governorate: Governorate.fromJson(json['governorate']),
     );
   }
 }

@@ -7,6 +7,7 @@ import 'package:staybay/constants.dart';
 import 'package:staybay/cubits/apartments/aparment_cubit.dart';
 import 'package:staybay/cubits/user/user_cubit.dart';
 import 'package:staybay/screens/my_apartments_screen.dart';
+import 'package:staybay/screens/owner_bookings_screen.dart';
 // import 'package:staybay/test.dart';
 // import 'package:staybay/test.dart';
 
@@ -113,6 +114,7 @@ class MyApp extends StatelessWidget {
       FavoritesScreen.routeName: (context) => const FavoritesScreen(),
       AccountScreen.routeName: (context) => const AccountScreen(),
       BookingsScreen.routeName: (context) => const BookingsScreen(),
+      OwnerBookingsScreen.routeName: (context) => const OwnerBookingsScreen(),
       BookingDetailsScreen.routeName: (context) =>
           BookingDetailsScreen(apartment: null),
       MyApartmentsScreen.routeName: (context) => MyApartmentsScreen(),

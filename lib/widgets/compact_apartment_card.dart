@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:staybay/screens/add_apartment_screen.dart';
 import 'package:staybay/services/add_favorite_service.dart';
 import 'package:staybay/services/remove_favorite_service.dart';
 import '../app_theme.dart';
@@ -7,7 +8,12 @@ import '../screens/apartment_details_screen.dart';
 
 class CompactApartmentCard extends StatefulWidget {
   final Apartment apartment;
-  const CompactApartmentCard({super.key, required this.apartment});
+  final bool edit;
+  const CompactApartmentCard({
+    super.key,
+    required this.apartment,
+    required this.edit,
+  });
 
   @override
   State<CompactApartmentCard> createState() => _CompactApartmentCardState();
@@ -28,12 +34,21 @@ class _CompactApartmentCardState extends State<CompactApartmentCard> {
 
     return InkWell(
       onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) =>
-                ApartmentDetailsScreen(apartment: widget.apartment),
-          ),
-        );
+        if (widget.edit) {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) =>
+                  AddApartmentScreen(apartmentToEdit: widget.apartment),
+            ),
+          );
+        } else {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) =>
+                  ApartmentDetailsScreen(apartment: widget.apartment),
+            ),
+          );
+        }
       },
       borderRadius: BorderRadius.circular(AppSizes.borderRadiusLarge),
       child: Card(
