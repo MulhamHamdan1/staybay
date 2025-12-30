@@ -89,41 +89,53 @@ class _OwnerBookedCardState extends State<OwnerBookedCard> {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Card(
+child: Card(
         elevation: 3,
+        clipBehavior: Clip.antiAlias,  
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Stack(
-              children: [
-                ClipRRect(
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(16),
-                  ),
-                  child: Image.network(
-                    widget.book.apartment.imagePath.startsWith('http')
-                        ? widget.book.apartment.imagePath
-                        : '$kBaseUrlImage/${widget.book.apartment.imagePath}',
-                    height: 140,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => Container(
-                      height: 140,
-                      color: Colors.grey.shade200,
-                      child: const Icon(Icons.broken_image, color: Colors.grey),
+          children: [ 
+            SizedBox(
+              height: 140,
+              width: double.infinity,
+              child: Stack(
+                children: [ 
+                  Positioned.fill(
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(16),
+                      ),
+                      child: Image.network(
+                        widget.book.apartment.imagePath.startsWith('http')
+                            ? widget.book.apartment.imagePath
+                            : '$kBaseUrlImage/${widget.book.apartment.imagePath}',
+                        fit: BoxFit.cover, 
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return Container(color: Colors.grey.shade200);
+                        },
+                        errorBuilder: (_, __, ___) => Container(
+                          color: Colors.grey.shade200,
+                          child: const Icon(
+                            Icons.broken_image,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                ),
-                Positioned(
-                  top: 12,
-                  right: 12,
-                  child: _StatusChip(
-                    label: widget.book.status,
-                    color: _getStatusColor(widget.book.status),
+                  
+                  Positioned(
+                    top: 12,
+                    right: 12,
+                    child: _StatusChip(
+                      label: widget.book.status,
+                      color: _getStatusColor(widget.book.status),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
 
             Padding(
