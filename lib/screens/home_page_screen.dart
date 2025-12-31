@@ -82,6 +82,8 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _Refresh() async {
     await context.read<ApartmentCubit>().refreshApartments(filters);
+    _notificationCubit.stopPolling();
+    _notificationCubit.startPolling();
   }
 
   @override

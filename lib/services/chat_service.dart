@@ -4,7 +4,7 @@ import 'package:staybay/models/chat.dart';
 import 'package:staybay/models/message.dart';
 
 class ChatApiService {
-  late Dio dio;
+  static Dio dio = DioClient.dio;
 
   ChatApiService();
 
@@ -12,7 +12,6 @@ class ChatApiService {
 
   static Future<ChatApiService> create() async {
     final service = ChatApiService._();
-    service.dio = await createDio();
     return service;
   }
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:staybay/constants.dart';
+import 'package:staybay/core/dio_client.dart';
 import 'package:staybay/cubits/locale/locale_cubit.dart';
 import 'package:staybay/cubits/locale/locale_state.dart';
 import 'package:staybay/services/login_service.dart';
@@ -38,6 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> saveToken(String token) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(kToken, token);
+    await DioClient.setToken(token);
     await prefs.setBool(kIsLoggedIn, true);
   }
 

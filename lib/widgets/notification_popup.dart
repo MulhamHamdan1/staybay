@@ -30,14 +30,47 @@ void showNotificationPopup(BuildContext context) {
               Expanded(
                 child: TabBarView(
                   children: [
-                    BlocBuilder<NotificationCubit, NotificationState>(
-                      builder: (_, state) =>
-                          NotificationList(items: state.unread),
-                    ),
+                    // Unread tab
                     BlocBuilder<NotificationCubit, NotificationState>(
                       builder: (_, state) {
+                        return Column(
+                          children: [
+                            if (state.unread.isNotEmpty)
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 8,
+                                ),
+                                child: ElevatedButton.icon(
+                                  onPressed: () async {
+                                    await context
+                                        .read<NotificationCubit>()
+                                        .markAllAsRead();
+                                  },
+                                  icon: const Icon(Icons.done_all),
+                                  label: const Text('Mark all as read'),
+                                ),
+                              ),
+                            Expanded(
+                              child: NotificationList(
+                                items: state.unread,
+                                isRead: true,
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+
+                    // All tab
+                    BlocBuilder<NotificationCubit, NotificationState>(
+                      builder: (_, state) {
+                        // You can still fetchAll here if needed
                         cubit.fetchAll();
-                        return NotificationList(items: state.all);
+                        return NotificationList(
+                          items: state.all,
+                          isRead: false,
+                        );
                       },
                     ),
                   ],
