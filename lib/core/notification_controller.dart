@@ -1,11 +1,13 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:staybay/services/api_notifications_service.dart';
+import 'package:staybay/models/notification_model.dart';
 
 class NotificationState {
   final int unreadCount;
-  final List unread;
-  final List all;
+  final List<NotificationModel> unread;
+  final List<dynamic> all;
 
   NotificationState({
     this.unreadCount = 0,
@@ -13,7 +15,11 @@ class NotificationState {
     this.all = const [],
   });
 
-  NotificationState copyWith({int? unreadCount, List? unread, List? all}) {
+  NotificationState copyWith({
+    int? unreadCount,
+    List<NotificationModel>? unread,
+    List<dynamic>? all,
+  }) {
     return NotificationState(
       unreadCount: unreadCount ?? this.unreadCount,
       unread: unread ?? this.unread,
@@ -39,18 +45,30 @@ class NotificationCubit extends Cubit<NotificationState> {
   }
 
   Future<void> fetchUnreadCount() async {
-    final unread = await ApiNotificationService.fetchUnread();
-    emit(state.copyWith(unreadCount: unread.length, unread: unread));
+    try {
+      final unread = await ApiNotificationService.fetchUnread();
+      emit(state.copyWith(unreadCount: unread.length, unread: unread));
+    } catch (e) {
+      log('Error fetchUnreadCount: $e');
+    }
   }
 
   Future<void> fetchUnread() async {
-    final unread = await ApiNotificationService.fetchUnread();
-    emit(state.copyWith(unread: unread));
+    try {
+      final unread = await ApiNotificationService.fetchUnread();
+      emit(state.copyWith(unread: unread));
+    } catch (e) {
+      log('Error fetchUnread: $e');
+    }
   }
 
   Future<void> fetchAll() async {
-    final all = await ApiNotificationService.fetchAll();
-    emit(state.copyWith(all: all));
+    try {
+      final all = await ApiNotificationService.fetchAll();
+      emit(state.copyWith(all: all));
+    } catch (e) {
+      log('Error fetchAll: $e');
+    }
   }
 
   @override

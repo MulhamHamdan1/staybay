@@ -24,12 +24,13 @@ class _HomePageState extends State<HomePage> {
   final TextEditingController _searchController = TextEditingController();
 
   Map<String, dynamic> filters = {};
-
+  late NotificationCubit _notificationCubit;
   @override
   void initState() {
     super.initState();
+    _notificationCubit = context.read<NotificationCubit>();
     context.read<ApartmentCubit>().fetchApartments();
-    context.read<NotificationCubit>().startPolling();
+    _notificationCubit.startPolling();
     _scrollController.addListener(_onScroll);
   }
 
@@ -85,7 +86,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
-    context.read<NotificationCubit>().stopPolling();
+    _notificationCubit.stopPolling();
     _scrollController.dispose();
     _searchController.dispose();
     super.dispose();
