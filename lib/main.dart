@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:staybay/constants.dart';
+import 'package:staybay/core/dio_client.dart';
+import 'package:staybay/core/forground_task_service.dart';
 import 'package:staybay/core/notification_controller.dart';
 import 'package:staybay/cubits/apartments/aparment_cubit.dart';
 import 'package:staybay/cubits/user/user_cubit.dart';
@@ -32,6 +34,8 @@ import 'widgets/app_bottom_nav_bar.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final SharedPreferences prefs = await SharedPreferences.getInstance();
+  await DioClient.init();
+  await ForegroundTaskService.init();
   final bool islogin = prefs.getBool(kIsLoggedIn) ?? false;
   final bool isDark = prefs.getBool(kIsDark) ?? false;
   log(islogin.toString());

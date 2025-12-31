@@ -1,22 +1,63 @@
+import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:staybay/constants.dart';
 
-Future<Dio> createDio() async {
-  final dio = Dio(
-    BaseOptions(baseUrl: kBaseUrl, headers: {'Accept': 'application/json'}),
-  );
-  final prefs = await SharedPreferences.getInstance();
-  final token = prefs.getString(kToken);
+class DioClient {
+  DioClient._();
 
-  dio.interceptors.add(
-    InterceptorsWrapper(
-      onRequest: (options, handler) {
-        options.headers['Authorization'] = 'Bearer $token';
-        return handler.next(options);
-      },
-    ),
-  );
+  static Dio? _dio;
+  static String? _token;
 
-  return dio;
+  /// Call this ONCE at app startup (main)
+  static Future<void> init() async {
+    final prefs = await SharedPreferences.getInstance();
+    _token = prefs.getString(kToken);
+
+    _dio = Dio(
+      BaseOptions(baseUrl: kBaseUrl, headers: {'Accept': 'application/json'}),
+    );
+
+    _dio!.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) {
+          if (_token != null && _token!.isNotEmpty) {
+            options.headers['Authorization'] = 'Bearer $_token';
+          }
+          return handler.next(options);
+        },
+      ),
+    );
+
+    log('Dio initialized with token: $_token');
+  }
+
+  /// Always use this Dio instance
+  static Dio get dio {
+    log(_token!);
+    if (_dio == null) {
+      throw Exception(
+        'DioClient not initialized. Call DioClient.init() in main().',
+      );
+    }
+    return _dio!;
+  }
+
+  static get token {
+    return _token;
+  }
+
+  /// Call this when user logs in
+  static Future<void> setToken(String token) async {
+    _token = token;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(kToken, token);
+  }
+
+  /// Call this when user logs out
+  static Future<void> clearToken() async {
+    _token = null;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(kToken);
+  }
 }

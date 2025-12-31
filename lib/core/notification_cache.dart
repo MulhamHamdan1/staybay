@@ -24,7 +24,7 @@ class NotificationCache {
     return toShow;
   }
 
-  static Future<void> addShownId(int id) async {
+  static Future<void> addShownId(String id) async {
     final prefs = await SharedPreferences.getInstance();
     final list = prefs.getStringList(_shownIdsKey) ?? [];
 
