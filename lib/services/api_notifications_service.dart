@@ -5,10 +5,11 @@ import 'package:staybay/core/dio_client.dart';
 import 'package:staybay/models/notification_model.dart';
 
 class ApiNotificationService {
-  static Dio dio = createDio();
-  ApiNotificationService();
+  // ApiNotificationService();
 
   static Future<List<NotificationModel>> fetchUnread() async {
+    Dio dio = await createDio();
+
     try {
       final response = await dio.get('/user/notifications');
       if (response.data == null || response.data['unread'] == null) return [];
@@ -25,6 +26,8 @@ class ApiNotificationService {
   }
 
   static Future<List<dynamic>> fetchAll() async {
+    Dio dio = await createDio();
+
     try {
       final response = await dio.get('/user/notifications');
       return [...response.data['unread'] ?? [], ...response.data['read'] ?? []];
@@ -38,6 +41,7 @@ class ApiNotificationService {
   }
 
   static Future<void> markAllAsRead() async {
+    Dio dio = await createDio();
     try {
       await dio.post('/user/notifications');
     } on DioException catch (e) {
