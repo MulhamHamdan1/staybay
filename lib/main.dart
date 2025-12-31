@@ -11,6 +11,7 @@ import 'package:staybay/cubits/apartments/aparment_cubit.dart';
 import 'package:staybay/cubits/user/user_cubit.dart';
 import 'package:staybay/screens/my_apartments_screen.dart';
 import 'package:staybay/screens/owner_bookings_screen.dart';
+import 'package:staybay/services/local_notification_service.dart';
 // import 'package:staybay/test.dart';
 // import 'package:staybay/test.dart';
 
@@ -36,6 +37,7 @@ void main() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   await DioClient.init();
   await ForegroundTaskService.init();
+  await LocalNotificationService.init();
   final bool islogin = prefs.getBool(kIsLoggedIn) ?? false;
   final bool isDark = prefs.getBool(kIsDark) ?? false;
   log(islogin.toString());

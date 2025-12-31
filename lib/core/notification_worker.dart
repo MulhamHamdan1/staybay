@@ -42,6 +42,7 @@ class NotificationTaskHandler extends TaskHandler {
   @override
   Future<void> onRepeatEvent(DateTime timestamp) async {
     try {
+      log('repeating');
       List<NotificationModel> unreadNotificationsBackend =
           await ApiNotificationService.fetchUnread();
 
@@ -52,7 +53,7 @@ class NotificationTaskHandler extends TaskHandler {
 
       if (unreadNotifications.isNotEmpty) {
         LocalNotificationService.show(
-          title: 'You have unread Notifications',
+          title: 'StayBay unread Notifications',
           body: unreadNotifications.toString(),
         );
       }

@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:staybay/constants.dart';
 import 'package:staybay/core/dio_client.dart';
 import 'package:staybay/models/notification_model.dart';
 
@@ -10,17 +12,40 @@ class ApiNotificationService {
 
   static Future<List<NotificationModel>> fetchUnread() async {
     try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(kToken);
+
+      if (token == null || token.isEmpty) {
+        log('fetchUnread: token is null, skipping');
+        return [];
+      }
+
+      final dio = Dio(
+        BaseOptions(
+          baseUrl: kBaseUrl,
+          headers: {
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
       final response = await dio.get('/user/notifications');
-      if (response.data == null || response.data['unread'] == null) return [];
-      final List data = response.data['unread'];
-      // log(data.toString());
-      return data.map((json) => NotificationModel.fromJson(json)).toList();
-    } on DioException catch (e) {
-      // Log error instead of throwing
-      log('DioException fetchUnread: ${e.response?.data ?? e.message}');
-      return [];
-    } catch (e) {
-      log('Unexpected error fetchUnread: $e');
+
+      if (response.data == null ||
+          response.data['unread'] == null ||
+          response.data['unread'] is! List) {
+        return [];
+      }
+
+      final List list = response.data['unread'];
+
+      return list
+          .map((e) => NotificationModel.fromJson(Map<String, dynamic>.from(e)))
+          .toList();
+    } catch (e, s) {
+      log('fetchUnread ERROR: $e');
+      log(s.toString());
       return [];
     }
   }

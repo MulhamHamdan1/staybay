@@ -1,14 +1,15 @@
+import 'dart:developer';
+
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
-import 'package:staybay/core/notification_worker.dart';
+import 'notification_task_callback.dart';
 
 class ForegroundTaskService {
-  static init() {
+  static Future<void> init() async {
     FlutterForegroundTask.init(
       androidNotificationOptions: AndroidNotificationOptions(
-        channelId: 'foreground_service',
-        channelName: 'Foreground Service Notification',
-        channelDescription:
-            'This notification appears when the foreground service is running.',
+        channelId: 'staybay_notifications',
+        channelName: 'StayBay Notifications',
+        channelDescription: 'Background notification service',
         channelImportance: NotificationChannelImportance.LOW,
         priority: NotificationPriority.LOW,
       ),
@@ -17,22 +18,22 @@ class ForegroundTaskService {
         playSound: false,
       ),
       foregroundTaskOptions: ForegroundTaskOptions(
-        eventAction: ForegroundTaskEventAction.repeat(2000),
+        eventAction: ForegroundTaskEventAction.repeat(5000),
         autoRunOnBoot: true,
       ),
     );
   }
 
-  static void startNotificationForegroundService() {
-    FlutterForegroundTask.startService(
-      notificationTitle: 'StayBay Notifications',
-      notificationText: 'Checking for new notifications...',
-      callback: startCallback,
+  static Future<void> start() async {
+    log('started service');
+    await FlutterForegroundTask.startService(
+      notificationTitle: 'StayBay',
+      notificationText: 'Listening for notifications',
+      callback: notificationTaskCallback,
     );
   }
 
-  // Callback links the TaskHandler
-  static void startCallback() {
-    FlutterForegroundTask.setTaskHandler(NotificationTaskHandler());
+  static Future<void> stop() async {
+    await FlutterForegroundTask.stopService();
   }
 }
