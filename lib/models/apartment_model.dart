@@ -20,6 +20,8 @@ class Apartment {
   bool isFavorite;
   City? city;
   Governorate? governorate;
+  List<int>? imagesIDs;
+
   Apartment({
     this.id,
     this.location,
@@ -34,6 +36,7 @@ class Apartment {
     required this.areaSqft,
     required this.description,
     required this.imagesPaths,
+    this.imagesIDs,
     this.isFavorite = false,
     required this.amenities,
     this.city,
@@ -54,15 +57,17 @@ class Apartment {
 
     var images = json['images'] as List<dynamic>;
     List<String> imagesPaths = [];
+    List<int> imagesIds = [];
     for (var image in images) {
       String path = image['path'];
+      int id = image['id'];
+      imagesIds.add(id);
       if (path.contains("https")) {
         imagesPaths.add(path);
       } else {
         imagesPaths.add('$kBaseUrlImage/$path');
       }
     }
-
     var ownerFirstName = json['owner']['first_name'];
     var ownerLastName = json['owner']['last_name'];
     var ownerName = '$ownerFirstName $ownerLastName';
@@ -84,6 +89,7 @@ class Apartment {
       isFavorite: json['is_favorite'],
       city: City.fromJson(json['city']),
       governorate: Governorate.fromJson(json['governorate']),
+      imagesIDs: imagesIds,
     );
   }
 }
