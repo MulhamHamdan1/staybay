@@ -2,12 +2,14 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:staybay/app_theme.dart';
+import 'package:staybay/core/notification_controller.dart';
 import 'package:staybay/cubits/apartments/acpartment_state.dart';
 import 'package:staybay/cubits/apartments/aparment_cubit.dart';
 import 'package:staybay/models/apartment_model.dart';
 import 'package:staybay/widgets/active_filters_bar.dart';
 import 'package:staybay/widgets/apartment_card.dart';
 import 'package:staybay/widgets/filter_dialog.dart';
+import 'package:staybay/widgets/notification_bell.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -27,6 +29,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     context.read<ApartmentCubit>().fetchApartments();
+    context.read<NotificationCubit>().startPolling();
     _scrollController.addListener(_onScroll);
   }
 
@@ -82,6 +85,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
+    context.read<NotificationCubit>().stopPolling();
     _scrollController.dispose();
     _searchController.dispose();
     super.dispose();
@@ -226,10 +230,7 @@ class _HomePageState extends State<HomePage> {
                     },
                   ),
                 ),
-                IconButton(
-                  icon: const Icon(Icons.notifications_none),
-                  onPressed: () {},
-                ),
+                const NotificationBell(),
                 IconButton(
                   icon: const Icon(Icons.filter_alt_outlined),
                   onPressed: _openFilterDialog,
