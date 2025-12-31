@@ -21,6 +21,7 @@ class Apartment {
   City? city;
   Governorate? governorate;
   List<int>? imagesIDs;
+  final int? ownerId;
 
   Apartment({
     this.id,
@@ -41,6 +42,7 @@ class Apartment {
     required this.amenities,
     this.city,
     this.governorate,
+    this.ownerId,
   });
   factory Apartment.fromJson(Map<String, dynamic> json) {
     var hasWifi = json['has_wifi'] == 1 ? 'wifi' : null;
@@ -90,6 +92,7 @@ class Apartment {
       city: City.fromJson(json['city']),
       governorate: Governorate.fromJson(json['governorate']),
       imagesIDs: imagesIds,
+      ownerId: json['owner_id'],
     );
   }
 }

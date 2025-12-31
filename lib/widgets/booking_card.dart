@@ -1,7 +1,12 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:staybay/constants.dart';
 import 'package:staybay/models/book_model.dart';
+import 'package:staybay/models/chat.dart';
 import 'package:staybay/screens/booking_details_screen.dart';
+import 'package:staybay/screens/chat_screen.dart';
+import 'package:staybay/services/chat_service.dart';
 import 'package:staybay/services/pay_booking_service.dart';
 import 'package:staybay/services/rate_booking_service.dart';
 import 'package:staybay/widgets/rating_dialog.dart';
@@ -146,7 +151,43 @@ class _BookedCardState extends State<BookedCard> {
                       if (_isActionLoading)
                         const Center(child: CircularProgressIndicator())
                       else ...[
-                        TextButton(onPressed: () {}, child: Text("chat")),
+                        TextButton(
+                          onPressed: () async {
+                            if (widget.book.apartment.ownerId != null) {
+                              Chat chat = await ChatApiService.getChat(
+                                widget.book.apartment.ownerId!,
+                              );
+                              try {
+                                // After getting the chat, push the ChatScreen with the appropriate chat data
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (BuildContext context) => ChatScreen(
+                                      chatId: chat
+                                          .id, // Assuming Chat has an `id` field
+                                      receiverId: chat
+                                          .receiverId, // Assuming Chat has `receiverId` field
+                                    ),
+                                  ),
+                                );
+                              } catch (e) {
+                                // Handle error (e.g., network error, chat creation failure)
+                                log("Error fetching or creating chat: $e");
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'Error creating or fetching chat.',
+                                    ),
+                                  ),
+                                );
+                              }
+                            } else {
+                              // Handle the case where ownerId is null
+                              log("Owner ID is null, cannot initiate chat.");
+                            }
+                          },
+                          child: Text("chat"),
+                        ),
                         const SizedBox(height: 8),
 
                         TextButton.icon(

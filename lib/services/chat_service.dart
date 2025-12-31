@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:staybay/core/dio_client.dart';
 import 'package:staybay/models/chat.dart';
@@ -19,6 +21,21 @@ class ChatApiService {
   Future<List<Chat>> getChats() async {
     final response = await dio.get('/chat');
     return (response.data as List).map((e) => Chat.fromJson(e)).toList();
+  }
+
+  static Future<Chat> getChat(int receiverId) async {
+    try {
+      final response = await dio.get(
+        '/chat/show',
+        queryParameters: {'receiver_id': receiverId},
+      );
+      // Assuming the response contains a valid Chat object
+      return Chat.fromJson(response.data);
+    } catch (e) {
+      // Handle error
+      log('Error fetching chat: $e');
+      rethrow; // Optionally rethrow or handle the error as needed
+    }
   }
 
   // Get single chat messages

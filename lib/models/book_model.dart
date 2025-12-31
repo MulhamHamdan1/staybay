@@ -7,16 +7,16 @@ class BookModel {
   final String endDate;
   final String status;
   final double totalPrice;
-  final double totalPaid; 
+  final double totalPaid;
   final double rating;
-  final String? ratedAt;  
+  final String? ratedAt;
   final bool userCanRate;
   final bool isPaid;
   final bool canUserPay;
   final bool canUserEdit;
   final bool canOwnerEdit;
   final String createdAt;
-  final String updatedAt;  
+  final String updatedAt;
 
   BookModel({
     required this.id,
@@ -47,7 +47,7 @@ class BookModel {
       totalPrice: (json['total_price'] ?? 0).toDouble(),
       totalPaid: (json['total_paid'] ?? 0).toDouble(),
       rating: (json['rating'] ?? 0).toDouble(),
-      ratedAt: json['rated_at'],  
+      ratedAt: json['rated_at'],
       userCanRate: json['user_can_rate'] ?? false,
       isPaid: json['is_paid'] ?? false,
       canUserPay: json['can_user_pay'] ?? false,
