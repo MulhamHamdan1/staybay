@@ -8,7 +8,7 @@ import 'package:staybay/widgets/rating_dialog.dart';
 
 class BookedCard extends StatefulWidget {
   final BookModel book;
-  final VoidCallback? onUpdate;  
+  final VoidCallback? onUpdate;
 
   const BookedCard({super.key, required this.book, this.onUpdate});
 
@@ -17,7 +17,7 @@ class BookedCard extends StatefulWidget {
 }
 
 class _BookedCardState extends State<BookedCard> {
-  bool _isActionLoading = false; 
+  bool _isActionLoading = false;
 
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
@@ -139,27 +139,30 @@ class _BookedCardState extends State<BookedCard> {
                     ],
                   ),
                   const Divider(height: 28),
- 
+
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       if (_isActionLoading)
                         const Center(child: CircularProgressIndicator())
-                      else ...[ 
+                      else ...[
+                        TextButton(onPressed: () {}, child: Text("chat")),
+                        const SizedBox(height: 8),
+
                         TextButton.icon(
                           onPressed: canEdit ? _handleEdit : null,
                           icon: const Icon(Icons.edit, size: 18),
                           label: const Text('Edit'),
                         ),
                         const SizedBox(height: 8),
-                        
+
                         OutlinedButton.icon(
                           onPressed: canRate ? _handleRate : null,
                           icon: const Icon(Icons.star_outline, size: 18),
                           label: const Text('Rate'),
                         ),
                         const SizedBox(height: 8),
-                         
+
                         ElevatedButton(
                           onPressed: canPay ? _handlePay : null,
                           style: ElevatedButton.styleFrom(
@@ -188,8 +191,7 @@ class _BookedCardState extends State<BookedCard> {
       MaterialPageRoute(
         builder: (_) => BookingDetailsScreen(booking: widget.book),
       ),
-    ).then((_) => widget.onUpdate?.call(),
-    ); 
+    ).then((_) => widget.onUpdate?.call());
   }
 
   void _handleRate() async {
@@ -209,7 +211,7 @@ class _BookedCardState extends State<BookedCard> {
       if (success && mounted) {
         if (widget.onUpdate != null) {
           widget.onUpdate!();
-      }
+        }
       }
       if (mounted) setState(() => _isActionLoading = false);
     }
@@ -217,7 +219,7 @@ class _BookedCardState extends State<BookedCard> {
 
   void _handlePay() async {
     setState(() => _isActionLoading = true);
-    
+
     bool success = await PayBookingService.payBooking(
       context: context,
       bookingId: widget.book.id.toString(),
@@ -226,13 +228,13 @@ class _BookedCardState extends State<BookedCard> {
     if (success && mounted) {
       if (widget.onUpdate != null) {
         widget.onUpdate!();
-      } 
+      }
     } else {
       if (mounted) setState(() => _isActionLoading = false);
     }
   }
 }
- 
+
 class _StatusChip extends StatelessWidget {
   final String label;
   final Color color;

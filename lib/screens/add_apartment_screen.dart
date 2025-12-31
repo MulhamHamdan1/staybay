@@ -279,6 +279,7 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
           context: context,
           apartment: apartment,
           cityId: selectedCity!.id,
+          // deletedImageIds:
         );
       }
 
