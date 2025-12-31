@@ -53,7 +53,7 @@ class ChatCubit extends Cubit<ChatState> {
       for (var msg in updatedMessages) {
         if (!msg.isRead) {
           try {
-            await _api.markRead(msg.id);
+            await _api.markRead(msg.id!);
           } catch (e) {
             // Ignore read errors
           }

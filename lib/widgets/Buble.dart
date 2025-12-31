@@ -21,7 +21,7 @@ class Bubble extends StatelessWidget {
         ),
         child: Padding(
           padding: const EdgeInsets.all(12),
-          child: Text(message.message),
+          child: Text(message.body),
         ),
       ),
     );
@@ -48,7 +48,7 @@ class Bubblefriend extends StatelessWidget {
         ),
         child: Padding(
           padding: const EdgeInsets.all(12),
-          child: Text(message.message),
+          child: Text(message.body),
         ),
       ),
     );
