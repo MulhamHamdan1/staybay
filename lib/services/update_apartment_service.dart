@@ -1,86 +1,64 @@
 import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:staybay/constants.dart';
 import 'package:staybay/models/apartment_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UpdateApartmentService {
-  /// Updates an apartment
-  /// [deletedImageIds] are the IDs of images to delete
-  /// [newCoverImagePath] is the local path if the cover image changed
   static Future<Response?> updateApartment({
     required BuildContext context,
     required Apartment apartment,
     required int cityId,
-    List<int> deletedImageIds = const [],
-    String? newCoverImagePath,
+    required List<int> deletedImageIds,
   }) async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString(kToken);
 
-    if (token == null) {
-      _showError(context, 'Not authenticated');
-      return null;
-    }
+    if (token == null) return null;
 
     final Dio dio = Dio();
     dio.options.baseUrl = kBaseUrl;
 
     try {
-      final Map<String, dynamic> dataMap = {
-        '_method': 'PUT', // for file uploads compatibility
+      final Map<String, dynamic> data = {
+        '_method': 'PUT',
+        'city_id': cityId,
+        'title': apartment.title,
+        'description': apartment.description,
+        'price': apartment.pricePerNight,
+        'bathrooms': apartment.baths,
+        'bedrooms': apartment.beds,
+        'size': apartment.areaSqft.toInt(),
+        'has_pool': apartment.amenities.contains('pool') ? 1 : 0,
+        'has_wifi': apartment.amenities.contains('wifi') ? 1 : 0,
       };
-
-      // Send fields only if changed / non-null
-      if (apartment.title.isNotEmpty) dataMap['title'] = apartment.title;
-      if (apartment.description.isNotEmpty)
-        dataMap['description'] = apartment.description;
-      dataMap['price'] = apartment.pricePerNight;
-      dataMap['bathrooms'] = apartment.baths;
-      dataMap['bedrooms'] = apartment.beds;
-      dataMap['size'] = apartment.areaSqft.toInt();
-      dataMap['city_id'] = cityId;
-      dataMap['has_pool'] = apartment.amenities.contains('pool') ? 1 : 0;
-      dataMap['has_wifi'] = apartment.amenities.contains('wifi') ? 1 : 0;
-
-      // Handle cover image if changed
-      if (newCoverImagePath != null && newCoverImagePath.isNotEmpty) {
-        dataMap['cover_image'] = await MultipartFile.fromFile(
-          newCoverImagePath,
-          filename: newCoverImagePath.split('/').last,
+ 
+      if (!apartment.imagePath.startsWith('http')) {
+        data['cover_image'] = await MultipartFile.fromFile(
+          apartment.imagePath,
+          filename: apartment.imagePath.split('/').last,
         );
       }
-
-      // Handle new images (local files only)
-      final List<MultipartFile> newFiles = [];
-      for (var path in apartment.imagesPaths) {
+ 
+      List<MultipartFile> galleryFiles = [];
+      for (String path in apartment.imagesPaths) { 
         if (!path.startsWith('http')) {
-          newFiles.add(
+          galleryFiles.add(
             await MultipartFile.fromFile(path, filename: path.split('/').last),
           );
         }
       }
-      if (newFiles.isNotEmpty) {
-        dataMap['new_images'] = newFiles;
+      
+      if (galleryFiles.isNotEmpty) {
+        data['new_images[]'] = galleryFiles;
       }
-
-      // Handle deleted images (IDs from the database)
+ 
       if (deletedImageIds.isNotEmpty) {
-        dataMap['delete_images'] = deletedImageIds;
+        data['deleted_images[]'] = deletedImageIds;
       }
 
-      if (dataMap.keys.length <= 1) {
-        // Nothing to update
-        _showError(context, 'No changes to update');
-        return null;
-      }
-
-      final formData = FormData.fromMap(dataMap);
-
-      log(
-        'Updating apartment ID: ${apartment.id} with data keys: ${dataMap.keys}',
-      );
+      final formData = FormData.fromMap(data);
 
       final response = await dio.post(
         '/apartments/${apartment.id}',
@@ -93,37 +71,13 @@ class UpdateApartmentService {
         ),
       );
 
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(response.data['message'] ?? 'Apartment updated'),
-            backgroundColor: Colors.green,
-          ),
-        );
-      }
-
       return response;
     } on DioException catch (e) {
-      log('Dio error: ${e.response?.data ?? e.message}');
-      if (context.mounted) {
-        _showError(
-          context,
-          e.response?.data['message'] ?? 'Failed to update apartment',
-        );
-      }
-      return null;
+      log('Update Error Response: ${e.response?.data}');
+      return e.response;
     } catch (e) {
-      log('Unexpected error: $e');
-      if (context.mounted) {
-        _showError(context, 'Unexpected error occurred');
-      }
+      log('Unexpected Service Error: $e');
       return null;
     }
-  }
-
-  static void _showError(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), backgroundColor: Colors.red),
-    );
   }
 }

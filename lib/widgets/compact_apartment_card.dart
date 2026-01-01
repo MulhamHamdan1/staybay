@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:staybay/screens/add_apartment_screen.dart';
+// import 'package:staybay/screens/add_apartment_screen.dart';
+import 'package:staybay/screens/edit_apartment_screen.dart';
 import 'package:staybay/services/add_favorite_service.dart';
 import 'package:staybay/services/remove_favorite_service.dart';
 import '../app_theme.dart';
@@ -38,7 +39,8 @@ class _CompactApartmentCardState extends State<CompactApartmentCard> {
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) =>
-                  AddApartmentScreen(apartmentToEdit: widget.apartment),
+                  // AddApartmentScreen(apartmentToEdit: widget.apartment),
+                  EditApartmentScreen(apartment: widget.apartment),
             ),
           );
         } else {

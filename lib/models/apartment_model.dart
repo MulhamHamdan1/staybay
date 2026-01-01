@@ -45,54 +45,59 @@ class Apartment {
     this.ownerId,
   });
   factory Apartment.fromJson(Map<String, dynamic> json) {
-    var hasWifi = json['has_wifi'] == 1 ? 'wifi' : null;
-    var hasPool = json['has_pool'] == 1 ? 'pool' : null;
     List<String> amenities = [];
-    amenities.addAll([
-      if (hasWifi != null) hasWifi,
-      if (hasPool != null) hasPool,
-    ]);
-
-    var governorate = json['governorate']['name'];
-    var city = json['city']['name'];
-    var location = '$city, $governorate';
-
-    var images = json['images'] as List<dynamic>;
-    List<String> imagesPaths = [];
-    List<int> imagesIds = [];
-    for (var image in images) {
-      String path = image['path'];
-      int id = image['id'];
-      imagesIds.add(id);
-      if (path.contains("https")) {
-        imagesPaths.add(path);
-      } else {
-        imagesPaths.add('$kBaseUrlImage/$path');
+    if (json['has_wifi'] == 1 || json['has_wifi'] == true) {
+      amenities.add('wifi');
+    }
+    if (json['has_pool'] == 1 || json['has_pool'] == true) {
+      amenities.add('pool');
+    }
+    List<String> paths = [];
+    List<int> ids = [];
+   
+    String coverPath = '';
+    if (json['cover_image'] != null) {
+      String p = json['cover_image']['path'] ?? '';
+      coverPath = p.startsWith("http") ? p : '$kBaseUrlImage/$p';
+    }
+ 
+    if (json['images'] != null && json['images'] is List) {
+      for (var img in json['images']) {
+        if (img['id'] != null) ids.add(img['id']);
+        String? p = img['path'];
+        if (p != null) {
+          paths.add(p.startsWith("http") ? p : '$kBaseUrlImage/$p');
+        }
       }
     }
-    var ownerFirstName = json['owner']['first_name'];
-    var ownerLastName = json['owner']['last_name'];
-    var ownerName = '$ownerFirstName $ownerLastName';
+
+    if (coverPath.isEmpty && paths.isNotEmpty) {
+      coverPath = paths.first;
+    }
+
     return Apartment(
-      id: json['id'].toString(),
-      title: json['title'],
-      location: location,
-      pricePerNight: (json['price'] ?? 0).toDouble(),
-      imagePath: imagesPaths.first,
-      rating: json['rating'].toString(),
-      ratingCount: json['rating_count'],
-      beds: json['bedrooms'],
-      baths: json['bathrooms'],
-      areaSqft: json['size'].toDouble(),
-      ownerName: ownerName,
+      id: json['id']?.toString(),
+      title: json['title'] ?? 'No Title',
+      location:
+          "${json['city']?['name'] ?? ''}, ${json['governorate']?['name'] ?? ''}",
+      pricePerNight: double.tryParse(json['price']?.toString() ?? '0') ?? 0.0,
+      imagePath: coverPath,
+      rating: json['rating']?.toString() ?? '0',
+      ratingCount: int.tryParse(json['rating_count']?.toString() ?? '0') ?? 0,
+      beds: int.tryParse(json['bedrooms']?.toString() ?? '0') ?? 0,
+      baths: int.tryParse(json['bathrooms']?.toString() ?? '0') ?? 0,
+      areaSqft: double.tryParse(json['size']?.toString() ?? '0') ?? 0.0,
+      ownerName:
+          "${json['owner']?['first_name'] ?? ''} ${json['owner']?['last_name'] ?? ''}",
       amenities: amenities,
       description: json['description'] ?? '',
-      imagesPaths: imagesPaths,
-      isFavorite: json['is_favorite'],
-      city: City.fromJson(json['city']),
-      governorate: Governorate.fromJson(json['governorate']),
-      imagesIDs: imagesIds,
-      ownerId: json['owner_id'],
+      imagesPaths: paths,
+      imagesIDs: ids,
+      isFavorite: json['is_favorite'] ?? false,
+      city: json['city'] != null ? City.fromJson(json['city']) : null,
+      governorate: json['governorate'] != null
+          ? Governorate.fromJson(json['governorate'])
+          : null,
     );
   }
 }

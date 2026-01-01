@@ -1,6 +1,5 @@
 import 'dart:io';
-import 'package:dio/src/response.dart';
-import 'package:flutter/foundation.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:staybay/models/apartment_model.dart';
@@ -8,14 +7,12 @@ import 'package:staybay/models/city_model.dart';
 import 'package:staybay/models/governorate_model.dart';
 import 'package:staybay/services/add_apartment_service.dart';
 import 'package:staybay/services/get_governorates_and_cities_service.dart';
-import 'package:staybay/services/update_apartment_service.dart';
 import 'package:staybay/widgets/app_bottom_nav_bar.dart';
 
 class AddApartmentScreen extends StatefulWidget {
   static const String routeName = 'add';
 
-  final Apartment? apartmentToEdit;
-  const AddApartmentScreen({super.key, this.apartmentToEdit});
+  const AddApartmentScreen({super.key});
 
   @override
   State<AddApartmentScreen> createState() => _AddApartmentScreenState();
@@ -33,6 +30,7 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
 
   bool isLoadingGovs = true;
   bool isLoadingCities = false;
+  bool isSaving = false;
 
   final _titleController = TextEditingController();
   final _priceController = TextEditingController();
@@ -42,52 +40,28 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
   final _descriptionController = TextEditingController();
 
   final List<String> _allAmenities = ['wifi', 'pool'];
-  List<String> _selectedAmenities = [];
+  final List<String> _selectedAmenities = [];
 
-  /// ===== IMAGE STATE =====
   final ImagePicker _imagePicker = ImagePicker();
-  final List<XFile> _pickedImages = []; // New local images
-  final Map<String, Uint8List> _webImageBytes = {};
-  List<String> _existingImageUrls = []; // Images already on the server
+  XFile? _pickedCover;
+  final List<XFile> _pickedImages = [];
 
   @override
   void initState() {
     super.initState();
     _loadGovernorates();
-
-    if (widget.apartmentToEdit != null) {
-      final apartment = widget.apartmentToEdit!;
-      _existingImageUrls = List.from(apartment.imagesPaths);
-      _titleController.text = apartment.title;
-      _priceController.text = apartment.pricePerNight.toString();
-      _bedsController.text = apartment.beds.toString();
-      _bathsController.text = apartment.baths.toString();
-      _areaController.text = apartment.areaSqft.toString();
-      _descriptionController.text = apartment.description;
-      _selectedAmenities = List.from(apartment.amenities);
-    }
   }
 
   Future<void> _loadGovernorates() async {
     try {
       final data = await _getGovernatesAndCities.getGovernorates();
       if (!mounted) return;
-
       setState(() {
         governorates = data;
         isLoadingGovs = false;
-        if (widget.apartmentToEdit != null &&
-            widget.apartmentToEdit!.governorate != null) {
-          selectedGov = governorates.firstWhere(
-            (g) => g.id == widget.apartmentToEdit!.governorate!.id,
-            orElse: () => governorates.first,
-          );
-          _onGovernorateChanged(selectedGov);
-        }
       });
     } catch (e) {
-      if (!mounted) return;
-      setState(() => isLoadingGovs = false);
+      if (mounted) setState(() => isLoadingGovs = false);
     }
   }
 
@@ -99,198 +73,82 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
       cities = [];
       isLoadingCities = true;
     });
-
     try {
       final data = await _getGovernatesAndCities.getCities(gov.id);
       if (!mounted) return;
-
       setState(() {
         cities = data;
         isLoadingCities = false;
-        if (widget.apartmentToEdit != null &&
-            widget.apartmentToEdit!.city != null) {
-          var match = cities.where(
-            (c) => c.id == widget.apartmentToEdit!.city!.id,
-          );
-          if (match.isNotEmpty) selectedCity = match.first;
-        }
       });
     } catch (e) {
-      if (!mounted) return;
-      setState(() => isLoadingCities = false);
+      if (mounted) setState(() => isLoadingCities = false);
     }
   }
 
-  @override
-  void dispose() {
-    _titleController.dispose();
-    _priceController.dispose();
-    _bedsController.dispose();
-    _bathsController.dispose();
-    _areaController.dispose();
-    _descriptionController.dispose();
-    super.dispose();
+  Future<void> _pickCover() async {
+    final image = await _imagePicker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 85,
+    );
+    if (image != null) setState(() => _pickedCover = image);
   }
 
-  /// ===== IMAGE PICKER & PREVIEW =====
   Future<void> _pickImages() async {
     final images = await _imagePicker.pickMultiImage(imageQuality: 85);
-    if (images.isEmpty) return;
-
-    if (kIsWeb) {
-      for (final img in images) {
-        _webImageBytes[img.name] = await img.readAsBytes();
-      }
-    }
-    setState(() => _pickedImages.addAll(images));
+    if (images.isNotEmpty) setState(() => _pickedImages.addAll(images));
   }
 
-  void _removeImageAt(int index) {
-    final removed = _pickedImages.removeAt(index);
-    if (kIsWeb) _webImageBytes.remove(removed.name);
-    setState(() {});
-  }
-
-  void _removeExistingImageAt(int index) {
-    setState(() => _existingImageUrls.removeAt(index));
-  }
-
-  Widget _imagesPreview() {
-    final totalItems = _existingImageUrls.length + _pickedImages.length + 1;
-
-    return SizedBox(
-      height: 120,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        itemCount: totalItems,
-        separatorBuilder: (_, __) => const SizedBox(width: 12),
-        itemBuilder: (context, index) {
-          // Add Button
-          if (index == totalItems - 1) {
-            return InkWell(
-              onTap: _pickImages,
-              child: Container(
-                width: 120,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.grey.shade300),
-                ),
-                child: const Icon(Icons.add_a_photo, color: Colors.blue),
-              ),
-            );
-          }
-
-          // Existing Images (URLs)
-          if (index < _existingImageUrls.length) {
-            return _buildImageStack(
-              image: Image.network(
-                _existingImageUrls[index],
-                fit: BoxFit.cover,
-              ),
-              onDelete: () => _removeExistingImageAt(index),
-            );
-          }
-
-          // Newly Picked Images (Files)
-          final pickedIndex = index - _existingImageUrls.length;
-          final image = _pickedImages[pickedIndex];
-          return _buildImageStack(
-            image: kIsWeb
-                ? Image.memory(_webImageBytes[image.name]!, fit: BoxFit.cover)
-                : Image.file(File(image.path), fit: BoxFit.cover),
-            onDelete: () => _removeImageAt(pickedIndex),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildImageStack({
-    required Widget image,
-    required VoidCallback onDelete,
-  }) {
-    return Stack(
-      children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(12),
-          child: SizedBox(width: 120, height: 120, child: image),
-        ),
-        Positioned(
-          top: 4,
-          right: 4,
-          child: InkWell(
-            onTap: onDelete,
-            child: const CircleAvatar(
-              radius: 12,
-              backgroundColor: Colors.black54,
-              child: Icon(Icons.close, size: 14, color: Colors.white),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  /// ===== SAVE / UPDATE LOGIC =====
   void _saveApartment() async {
-    // 1. Combine all images to check if list is empty
-    final List<String> combinedImages = [
-      ..._existingImageUrls,
-      ..._pickedImages.map((e) => e.path).toList(),
-    ];
-
     if (_formKey.currentState?.validate() ?? false) {
       if (selectedGov == null || selectedCity == null) {
         _showSnackBar('Please select governorate and city');
         return;
       }
-
-      if (combinedImages.isEmpty) {
-        _showSnackBar('Please add at least one image');
+      
+      if (_pickedCover == null) {
+        _showSnackBar('Please add a cover image');
         return;
       }
 
-      // Create Apartment object with combined images
+      setState(() => isSaving = true);
+
+      List<String> combinedPaths = [
+        _pickedCover!.path,
+        ..._pickedImages.map((e) => e.path),
+      ];
+
       Apartment apartment = Apartment(
         title: _titleController.text,
-        pricePerNight: double.parse(_priceController.text),
-        imagePath: combinedImages.first, // Main display image
-        rating: widget.apartmentToEdit?.rating ?? '0',
-        ratingCount: widget.apartmentToEdit?.ratingCount ?? 0,
-        beds: int.parse(_bedsController.text),
-        baths: int.parse(_bathsController.text),
-        areaSqft: double.parse(_areaController.text),
+        pricePerNight: double.tryParse(_priceController.text) ?? 0.0,
+        imagePath: combinedPaths.first,
+        rating: '0',
+        ratingCount: 0,
+        beds: int.tryParse(_bedsController.text) ?? 0,
+        baths: int.tryParse(_bathsController.text) ?? 0,
+        areaSqft: double.tryParse(_areaController.text) ?? 0.0,
         description: _descriptionController.text,
-        imagesPaths: combinedImages, // Send all (old + new)
+        imagesPaths: combinedPaths,
         amenities: _selectedAmenities,
+        city: selectedCity,
+        governorate: selectedGov,
       );
 
-      Response<dynamic>? response;
-      if (widget.apartmentToEdit == null) {
-        response = await AddApartmentService.addApartment(
-          context: context,
-          apartment: apartment,
-          cityId: selectedCity!.id,
-        );
-      } else {
-        // Pass the original ID for updating
-        apartment.id = widget.apartmentToEdit!.id;
-        response = await UpdateApartmentService.updateApartment(
-          context: context,
-          apartment: apartment,
-          cityId: selectedCity!.id,
-          // deletedImageIds:
-        );
-      }
+      Response? response = await AddApartmentService.addApartment(
+        context: context,
+        apartment: apartment,
+        cityId: selectedCity!.id,
+      );
 
-      if (response != null &&
-          (response.statusCode == 201 || response.statusCode == 200)) {
+      setState(() => isSaving = false);
+
+      if (response != null && response.statusCode == 201) {
+        if (!mounted) return;
         Navigator.of(
           context,
-        ).pushNamedAndRemoveUntil(AppBottomNavBar.routeName, (_) => false);
+        ).pushNamedAndRemoveUntil(AppBottomNavBar.routeName, (route) => false);
+      } else {
+        _showSnackBar('Failed to add apartment.');
       }
-    } else {
-      _showSnackBar('Please fill all required fields');
     }
   }
 
@@ -300,7 +158,237 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
     ).showSnackBar(SnackBar(content: Text(message)));
   }
 
-  /// ===== UI COMPONENTS =====
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Add Apartment')),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  _sectionHeader("Cover Image (Required)"),
+                  _coverPickerUI(),
+                  const SizedBox(height: 20),
+                  _sectionHeader("Gallery Images"),
+                  _galleryPickerUI(),
+                  const SizedBox(height: 16),
+                  _field(_titleController, 'Title', Icons.home),
+                  _buildLocationSelectors(),
+                  _field(
+                    _priceController,
+                    'Price per night',
+                    Icons.attach_money,
+                    inputType: TextInputType.number,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _field(
+                          _bedsController,
+                          'Beds',
+                          Icons.bed,
+                          inputType: TextInputType.number,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: _field(
+                          _bathsController,
+                          'Baths',
+                          Icons.bathtub,
+                          inputType: TextInputType.number,
+                        ),
+                      ),
+                    ],
+                  ),
+                  _field(
+                    _areaController,
+                    'Area',
+                    Icons.square_foot,
+                    inputType: TextInputType.number,
+                  ),
+                  _field(
+                    _descriptionController,
+                    'Description',
+                    Icons.description,
+                    maxlines: 3,
+                  ),
+                  _amenitiesSection(),
+                  const SizedBox(height: 24),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: isSaving ? null : _saveApartment,
+                      child: isSaving
+                          ? const CircularProgressIndicator(color: Colors.white)
+                          : const Text('Save Apartment'),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          if (isSaving) Container(color: Colors.black26),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLocationSelectors() {
+    return Column(
+      children: [
+        _buildFilterRow(
+          label: 'المحافظة',
+          value: selectedGov?.name,
+          child: isLoadingGovs
+              ? const CircularProgressIndicator(strokeWidth: 2)
+              : DropdownButton<Governorate>(
+                  isExpanded: true,
+                  hint: const Text('اختر محافظة'),
+                  value: selectedGov,
+                  items: governorates
+                      .map(
+                        (gov) =>
+                            DropdownMenuItem(value: gov, child: Text(gov.name)),
+                      )
+                      .toList(),
+                  onChanged: _onGovernorateChanged,
+                ),
+        ),
+        _buildFilterRow(
+          label: 'المدينة',
+          value: selectedCity?.name,
+          child: isLoadingCities
+              ? const LinearProgressIndicator()
+              : DropdownButton<City>(
+                  isExpanded: true,
+                  hint: Text(
+                    selectedGov == null ? 'اختر محافظة أولاً' : 'اختر مدينة',
+                  ),
+                  value: selectedCity,
+                  items: cities
+                      .map(
+                        (city) => DropdownMenuItem(
+                          value: city,
+                          child: Text(city.name),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: (val) => setState(() => selectedCity = val),
+                ),
+        ),
+      ],
+    );
+  }
+
+  Widget _coverPickerUI() {
+    return GestureDetector(
+      onTap: _pickCover,
+      child: Container(
+        height: 150,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.blue.shade100),
+          color: Colors.blue.withOpacity(0.05),
+        ),
+        child: _pickedCover != null
+            ? ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.file(File(_pickedCover!.path), fit: BoxFit.cover),
+              )
+            : const Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.add_a_photo, size: 40, color: Colors.blue),
+                  Text(
+                    "Select Cover Image",
+                    style: TextStyle(color: Colors.blue),
+                  ),
+                ],
+              ),
+      ),
+    );
+  }
+
+  Widget _galleryPickerUI() {
+    return SizedBox(
+      height: 100,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        children: [
+          ..._pickedImages.asMap().entries.map(
+            (e) => _galleryTile(
+              Image.file(File(e.value.path), fit: BoxFit.cover),
+              () => setState(() => _pickedImages.removeAt(e.key)),
+            ),
+          ),
+          GestureDetector(
+            onTap: _pickImages,
+            child: Container(
+              width: 100,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.grey.shade300),
+              ),
+              child: const Icon(
+                Icons.add_photo_alternate_outlined,
+                color: Colors.grey,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _galleryTile(Widget image, VoidCallback onRemove) {
+    return Stack(
+      children: [
+        Container(
+          width: 100,
+          height: 100,
+          margin: const EdgeInsets.only(right: 8),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: image,
+          ),
+        ),
+        Positioned(
+          right: 12,
+          top: 4,
+          child: GestureDetector(
+            onTap: onRemove,
+            child: const CircleAvatar(
+              radius: 10,
+              backgroundColor: Colors.red,
+              child: Icon(Icons.close, size: 12, color: Colors.white),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _sectionHeader(String title) => Align(
+    alignment: Alignment.centerLeft,
+    child: Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Text(
+        title,
+        style: const TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.bold,
+          color: Colors.grey,
+        ),
+      ),
+    ),
+  );
 
   Widget _buildFilterRow({
     required String label,
@@ -357,27 +445,17 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
           'Amenities',
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
-        const SizedBox(height: 8),
-        ..._allAmenities.map((amenity) {
-          return CheckboxListTile(
+        ..._allAmenities.map(
+          (amenity) => CheckboxListTile(
             value: _selectedAmenities.contains(amenity),
-            controlAffinity: ListTileControlAffinity.leading,
-            title: Row(
-              children: [
-                Icon(_getAmenityIcon(amenity), size: 20),
-                const SizedBox(width: 8),
-                Text(amenity),
-              ],
+            title: Text(amenity),
+            onChanged: (val) => setState(
+              () => val!
+                  ? _selectedAmenities.add(amenity)
+                  : _selectedAmenities.remove(amenity),
             ),
-            onChanged: (value) {
-              setState(() {
-                value == true
-                    ? _selectedAmenities.add(amenity)
-                    : _selectedAmenities.remove(amenity);
-              });
-            },
-          );
-        }),
+          ),
+        ),
       ],
     );
   }
@@ -403,125 +481,5 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
         ),
       ),
     );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          widget.apartmentToEdit == null ? 'Add Apartment' : 'Edit Apartment',
-        ),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              _imagesPreview(),
-              const SizedBox(height: 16),
-              _field(_titleController, 'Title', Icons.home),
-              _buildFilterRow(
-                label: 'المحافظة',
-                value: selectedGov?.name,
-                child: isLoadingGovs
-                    ? const CircularProgressIndicator(strokeWidth: 2)
-                    : DropdownButton<Governorate>(
-                        isExpanded: true,
-                        hint: const Text('اختر محافظة'),
-                        value: selectedGov,
-                        items: governorates.map((gov) {
-                          return DropdownMenuItem(
-                            value: gov,
-                            child: Text(gov.name),
-                          );
-                        }).toList(),
-                        onChanged: _onGovernorateChanged,
-                      ),
-              ),
-              _buildFilterRow(
-                label: 'المدينة',
-                value: selectedCity?.name,
-                child: isLoadingCities
-                    ? const LinearProgressIndicator()
-                    : DropdownButton<City>(
-                        isExpanded: true,
-                        hint: Text(
-                          selectedGov == null
-                              ? 'اختر محافظة أولاً'
-                              : 'اختر مدينة',
-                        ),
-                        value: selectedCity,
-                        items: cities.map((city) {
-                          return DropdownMenuItem(
-                            value: city,
-                            child: Text(city.name),
-                          );
-                        }).toList(),
-                        onChanged: (val) => setState(() => selectedCity = val),
-                      ),
-              ),
-              _field(
-                _priceController,
-                'Price per night',
-                Icons.attach_money,
-                inputType: TextInputType.number,
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: _field(
-                      _bedsController,
-                      'Beds',
-                      Icons.bed,
-                      inputType: TextInputType.number,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: _field(
-                      _bathsController,
-                      'Baths',
-                      Icons.bathtub,
-                      inputType: TextInputType.number,
-                    ),
-                  ),
-                ],
-              ),
-              _field(
-                _areaController,
-                'Area',
-                Icons.square_foot,
-                inputType: TextInputType.number,
-              ),
-              _field(
-                _descriptionController,
-                'Description',
-                Icons.description,
-                maxlines: 3,
-              ),
-              const SizedBox(height: 16),
-              _amenitiesSection(),
-              const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: _saveApartment,
-                  child: const Text('Save Apartment'),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  IconData _getAmenityIcon(String amenity) {
-    if (amenity.toLowerCase() == 'wifi') return Icons.wifi;
-    if (amenity.toLowerCase() == 'pool') return Icons.pool;
-    return Icons.check_circle_outline;
   }
 }
