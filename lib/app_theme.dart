@@ -39,7 +39,7 @@ class AppStyles {
   static const TextStyle titleStyle = TextStyle(
     fontSize: AppSizes.fontSizeTitle,
     fontWeight: FontWeight.bold,
-    color: AppColors.primaryText,
+    // color: AppColors.primaryText,
   );
 
   static const TextStyle labelStyle = TextStyle(

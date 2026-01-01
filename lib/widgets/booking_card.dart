@@ -1,12 +1,9 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:staybay/constants.dart';
+import 'package:staybay/cubits/locale/locale_cubit.dart';
 import 'package:staybay/models/book_model.dart';
-import 'package:staybay/models/chat.dart';
 import 'package:staybay/screens/booking_details_screen.dart';
-import 'package:staybay/screens/chat_screen.dart';
-import 'package:staybay/services/chat_service.dart';
 import 'package:staybay/services/pay_booking_service.dart';
 import 'package:staybay/services/rate_booking_service.dart';
 import 'package:staybay/widgets/chat_button.dart';
@@ -23,6 +20,9 @@ class BookedCard extends StatefulWidget {
 }
 
 class _BookedCardState extends State<BookedCard> {
+  Map<String, dynamic> get locale =>
+      context.read<LocaleCubit>().state.localizedStrings['bookedCard'];
+
   bool _isActionLoading = false;
 
   Color _getStatusColor(String status) {
@@ -116,7 +116,7 @@ class _BookedCardState extends State<BookedCard> {
                   Row(
                     children: [
                       Text(
-                        "Total: \$${widget.book.totalPrice.toStringAsFixed(0)}",
+                        "${locale['total'] ?? 'Total:'} \$${widget.book.totalPrice.toStringAsFixed(0)}",
                         style: const TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 15,
@@ -152,7 +152,10 @@ class _BookedCardState extends State<BookedCard> {
                       if (_isActionLoading)
                         const Center(child: CircularProgressIndicator())
                       else ...[
-                        ChatButton(ownerId: widget.book.apartment.ownerId),
+                        ChatButton(
+                          ownerId: widget.book.apartment.ownerId,
+                          buttonText: locale['chat'] ?? 'Chat',
+                        ),
                         const SizedBox(height: 8),
                         OutlinedButton.icon(
                           onPressed: canRate ? _handleRate : null,
@@ -165,11 +168,11 @@ class _BookedCardState extends State<BookedCard> {
                           onPressed: canPay ? _handlePay : null,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: canPay
-                                ? Colors.blue
-                                : Colors.grey.shade400,
+                                ? Theme.of(context).primaryColor
+                                : Theme.of(context).cardColor,
                             foregroundColor: Colors.white,
                           ),
-                          child: const Text('Pay Now'),
+                          child: Text(locale['pay'] ?? 'Pay Now'),
                         ),
                       ],
                     ],
@@ -242,7 +245,7 @@ class _StatusChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.15),
+        color: color.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(

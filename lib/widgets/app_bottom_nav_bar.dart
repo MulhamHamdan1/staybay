@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:staybay/cubits/locale/locale_cubit.dart';
 import '../app_theme.dart';
 import '../screens/home_page_screen.dart';
 import '../screens/add_apartment_screen.dart';
@@ -15,6 +17,9 @@ class AppBottomNavBar extends StatefulWidget {
 }
 
 class _AppBottomNavBarState extends State<AppBottomNavBar> {
+  Map<String, dynamic> get locale =>
+      context.read<LocaleCubit>().state.localizedStrings['bottomNav'];
+
   int _currentIndex = 0;
 
   final List<Widget> _pages = [
@@ -55,26 +60,26 @@ class _AppBottomNavBarState extends State<AppBottomNavBar> {
           fontSize: AppSizes.fontSizeLabel * 0.9,
           color: inactiveColor,
         ),
-        items: const [
+        items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home_outlined),
             activeIcon: Icon(Icons.home),
-            label: 'Home',
+            label: locale['home'] ?? 'Home',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.add_circle_outline),
             activeIcon: Icon(Icons.add_circle),
-            label: 'Add',
+            label: locale['add'] ?? 'Add',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.favorite_border),
             activeIcon: Icon(Icons.favorite),
-            label: 'Favorites',
+            label: locale['favorites'] ?? 'Favorites',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_outline),
             activeIcon: Icon(Icons.person),
-            label: 'Account',
+            label: locale['account'] ?? 'Account',
           ),
         ],
       ),

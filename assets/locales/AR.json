@@ -1,27 +1,26 @@
 {
     "welcome": {
-        "WELCOME": "أهلاً بك",
-        "des1": "ابحث عن مساحتك القادمة، واشعر كأنك في منزلك",
-        "des2": "حيث الراحة تلتقي بالسهولة",
+        "WELCOME": "مرحباً",
+        "des1": "ابحث عن مساحتك القادمة، اشعر بالبيت",
+        "des2": "حيث يلتقي الراحة بالراحة",
         "login": "تسجيل الدخول",
         "signup": "إنشاء حساب"
     },
-
+    
     "login": {
         "title": "تسجيل الدخول",
-        "subtitle": "يرجى إدخال بياناتك لتسجيل الدخول.",
+        "subtitle": "الرجاء إدخال بيانات تسجيل الدخول الخاصة بك",
         "phone": "رقم الهاتف",
         "password": "كلمة المرور",
         "login": "تسجيل الدخول",
-        "forgotPassword": "هل نسيت كلمة المرور؟",
+        "forgotPassword": "نسيت كلمة المرور؟",
         "haveAccount": "ليس لديك حساب؟",
         "createAccount": "إنشاء حساب",
-        "phoneRequired": "يرجى إدخال رقم الهاتف",
-        "phoneLengthError": "يجب أن يكون رقم الهاتف 10 أرقام",
-        "passwordRequired": "يرجى إدخال كلمة المرور",
-        "passwordLengthError": "يجب أن تكون كلمة المرور بين 8 و16 حرفًا",
-        "error":"عذراً، حدث خطأ"
-
+        "phoneRequired": "الرجاء إدخال رقم الهاتف",
+        "phoneLengthError": "رقم الهاتف يجب أن يكون 10 أرقام",
+        "passwordRequired": "الرجاء إدخال كلمة المرور",
+        "passwordLengthError": "كلمة المرور يجب أن تكون بين 8 و 16 حرفاً",
+        "error": "حدث خطأ ما"
     },
 
     "singup": {
@@ -38,80 +37,78 @@
         "haveAccount": "لديك حساب بالفعل؟",
         "login": "تسجيل الدخول",
         "required": "هذا الحقل مطلوب",
-        "nameLengthError": "الحد الأقصى 20 حرفًا",
-        "phoneRequired": "يرجى إدخال رقم الهاتف",
-        "phoneLengthError": "يجب أن يكون رقم الهاتف 10 أرقام",
-        "passwordRequired": "يرجى إدخال كلمة المرور",
-        "passwordLengthError": "يجب أن تكون كلمة المرور بين 8 و16 حرفًا",
-        "profileRequired": "يرجى اختيار صورة الملف الشخصي.",
-        "idRequired": "يرجى اختيار صورة الهوية.",
-        "allRequired": "يرجى تعبئة جميع الحقول المطلوبة",
+        "nameLengthError": "الحد الأقصى 20 حرفاً",
+        "phoneRequired": "الرجاء إدخال رقم الهاتف",
+        "phoneLengthError": "رقم الهاتف يجب أن يكون 10 أرقام",
+        "passwordRequired": "الرجاء إدخال كلمة المرور",
+        "passwordLengthError": "كلمة المرور يجب أن تكون بين 8 و 16 حرفاً",
+        "profileRequired": "الرجاء اختيار صورة الملف الشخصي",
+        "idRequired": "الرجاء اختيار صورة الهوية",
+        "allRequired": "الرجاء تعبئة جميع الحقول المطلوبة",
         "imageSelected": "تم اختيار الصورة بنجاح",
-        "No image selected":"لم يتم اختيار صورة",
-        "Image Selected":"تم اختيار الصورة",
-        "error":"عذراً، حدث خطأ"
-    }
-    ,
-    "Success":{
-        "login succeeded":"شكراً لك، تم تسجيل الدخول بنجاح!",
-        "registration succeeded":"شكراً لك، تم التسجيل بنجاح!",
-        "Home Page":"الانتقال إلى الصفحة الرئيسية",
-        "successfully logged":"لقد سجلت الدخول إلى حسابك بنجاح.",
-        "created successfully":"تم إنشاء حسابك بنجاح.",
-        "agree":"بالمتابعة، أنت توافق على شروط الخدمة وسياسة الخصوصية الخاصة بنا"
+        "No image selected": "لم يتم اختيار صورة",
+        "Image Selected": "تم اختيار الصورة",
+        "error": "حدث خطأ ما"
     },
-        "home": {
-        "searchHint": "ابحث عن...",
-        "noApartments": "لم يتم العثور على شقق",
-        "notifications": "الإشعارات",
-        "filters": "الفلاتر",
-        "loadingMore": "جاري تحميل المزيد..."
+
+    "Success": {
+        "login succeeded": "شكراً لك، تم تسجيل الدخول بنجاح!",
+        "registration succeeded": "شكراً لك، تم التسجيل بنجاح!",
+        "Home Page": "اذهب إلى الصفحة الرئيسية",
+        "successfully logged": "لقد سجلت الدخول إلى حسابك بنجاح",
+        "created successfully": "تم إنشاء حسابك بنجاح",
+        "agree": "بالمتابعة، فإنك توافق على شروط الخدمة وسياسة الخصوصية"
+    },
+
+    "home": {
+        "searchHint": "بحث...",
+        "noApartments": "لم يتم العثور على شقق"
     },
     "filter": {
         "title": "تصفية الشقق",
         "governorate": "المحافظة",
         "selectGov": "اختر المحافظة",
-        "city": "المنطقة/المدينة",
+        "city": "المدينة",
         "selectCity": "اختر المدينة",
-        "selectGovFirst": "يرجى اختيار المحافظة أولاً",
+        "selectGovFirst": "اختر المحافظة أولاً",
         "bedrooms": "غرف النوم",
         "bathrooms": "الحمامات",
-        "price": "السعر (ل.س)",
+        "price": "السعر",
         "size": "المساحة (م²)",
         "rating": "التقييم",
-        "min": "الأدنى",
-        "max": "الأقصى",
+        "min": "الحد الأدنى",
+        "max": "الحد الأقصى",
         "to": "إلى",
-        "hasPool": "يوجد مسبح",
-        "hasWifi": "يوجد إنترنت (WiFi)",
+        "hasPool": "يحتوي على مسبح",
+        "hasWifi": "يحتوي على واي فاي",
         "apply": "تطبيق"
     },
     "activeFilters": {
         "label": "الفلاتر النشطة",
         "city": "المدينة",
-        "beds": "الغرف",
+        "beds": "غرف النوم",
         "baths": "الحمامات",
         "price": "السعر",
         "pool": "مسبح",
-        "wifi": "إنترنت",
+        "wifi": "واي فاي",
         "search": "بحث"
     },
     "searchFilters": {
-        "searchHint": "ابحث هنا...",
+        "searchHint": "بحث...",
         "chips": {
             "location": "الموقع",
-            "beds": "الغرف",
+            "beds": "غرف النوم",
             "baths": "الحمامات",
             "area": "المساحة",
             "price": "السعر"
         },
         "sheets": {
-            "any": "الكل",
+            "any": "أي",
             "plus": "+",
             "moreThan": "أكثر من",
             "areaUnit": "م²",
-            "currencySymbol": "ل.س"
-            },
+            "currencySymbol": "$"
+        },
         "governorates": {
             "Damascus": "دمشق",
             "Rif Dimashq": "ريف دمشق",
@@ -130,9 +127,9 @@
         },
         "cities": {
             "Mazzeh": "المزة",
-            "Mazzeh Villas": "فيلات مزة",
+            "Mazzeh Villas": "مزارع المزة",
             "Rukn Al-Din": "ركن الدين",
-            "Barzeh": "برزة",
+            "Barzeh": "البرزة",
             "Midan": "الميدان",
             "Kafr Sousa": "كفرسوسة",
             "Abu Rummaneh": "أبو رمانة",
@@ -144,13 +141,13 @@
             "Bab Touma": "باب توما",
             "Bab Sharqi": "باب شرقي",
             "Jobar": "جوبر",
-            "Qaboun": "القابون",
+            "Qaboun": "القدمون",
             "Tishreen": "تشرين",
             "Dummar": "دمر",
             "Dummar Project": "مشروع دمر",
-            "Mezzeh 86": "مزة 86",
-            "Kafar Souseh": "كفر سوسة",
-            "Zahera": "الزاهرة",
+            "Mezzeh 86": "المزة 86",
+            "Kafar Souseh": "كفرسوسة",
+            "Zahera": "الزهيرة",
             "Douma": "دوما",
             "Darayya": "داريا",
             "Qudsaya": "قدسيا",
@@ -162,26 +159,26 @@
             "Saqba": "سقبا",
             "Kafr Batna": "كفر بطنا",
             "Jaramana": "جرمانا",
-            "Mleiha": "المليحة",
-            "Ein Tarma": "عين ترما",
+            "Mleiha": "مليحة",
+            "Ein Tarma": "عين التينة",
             "Nabek": "النبك",
             "Rankous": "رنكوس",
             "Aziziya": "العزيزية",
             "New Aleppo": "حلب الجديدة",
             "Suleimaniya": "السليمانية",
             "Hamdaneya": "الحمدانية",
-            "Al-Jamiliyah": "الجميلية",
+            "Al-Jamiliyah": "الجاملية",
             "Al-Sabil": "السبيل",
             "Al-Midan": "الميدان",
             "Al-Shaar": "الشعار",
             "Seif Al-Dawla": "سيف الدولة",
-            "Hanano": "هنانو",
-            "Ramousah": "الراموسة",
+            "Hanano": "حنانو",
+            "Ramousah": "الرموسة",
             "Karm Al-Jabal": "كرم الجبل",
             "Al-Furqan": "الفرقان",
             "Al-Hamra": "الحمراء",
             "Al-Zahra": "الزهراء",
-            "Al-Waer": "الوعر",
+            "Al-Waer": "الواير",
             "Inshaat": "الإنشاءات",
             "Baba Amr": "بابا عمرو",
             "Karm Al-Zeitoun": "كرم الزيتون",
@@ -206,16 +203,16 @@
             "Baniyas": "بانياس",
             "Safita": "صافيتا",
             "Sheikh Badr": "الشيخ بدر",
-            "Duraykish": "دريكيش",
+            "Duraykish": "الدركيش",
             "Idlib City": "مدينة إدلب",
             "Ariha": "أريحا",
             "Saraqib": "سراقب",
             "Jisr Al-Shughur": "جسر الشغور",
-            "Maarrat Misrin": "معرة مصرين",
+            "Maarrat Misrin": "معرتمصرين",
             "Deir ez-Zor City": "مدينة دير الزور",
             "Al-Mayadin": "الميادين",
             "Al-Bukamal": "البوكمال",
-            "Ashara": "العشارة",
+            "Ashara": "عشارة",
             "Raqqa City": "مدينة الرقة",
             "Tal Abyad": "تل أبيض",
             "Al-Karamah": "الكرامة",
@@ -225,7 +222,7 @@
             "Malikiyah": "المالكية",
             "Daraa City": "مدينة درعا",
             "Daraa Al-Balad": "درعا البلد",
-            "Izraa": "إزرع",
+            "Izraa": "ازرع",
             "Al-Sanamayn": "الصنمين",
             "Busra Al-Sham": "بصرى الشام",
             "Sweida City": "مدينة السويداء",
@@ -236,150 +233,172 @@
         }
     },
     "myApartments": {
-        "title": "عقاراتي",
-        "noApartments": "لا توجد عقارات حالياً",
-        "noFavorites": "لا توجد عقارات في المفضلة بعد!",
-        "errorOccurred": "عذراً! حدث خطأ ما",
-        "loading": "جاري تحميل عقاراتك..."
+        "title": "شققي",
+        "noApartments": "لا توجد شقق حتى الآن",
+        "errorOccurred": "عفواً! حدث خطأ ما"
     },
+    
     "favorites": {
         "title": "المفضلة",
-        "noItems": "لا توجد عناصر مفضلة بعد",
-        "noFavoritesYet": "قائمة المفضلة فارغة!",
-        "error": "عذراً، حدث خطأ: ",
+        "noItems": "لا توجد عناصر مفضلة حتى الآن",
+        "error": "عفواً خطأ: ",
         "loading": "جاري تحميل المفضلة..."
     },
+    
     "booking": {
         "title": "الحجز",
         "checkIn": "تاريخ الوصول",
         "checkOut": "تاريخ المغادرة",
         "paymentMethod": "طريقة الدفع",
         "cash": "نقداً",
-        "card": "بطاقة ائتمان",
-        "paypal": "بايبال",
-        "total": "الإجمالي",
+        "card": "بطاقة",
+        "paypal": "باي بال",
+        "total": "المجموع",
         "nights": "ليالي",
         "confirmBooking": "تأكيد الحجز",
-        "bookingConfirmed": "تم تأكيد الحجز بنجاح",
-        "ratingThankYou": "شكراً لك! لقد منحت تقييماً بـ {} نجوم."
+        "bookingConfirmed": "تم تأكيد الحجز",
+        "ratingThankYou": "شكراً لك! لقد أعطيت تقييماً بقيمة {} نجوم."
     },
+
     "ratingDialog": {
         "question": "كيف كانت تجربتك؟",
         "submit": "إرسال التقييم",
-        "defaultText": "اختر التقييم",
+        "defaultText": "اختر تقييماً",
         "levels": {
-            "terrible": "سيء جداً",
-            "poor": "سيء",
-            "average": "متوسط",
-            "good": "جيد",
-            "excellent": "ممتاز"
+            "terrible": "سيئة جداً",
+            "poor": "سيئة",
+            "average": "متوسطة",
+            "good": "جيدة",
+            "excellent": "ممتازة"
         }
     },
+    
     "apartmentDetails": {
         "perNight": " / ليلة",
-        "bedrooms": "غرف نوم",
-        "bathrooms": "حمامات",
+        "bedrooms": "غرف النوم",
+        "bathrooms": "الحمامات",
         "area": "المساحة",
-        "areaUnit": "م²",
         "owner": "المالك: ",
         "reviews": "التقييمات",
         "amenities": "المرافق والخدمات",
         "description": "الوصف",
         "bookNow": "احجز الآن"
     },
-    "amenities": {
-        "wifi": "إنترنت (WiFi)",
-        "pool": "مسبح",
-        "ac": "تكييف",
-        "parking": "موقف سيارات",
-        "kitchen": "مطبخ",
-        "tv": "تلفاز",
-        "gym": "نادي رياضي",
-        "unknown": "مرافق أخرى"
-    },
-    "errors": {
-        "imageLoadError": "تعذر تحميل الصورة"
-    },
     "apartmentCard": {
         "imageNotFound": "الصورة غير موجودة: ",
-        "beds": "غرف",
+        "beds": "غرف نوم",
         "baths": "حمامات",
-        "sqft": "م²",
-        "reviews": "تقييمات",
-        "perNight": " / ليلة",
-        "unknownLocation": "موقع غير معروف"
+        "sqft": "قدم مربع",
+        "perNight": " / ليلة"
     },
+
     "bookedCard": {
-        "total": "الإجمالي: ",
-        "reviews": "تقييمات",
-        "start": "البداية: ",
-        "end": "النهاية: ",
+        "total": "المجموع: ",
         "status": "الحالة: ",
-        "pay": "دفع",
-        "bookingStatus": {
-            "pending": "قيد الانتظار",
-            "approved": "تمت الموافقة",
-            "rejected": "مرفوض",
-            "cancelled": "ملغي",
-            "completed": "مكتمل",
-            "started": "بدأ",
-            "finished": "انتهى",
-            "failed": "فشل"
-        }
+        "pay": "ادفع الآن"
     },
     "bottomNav": {
         "home": "الرئيسية",
         "add": "إضافة",
         "favorites": "المفضلة",
-        "account": "حسابي"
+        "account": "الحساب"
     },
+    
     "addApartment": {
+        "edit Apartment": "تعديل الشقة",
         "appBarTitle": "إضافة شقة",
+        
         "imageSection": {
-            "addImages": "أضف صوراً",
-            "errorNoImages": "يرجى إضافة صورة واحدة على الأقل"
+            "addImages": "إضافة صور",
+            "errorNoImages": "الرجاء إضافة صورة واحدة على الأقل"
         },
         "fields": {
             "title": "العنوان",
             "price": "السعر لكل ليلة",
-            "beds": "عدد الغرف",
-            "baths": "عدد الحمامات",
+            "beds": "غرف النوم",
+            "baths": "الحمامات",
             "area": "المساحة",
             "description": "الوصف",
-            "requiredError": "مطلوب"
-            },
+            "requiredError": "الرجاء تعبئة جميع الحقول المطلوبة"
+        },
         "location": {
             "governorate": "المحافظة",
             "city": "المدينة",
             "selectGov": "اختر المحافظة",
             "selectCity": "اختر المدينة",
             "selectGovFirst": "اختر المحافظة أولاً",
-            "errorSelection": "يرجى اختيار المحافظة والمدينة"
+            "errorSelection": "الرجاء اختيار المحافظة والمدينة"
         },
         "amenities": {
             "title": "المرافق",
-            "wifi": "إنترنت (WiFi)",
+            "wifi": "واي فاي",
             "pool": "مسبح"
         },
         "buttons": {
-            "save": "حفظ الشقة"
+            "save": "حفظ الشقة",
+            "update": "تحديث الشقة"
         },
         "messages": {
-            "fillRequired": "يرجى تعبئة كافة الحقول المطلوبة"
+            "fillRequired": "الرجاء تعبئة جميع الحقول المطلوبة"
         }
     },
+    
     "account": {
         "appBarTitle": "الملف الشخصي",
         "refresh": "تحديث",
-        "myApartments": "عقاراتي",
+        "myApartments": "شققي",
+        "bookingsRequest": "طلبات الحجز",
         "myBookings": "حجوزاتي",
-        "toggleTheme": "تبديل المظهر (ليلي/نهاري)",
+        "toggleTheme": "تبديل السمة",
         "logout": "تسجيل الخروج",
         "changeLanguage": "اللغة",
         "errors": {
             "userLoadFailed": "فشل تحميل بيانات المستخدم"
         }
+    },
+    "OwnerBookings": {
+        "title": "طلبات الحجز",
+        "error": "خطأ: ",
+        "noBookings": "لا توجد طلبات حجز حتى الآن"
+    },
+    "BookingsScreen": {
+        "myBookings": "حجوزاتي",
+        "error": "خطأ: ",
+        "noBookings": "لا توجد حجوزات حتى الآن"
+    },
+    
+    "CompactApartmentCard": {
+        "perNight": " / ليلة"
+    },
+    
+    "OwnerBookedCard": {
+        "status": {
+            "pending": "قيد الانتظار",
+            "approved": "مقبول",
+            "rejected": "مرفوض",
+            "cancelled": "ملغي",
+            "completed": "مكتمل",
+            "started": "بدأ",
+            "finished": "انتهى",
+            "failed": "فشل",
+            "error": "خطأ"
+        },
+        "Check-in": "تاريخ الوصول",
+        "Check-out": "تاريخ المغادرة",
+        "beginningOfQuestion": "هل أنت متأكد أنك تريد ",
+        "endOfQuestion": " هذا الطلب؟",
+        "cancel": "إلغاء",
+        "yes": "نعم، ",
+        "reject": "رفض",
+        "approve": "قبول",
+        "noFurther": "لا توجد إجراءات أخرى متاحة",
+        "chat": "محادثة"
+    },
+    "ChatButton": {
+        "errorMissingID": "لا يمكن بدء المحادثة: معرف المالك مفقود.",
+        "errorCreating": "خطأ في إنشاء أو جلب المحادثة."
+    },
+    "ChatScreen": {
+        "appBarTitle": "المحادثة"
     }
 }
-
-

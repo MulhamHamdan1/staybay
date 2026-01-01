@@ -48,8 +48,7 @@
         "imageSelected": "Image selected successfully",
         "No image selected":"No image selected",
         "Image Selected":"Image Selected",
-        "error":"there was an error"
-
+        "error":"there was an error"  
 },
 
     "Success":{
@@ -63,10 +62,7 @@
 
     "home": {
         "searchHint": "Search...",
-        "noApartments": "No apartments found",
-        "notifications": "Notifications",
-        "filters": "Filters",
-        "loadingMore": "Loading more..."
+        "noApartments": "No apartments found"
     },
     "filter": {
         "title": "Filter Apartments",
@@ -77,13 +73,13 @@
         "selectGovFirst": "Select Governorate First",
         "bedrooms": "Bedrooms",
         "bathrooms": "Bathrooms",
-        "price": "Price (SYP)",
+        "price": "Price",
         "size": "Area (m²)",
         "rating": "Rating",
         "min": "Min",
         "max": "Max",
         "to": "To",
-        "hasPool": "Has Swimming Pool",
+        "hasPool": "Has Pool",
         "hasWifi": "Has WiFi",
         "apply": "Apply"
     },
@@ -97,7 +93,6 @@
         "wifi": "WiFi",
         "search": "Search"
     },
-
     "searchFilters": {
         "searchHint": "Search...",
         "chips": {
@@ -237,19 +232,15 @@
             "Baath City": "Baath City"
         }
     },
-  
 "myApartments": {
         "title": "My Apartments",
         "noApartments": "No apartments yet",
-        "noFavorites": "No favorites yet!",
-        "errorOccurred": "Oops! An error occurred",
-        "loading": "Loading your apartments..."
+        "errorOccurred": "Oops! An error occurred"
     },
     
     "favorites": {
         "title": "My Favorites",
         "noItems": "No Favorite items yet",
-        "noFavoritesYet": "No favorites yet!",
         "error": "oops Error: ",
         "loading": "Loading favorites..."
     },
@@ -287,53 +278,25 @@
         "bedrooms": "Bedrooms",
         "bathrooms": "Bathrooms",
         "area": "Area",
-        "areaUnit": "Sqft",
         "owner": "Owner: ",
         "reviews": "Reviews",
         "amenities": "Amenities & Services",
         "description": "Description",
         "bookNow": "Book Now"
     },
-"amenities": {
-        "wifi": "WiFi",
-        "pool": "Swimming Pool",
-        "ac": "Air Conditioning",
-        "parking": "Parking",
-        "kitchen": "Kitchen",
-        "tv": "TV",
-        "gym": "Gym",
-        "unknown": "Other Amenity"
-    },
-    "errors": {
-        "imageLoadError": "Could not load image"
-    },
     "apartmentCard": {
     "imageNotFound": "Image Not Found: ",
     "beds": "Beds",
     "baths": "Baths",
     "sqft": "Sqft",
-    "reviews": "reviews",
-    "perNight": " / night",
-    "unknownLocation": "Unknown Location"
+    "perNight": " / night"
   },
 
   "bookedCard": {
     "total": "total : ",
-    "reviews": "reviews",
-    "start": "start : ",
-    "end": "end: ",
     "status": "Status: ",
-    "pay": "pay",
-    "bookingStatus": {
-      "pending": "Pending",
-      "approved": "Approved",
-      "rejected": "Rejected",
-      "cancelled": "Cancelled",
-      "completed": "Completed",
-      "started": "Started",
-      "finished": "Finished",
-      "failed": "Failed"
-    }
+    "pay": "Pay Now",
+    "chat":"Chat"
   },
   "bottomNav": {
     "home": "Home",
@@ -343,7 +306,9 @@
   },
   
   "addApartment": {
+    "edit Apartment":"Edit Apartment",
     "appBarTitle": "Add Apartment",
+    
     "imageSection": {
       "addImages": "Add images",
       "errorNoImages": "Please add at least one image"
@@ -355,7 +320,7 @@
       "baths": "Baths",
       "area": "Area",
       "description": "Description",
-      "requiredError": "Required"
+      "requiredError": "Please fill all required fields"
     },
     "location": {
       "governorate": "Governorate",
@@ -371,7 +336,8 @@
       "pool": "Pool"
     },
     "buttons": {
-      "save": "Save Apartment"
+      "save": "Save Apartment",
+      "update": "Update Apartment"
     },
     "messages": {
       "fillRequired": "Please fill all required fields"
@@ -382,6 +348,7 @@
     "appBarTitle": "Profile",
     "refresh": "Refresh",
     "myApartments": "My Apartments",
+    "bookingsRequest":"Bookings Request",
     "myBookings": "My Bookings",
     "toggleTheme": "Toggle Theme",
     "logout": "Logout",
@@ -389,6 +356,52 @@
     "errors": {
       "userLoadFailed": "Failed to load user data"
     }
-  }
+  },
+  "OwnerBookings":{
+    "title":"Bookings Request",
+    "error":"Error: ",
+    "noBookings":"You have no bookings request yet"
+  },
+  "BookingsScreen":{
+    "myBookings":"My Bookings",
+    "error":"Error: ",
+    "noBookings":"You have no bookings request yet"
+  },
+  
+    "CompactApartmentCard":{
+        "perNight": " / night"
+    },
+  
+  "OwnerBookedCard":{
+    "status":{
+      "pending":"pending",
+      "approved":"approved",
+      "rejected":"rejected",
+      "cancelled":"cancelled",
+      "completed":"completed",
+      "started":"started",
+      "finished":"finished",
+      "failed":"failed",
+      "error":"Error"
+    },
+    "Check-in":"Check-in",
+    "Check-out":"Check-out",
+    "beginningOfQuestion":"Are you sure you want to ",
+    "endOfQuestion":" this request?",
+    "cancel":"CANCEL",
+    "yes":"YES, ",
+    "reject":"REJECT",
+    "approve":"APPROVE",
+    "noFurther":"No further actions available",
+    "chat":"Chat"
 
+  }
+  ,
+  "ChatButton":{
+    "errorMissingID":"Cannot start chat: Owner ID is missing.",
+    "errorCreating":"Error creating or fetching chat."
+  },
+  "ChatScreen":{
+    "appBarTitle":"Chat"
+  }
 }

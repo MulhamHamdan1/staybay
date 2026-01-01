@@ -35,21 +35,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   Map<String, dynamic> get locale =>
       context.read<LocaleCubit>().state.localizedStrings['singup'];
-  // late var locale = BlocProvider.of<LocaleCubit>(
-  //   context,
-
-  // ).state.localizedStrings['singup'];
-
-  // LocaleState localeState = context.read<LocaleState>().localizedStrings;
-  // @override
-  // void dispose() {
-  //   _firstNameController.dispose();
-  //   _lastNameController.dispose();
-  //   _phoneController.dispose();
-  //   _passwordController.dispose();
-  //   _dateOfBirthController.dispose();
-  //   super.dispose();
-  // }
+  @override
+  void dispose() {
+    _firstNameController.dispose();
+    _lastNameController.dispose();
+    _phoneController.dispose();
+    _passwordController.dispose();
+    _dateOfBirthController.dispose();
+    super.dispose();
+  }
 
   Future<void> _selectDateOfBirth() async {
     final theme = Theme.of(context);

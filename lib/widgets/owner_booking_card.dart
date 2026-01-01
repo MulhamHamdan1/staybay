@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:staybay/constants.dart';
+import 'package:staybay/cubits/locale/locale_cubit.dart';
+import 'package:staybay/cubits/locale/locale_state.dart';
 import 'package:staybay/models/book_model.dart';
 import 'package:staybay/services/owner_update_booking_servcie.dart';
 import 'package:staybay/widgets/chat_button.dart';
@@ -34,20 +37,46 @@ class _OwnerBookedCardState extends State<OwnerBookedCard> {
     }
   }
 
-  Future<void> _confirmAction(String newStatus) async {
-    final bool isApprove = newStatus == 'approved';
+  String _getStatuslabel(String status, Map<String, dynamic> locale) {
+    switch (status.toLowerCase()) {
+      case 'pending':
+        return locale['pending'] ?? 'pending';
+      case 'approved':
+        return locale['approved'] ?? 'approved';
+      case 'rejected':
+        return locale['rejected'] ?? 'rejected';
+      case 'cancelled':
+        return locale['cancelled'] ?? 'cancelled';
+      case 'completed':
+        return locale['completed'] ?? 'completed';
+      case 'started':
+        return locale['started'] ?? 'started';
+      case 'finished':
+        return locale['finished'] ?? 'finished';
+      case 'failed':
+        return locale['failed'] ?? 'failed';
+      default:
+        return locale['error'] ?? 'Error';
+    }
+  }
 
+  Future<void> _confirmAction(
+    String newStatus,
+    Map<String, dynamic> locale,
+  ) async {
+    final bool isApprove = newStatus == 'approved';
+    String localeStatus = locale['status'][newStatus];
     final bool? confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(
-          '${newStatus[0].toUpperCase()}${newStatus.substring(1)} Booking?',
+        title: Text('$localeStatus Booking?'),
+        content: Text(
+          '${locale['beginningOfQuestion'] ?? 'Are you sure you want to '}$newStatus${locale['endOfQuestion'] ?? ' this request?'}',
         ),
-        content: Text('Are you sure you want to $newStatus this request?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('CANCEL'),
+            child: Text(locale['cancel'] ?? 'CANCEL'),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
@@ -55,7 +84,7 @@ class _OwnerBookedCardState extends State<OwnerBookedCard> {
               backgroundColor: isApprove ? Colors.green : Colors.red,
               foregroundColor: Colors.white,
             ),
-            child: Text('YES, ${newStatus.toUpperCase()}'),
+            child: Text('${locale['yes'] ?? 'YES, '}$localeStatus'),
           ),
         ],
       ),
@@ -88,155 +117,182 @@ class _OwnerBookedCardState extends State<OwnerBookedCard> {
   Widget build(BuildContext context) {
     final bool canOwnerEdit = widget.book.canOwnerEdit;
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Card(
-        elevation: 3,
-        clipBehavior: Clip.antiAlias,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: 140,
-              width: double.infinity,
-              child: Stack(
-                children: [
-                  Positioned.fill(
-                    child: ClipRRect(
-                      borderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(16),
-                      ),
-                      child: Image.network(
-                        widget.book.apartment.imagePath.startsWith('http')
-                            ? widget.book.apartment.imagePath
-                            : '$kBaseUrlImage/${widget.book.apartment.imagePath}',
-                        fit: BoxFit.cover,
-                        loadingBuilder: (context, child, loadingProgress) {
-                          if (loadingProgress == null) return child;
-                          return Container(color: Colors.grey.shade200);
-                        },
-                        errorBuilder: (_, __, ___) => Container(
-                          color: Colors.grey.shade200,
-                          child: const Icon(
-                            Icons.broken_image,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  Positioned(
-                    top: 12,
-                    right: 12,
-                    child: _StatusChip(
-                      label: widget.book.status,
-                      color: _getStatusColor(widget.book.status),
-                    ),
-                  ),
-                ],
-              ),
+    return BlocBuilder<LocaleCubit, LocaleState>(
+      builder: (context, state) {
+        Map<String, dynamic> locale = state.localizedStrings['OwnerBookedCard'];
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: Card(
+            elevation: 3,
+            clipBehavior: Clip.antiAlias,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
             ),
-
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 140,
+                  width: double.infinity,
+                  child: Stack(
                     children: [
-                      Expanded(
-                        child: Text(
-                          widget.book.apartment.title,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                      Positioned.fill(
+                        child: ClipRRect(
+                          borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(16),
                           ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                          child: Image.network(
+                            widget.book.apartment.imagePath.startsWith('http')
+                                ? widget.book.apartment.imagePath
+                                : '$kBaseUrlImage/${widget.book.apartment.imagePath}',
+                            fit: BoxFit.cover,
+                            loadingBuilder: (context, child, loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              return Container(color: Colors.grey.shade200);
+                            },
+                            errorBuilder: (_, __, ___) => Container(
+                              color: Colors.grey.shade200,
+                              child: const Icon(
+                                Icons.broken_image,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
-                      Text(
-                        "#${widget.book.id}",
-                        style: TextStyle(
-                          color: Colors.grey.shade600,
-                          fontSize: 12,
+
+                      Positioned(
+                        top: 12,
+                        right: 12,
+                        child: _StatusChip(
+                          label: _getStatuslabel(
+                            widget.book.status,
+                            locale['status'],
+                          ),
+                          color: _getStatusColor(widget.book.status),
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12),
+                ),
 
-                  Row(
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _DateInfo(label: "Check-in", date: widget.book.startDate),
-                      const SizedBox(width: 24),
-                      _DateInfo(label: "Check-out", date: widget.book.endDate),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              widget.book.apartment.title,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          Text(
+                            "#${widget.book.id}",
+                            style: TextStyle(
+                              color: Colors.grey.shade600,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          _DateInfo(
+                            label: locale['Check-in'] ?? 'Check-in',
+                            date: widget.book.startDate,
+                          ),
+                          const SizedBox(width: 24),
+                          _DateInfo(
+                            label: locale['Check-out'] ?? 'Check-out',
+                            date: widget.book.endDate,
+                          ),
+                        ],
+                      ),
+
+                      const Divider(height: 32),
+
+                      if (_isLoading)
+                        const Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: CircularProgressIndicator(),
+                          ),
+                        )
+                      else if (canOwnerEdit)
+                        Row(
+                          children: [
+                            Expanded(
+                              child: OutlinedButton(
+                                onPressed: () =>
+                                    _confirmAction('rejected', locale),
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: Colors.red,
+                                  side: const BorderSide(color: Colors.red),
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 12,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                child: Text(locale['reject'] ?? "REJECT"),
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: ElevatedButton(
+                                onPressed: () =>
+                                    _confirmAction('approved', locale),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.green,
+                                  foregroundColor: Colors.white,
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 12,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                child: Text(locale['approve'] ?? 'APPROVE'),
+                              ),
+                            ),
+                          ],
+                        )
+                      else
+                        Center(
+                          child: Text(
+                            locale['noFurther'] ??
+                                'No further actions available',
+                            style: TextStyle(
+                              fontStyle: FontStyle.italic,
+                              color: Colors.grey.shade500,
+                            ),
+                          ),
+                        ),
+                      ChatButton(
+                        ownerId: widget.book.userId,
+                        buttonText: locale['chat'] ?? 'Chat',
+                      ),
                     ],
                   ),
-
-                  const Divider(height: 32),
-
-                  if (_isLoading)
-                    const Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: CircularProgressIndicator(),
-                      ),
-                    )
-                  else if (canOwnerEdit)
-                    Row(
-                      children: [
-                        Expanded(
-                          child: OutlinedButton(
-                            onPressed: () => _confirmAction('rejected'),
-                            style: OutlinedButton.styleFrom(
-                              foregroundColor: Colors.red,
-                              side: const BorderSide(color: Colors.red),
-                              padding: const EdgeInsets.symmetric(vertical: 12),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                            child: const Text("REJECT"),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: () => _confirmAction('approved'),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.green,
-                              foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(vertical: 12),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                            child: const Text("APPROVE"),
-                          ),
-                        ),
-                      ],
-                    )
-                  else
-                    Center(
-                      child: Text(
-                        "No further actions available",
-                        style: TextStyle(
-                          fontStyle: FontStyle.italic,
-                          color: Colors.grey.shade500,
-                        ),
-                      ),
-                    ),
-                  ChatButton(ownerId: widget.book.userId),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }
@@ -275,7 +331,7 @@ class _StatusChip extends StatelessWidget {
         color: color,
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 4),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 4),
         ],
       ),
       child: Text(
