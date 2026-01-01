@@ -5,14 +5,14 @@ import 'package:staybay/services/chat_service.dart';
 import 'package:staybay/screens/chat_screen.dart';
 
 class ChatButton extends StatelessWidget {
-  final int? ownerId;
+  final int? receiverId;
   final String buttonText;
   final Color? buttonColor;
   final TextStyle? textStyle;
 
   const ChatButton({
     super.key,
-    required this.ownerId,
+    required this.receiverId,
     this.buttonText = "Chat",
     this.buttonColor,
     this.textStyle,
@@ -25,7 +25,7 @@ class ChatButton extends StatelessWidget {
         foregroundColor: buttonColor ?? Theme.of(context).primaryColor,
       ),
       onPressed: () async {
-        if (ownerId == null) {
+        if (receiverId == null) {
           log("Owner ID is null, cannot initiate chat.");
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -36,7 +36,7 @@ class ChatButton extends StatelessWidget {
         }
 
         try {
-          Chat chat = await ChatApiService.getChat(ownerId!);
+          Chat chat = await ChatApiService.getChat(receiverId!);
 
           if (!context.mounted) return;
 
@@ -44,7 +44,7 @@ class ChatButton extends StatelessWidget {
             context,
             MaterialPageRoute(
               builder: (_) =>
-                  ChatScreen(chatId: chat.id, receiverId: chat.receiverId),
+                  ChatScreen(chatId: chat.id, receiverId: receiverId!),
             ),
           );
         } catch (e, st) {

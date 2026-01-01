@@ -23,6 +23,7 @@ class GetApartmentService {
     bool? hasPool,
     bool? hasWifi,
     String? search,
+    int? rooms,
     String sortBy = 'created_at',
     String sortOrder = 'desc',
   }) async {
@@ -36,6 +37,7 @@ class GetApartmentService {
         'per_page': perPage,
         'governorate_id': governorateId,
         'city_id': cityId,
+        'rooms': rooms,
         'bedrooms': bedrooms,
         'bathrooms': bathrooms,
         'price_min': priceMin,
@@ -44,12 +46,12 @@ class GetApartmentService {
         'size_max': sizeMax,
         'rating_min': ratingMin,
         'rating_max': ratingMax,
-        'has_pool': hasPool == true ? 1 : null,
-        'has_wifi': hasWifi == true ? 1 : null,
+        'has_pool': hasPool == null ? null : (hasPool ? 1 : 0),
+        'has_wifi': hasWifi == null ? null : (hasWifi ? 1 : 0),
         'search': search,
         'sort_by': sortBy,
         'sort_order': sortOrder,
-      }..removeWhere((key, value) => value == null),
+      }..removeWhere((k, v) => v == null),
       options: Options(headers: {'Authorization': 'Bearer $token'}),
     );
 
