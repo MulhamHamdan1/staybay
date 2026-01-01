@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:staybay/cubits/locale/locale_cubit.dart';
 import 'package:staybay/models/apartment_model.dart';
 import 'package:staybay/services/add_favorite_service.dart';
 import 'package:staybay/services/remove_favorite_service.dart';
@@ -21,6 +23,9 @@ class ApartmentDetailsScreen extends StatefulWidget {
 }
 
 class _ApartmentDetailsScreenState extends State<ApartmentDetailsScreen> {
+  Map<String, dynamic> get locale =>
+      context.read<LocaleCubit>().state.localizedStrings['apartmentDetails'];
+
   late bool _isFavorite;
 
   @override
@@ -81,7 +86,7 @@ class _ApartmentDetailsScreenState extends State<ApartmentDetailsScreen> {
               elevation: 0,
               backgroundColor: theme.colorScheme.primary,
               leading: IconButton(
-                icon: const Icon(Icons.arrow_back, color: Colors.white),
+                icon: const Icon(Icons.arrow_back),
                 onPressed: () => Navigator.of(context).pop(),
               ),
               actions: [
@@ -162,7 +167,7 @@ class _ApartmentDetailsScreenState extends State<ApartmentDetailsScreen> {
                           ),
                         ),
                         TextSpan(
-                          text: ' / night',
+                          text: locale['perNight'] ?? ' / night',
                           style: theme.textTheme.titleSmall?.copyWith(
                             color: theme.colorScheme.onSurfaceVariant,
                           ),
@@ -180,20 +185,20 @@ class _ApartmentDetailsScreenState extends State<ApartmentDetailsScreen> {
                   _buildFeatureIcon(
                     context,
                     icon: Icons.king_bed,
-                    label: 'Bedrooms',
+                    label: locale['bedrooms'] ?? 'Bedrooms',
                     value: '${apartmentDetails.beds}',
                   ),
                   _buildFeatureIcon(
                     context,
                     icon: Icons.bathtub,
-                    label: 'Bathrooms',
+                    label: locale['bathrooms'] ?? 'Bathrooms',
                     value: '${apartmentDetails.baths}',
                   ),
                   _buildFeatureIcon(
                     context,
                     icon: Icons.square_foot,
-                    label: 'Area',
-                    value: '${apartmentDetails.areaSqft} Sqft',
+                    label: locale['area'] ?? 'Area',
+                    value: '${apartmentDetails.areaSqft} ',
                   ),
                 ],
               ),
@@ -211,7 +216,7 @@ class _ApartmentDetailsScreenState extends State<ApartmentDetailsScreen> {
                       const SizedBox(width: AppSizes.paddingMedium),
                       Expanded(
                         child: Text(
-                          'Owner: ${apartmentDetails.ownerName}',
+                          '${locale['owner'] ?? 'Owner: '} ${apartmentDetails.ownerName}',
                           style: theme.textTheme.titleLarge?.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
@@ -240,7 +245,7 @@ class _ApartmentDetailsScreenState extends State<ApartmentDetailsScreen> {
                         }),
                         const SizedBox(width: AppSizes.paddingSmall),
                         Text(
-                          '(${apartmentDetails.ratingCount} Reviews)',
+                          '(${apartmentDetails.ratingCount} ${locale['reviews'] ?? 'Reviews'})',
                           style: theme.textTheme.bodyMedium?.copyWith(
                             color: AppColors.secondaryText,
                           ),
@@ -254,7 +259,7 @@ class _ApartmentDetailsScreenState extends State<ApartmentDetailsScreen> {
               const Divider(height: AppSizes.paddingLarge * 2),
 
               Text(
-                'Amenities & Services',
+                locale['amenities'] ?? 'Amenities & Services',
                 style: theme.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -264,7 +269,7 @@ class _ApartmentDetailsScreenState extends State<ApartmentDetailsScreen> {
               const Divider(height: AppSizes.paddingLarge * 2),
 
               Text(
-                'Description',
+                locale['description'] ?? 'Description',
                 style: theme.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -285,7 +290,7 @@ class _ApartmentDetailsScreenState extends State<ApartmentDetailsScreen> {
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(AppSizes.paddingLarge),
         child: CustomPrimaryButton(
-          text: 'Book Now',
+          text: locale['bookNow'] ?? 'Book Now',
           onPressed: () => _navigateToBooking(context),
         ),
       ),

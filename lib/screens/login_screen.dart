@@ -59,6 +59,11 @@ class _LoginScreenState extends State<LoginScreen> {
           context,
         ).pushNamed(SuccessScreen.routeName, arguments: true);
       }
+      if (response == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(locale['error']), backgroundColor: Colors.red),
+        );
+      }
     }
   }
 
@@ -125,7 +130,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               radius: screenHeight * 0.06,
                               backgroundColor: Theme.of(
                                 context,
-                              ).primaryColor.withOpacity(0.1),
+                              ).primaryColor.withValues(alpha: 0.1),
                               child: Icon(
                                 Icons.home_work_rounded,
                                 size: screenHeight * 0.06,

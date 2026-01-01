@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:staybay/cubits/locale/locale_cubit.dart';
 import 'package:staybay/models/apartment_model.dart';
 import 'package:staybay/services/get_favorite_apartment_service.dart';
 import 'package:staybay/widgets/compact_apartment_card.dart';
@@ -13,11 +15,20 @@ class MyApartmentsScreen extends StatefulWidget {
 }
 
 class _MyApartmentsScreenState extends State<MyApartmentsScreen> {
+  Map<String, dynamic> get locale =>
+      context.read<LocaleCubit>().state.localizedStrings['myApartments'];
+
   late Future<List<Apartment>> future;
   @override
   void initState() {
     super.initState();
-    future = GetFavoriteApartmentService.getMy();
+    future = GetApartmentService.getMy();
+  }
+
+  Future<void> _refreshMy() async {
+    setState(() {
+      future = GetApartmentService.getMy();
+    });
   }
 
   @override
@@ -25,7 +36,10 @@ class _MyApartmentsScreenState extends State<MyApartmentsScreen> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('My apartment'), centerTitle: true),
+      appBar: AppBar(
+        title: Text(locale['title'] ?? 'My Apartments'),
+        centerTitle: true,
+      ),
       body: FutureBuilder<List<Apartment>>(
         future: future,
         builder: (context, snapshot) {
@@ -34,28 +48,34 @@ class _MyApartmentsScreenState extends State<MyApartmentsScreen> {
           } else if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasData) {
-            var favorites = snapshot.data!;
-            if (favorites.isEmpty) {
-              return Center(
-                child: Text(
-                  'No Apartment yet',
-                  style: theme.textTheme.headlineMedium,
+            var myApartment = snapshot.data!;
+            if (myApartment.isEmpty) {
+              return RefreshIndicator(
+                onRefresh: _refreshMy,
+                child: Center(
+                  child: Text(
+                    locale['noApartments'] ?? 'No Apartment yet',
+                    style: theme.textTheme.headlineMedium,
+                  ),
                 ),
               );
             }
             return ListView.builder(
               padding: const EdgeInsets.all(16.0),
-              itemCount: favorites.length,
+              itemCount: myApartment.length,
               itemBuilder: (context, index) {
-                var apartment = favorites[index];
+                var apartment = myApartment[index];
                 return CompactApartmentCard(apartment: apartment, edit: true);
               },
             );
           } else {
-            return Center(
-              child: Text(
-                'No favorites yet!',
-                style: theme.textTheme.headlineMedium,
+            return RefreshIndicator(
+              onRefresh: _refreshMy,
+              child: Center(
+                child: Text(
+                  locale['noApartments'] ?? 'No Apartment yet',
+                  style: theme.textTheme.headlineMedium,
+                ),
               ),
             );
           }

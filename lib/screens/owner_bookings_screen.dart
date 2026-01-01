@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:staybay/cubits/locale/locale_cubit.dart';
 import 'package:staybay/models/book_model.dart';
 // import 'package:staybay/services/get_my_booking_service.dart';
 // import 'package:staybay/widgets/booking_card.dart';
@@ -15,6 +17,9 @@ class OwnerBookingsScreen extends StatefulWidget {
 }
 
 class _OwnerBookingsScreenState extends State<OwnerBookingsScreen> {
+  Map<String, dynamic> get locale =>
+      context.read<LocaleCubit>().state.localizedStrings['OwnerBookings'];
+
   late Future<List<BookModel>> future;
 
   @override
@@ -34,12 +39,17 @@ class _OwnerBookingsScreenState extends State<OwnerBookingsScreen> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Bookings Request'), centerTitle: true),
+      appBar: AppBar(
+        title: Text(locale['title'] ?? 'Bookings Request'),
+        centerTitle: true,
+      ),
       body: FutureBuilder<List<BookModel>>(
         future: future,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
+            return Center(
+              child: Text('${locale['error'] ?? 'Error: '}${snapshot.error}'),
+            );
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -63,7 +73,8 @@ class _OwnerBookingsScreenState extends State<OwnerBookingsScreen> {
                   const SizedBox(height: 16),
                   Center(
                     child: Text(
-                      'You have no bookings request yet',
+                      locale['noBookings'] ??
+                          'You have no bookings request yet',
                       style: theme.textTheme.headlineSmall,
                     ),
                   ),

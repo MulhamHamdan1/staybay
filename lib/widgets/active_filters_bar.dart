@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:staybay/app_theme.dart';
+import 'package:staybay/cubits/locale/locale_cubit.dart';
+import 'package:staybay/cubits/locale/locale_state.dart';
 
 class ActiveFiltersBar extends StatelessWidget {
   final Map<String, dynamic> filters;
@@ -17,63 +20,72 @@ class ActiveFiltersBar extends StatelessWidget {
 
     final theme = Theme.of(context);
 
-    final chips = filters.entries
-        .map((entry) {
-          final label = _labelFor(entry.key, entry.value);
-          if (label == null) return null;
+    return BlocBuilder<LocaleCubit, LocaleState>(
+      builder: (context, state) {
+        Map<String, dynamic> locale =
+            state.localizedStrings['activeFilters'] ?? {};
 
-          return Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: Chip(
-              label: Text(label),
-              deleteIcon: const Icon(Icons.close, size: 18),
-              onDeleted: () => onRemove(entry.key),
-              backgroundColor: theme.colorScheme.primary.withOpacity(0.15),
-              labelStyle: TextStyle(
-                color: theme.colorScheme.primary,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          );
-        })
-        .whereType<Widget>()
-        .toList();
+        final chips = filters.entries
+            .map((entry) {
+              final label = _labelFor(locale, entry.key, entry.value);
+              if (label == null) return null;
 
-    if (chips.isEmpty) return const SizedBox.shrink();
+              return Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: Chip(
+                  label: Text(label),
+                  deleteIcon: const Icon(Icons.close, size: 18),
+                  onDeleted: () => onRemove(entry.key),
+                  backgroundColor: theme.colorScheme.primary.withValues(
+                    alpha: 0.15,
+                  ),
+                  labelStyle: TextStyle(
+                    color: theme.colorScheme.primary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              );
+            })
+            .whereType<Widget>()
+            .toList();
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSizes.paddingMedium,
-        vertical: AppSizes.paddingSmall,
-      ),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(children: chips),
-      ),
+        if (chips.isEmpty) return const SizedBox.shrink();
+
+        return Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSizes.paddingMedium,
+            vertical: AppSizes.paddingSmall,
+          ),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(children: chips),
+          ),
+        );
+      },
     );
   }
 
-  String? _labelFor(String key, dynamic value) {
+  String? _labelFor(Map<String, dynamic> locale, String key, dynamic value) {
     switch (key) {
       case 'city_name':
-        return 'City: $value';
+        return '${locale['city'] ?? 'City'}: $value';
 
       case 'bedrooms':
-        return 'Beds: $value';
+        return '${locale['beds'] ?? 'Beds'}: $value';
 
       case 'bathrooms':
-        return 'Baths: $value';
+        return '${locale['baths'] ?? 'Baths'}: $value';
 
       case 'price_min':
         return filters.containsKey('price_max')
-            ? 'Price: \$${filters['price_min']} - \$${filters['price_max']}'
-            : 'Price ≥ \$${filters['price_min']}';
+            ? '${locale['price'] ?? 'Price'}: \$${filters['price_min']} - \$${filters['price_max']}'
+            : '${locale['price'] ?? 'Price'} ≥ \$${filters['price_min']}';
 
       case 'has_pool':
-        return 'Pool';
+        return locale['pool'];
 
       case 'has_wifi':
-        return 'WiFi';
+        return locale['wifi'];
 
       case 'search':
         return 'Search: "$value"';

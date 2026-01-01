@@ -2,7 +2,9 @@ import 'dart:io';
 import 'package:dio/src/response.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:staybay/cubits/locale/locale_cubit.dart';
 import 'package:staybay/models/apartment_model.dart';
 import 'package:staybay/models/city_model.dart';
 import 'package:staybay/models/governorate_model.dart';
@@ -22,6 +24,9 @@ class AddApartmentScreen extends StatefulWidget {
 }
 
 class _AddApartmentScreenState extends State<AddApartmentScreen> {
+  Map<String, dynamic> get locale =>
+      context.read<LocaleCubit>().state.localizedStrings['addApartment'];
+
   final _formKey = GlobalKey<FormState>();
   final GetGovernatesAndCities _getGovernatesAndCities =
       GetGovernatesAndCities();
@@ -41,7 +46,10 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
   final _areaController = TextEditingController();
   final _descriptionController = TextEditingController();
 
-  final List<String> _allAmenities = ['wifi', 'pool'];
+  List<String> get _allAmenities => [
+    locale['amenities']['wifi'] ?? 'wifi',
+    locale['amenities']['pool'] ?? 'pool',
+  ];
   List<String> _selectedAmenities = [];
 
   /// ===== IMAGE STATE =====
@@ -175,7 +183,10 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(color: Colors.grey.shade300),
                 ),
-                child: const Icon(Icons.add_a_photo, color: Colors.blue),
+                child: Icon(
+                  Icons.add_a_photo,
+                  color: Theme.of(context).primaryColor,
+                ),
               ),
             );
           }
@@ -241,12 +252,18 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
 
     if (_formKey.currentState?.validate() ?? false) {
       if (selectedGov == null || selectedCity == null) {
-        _showSnackBar('Please select governorate and city');
+        _showSnackBar(
+          locale['location']['errorSelection'] ??
+              'Please select governorate and city',
+        );
         return;
       }
 
       if (combinedImages.isEmpty) {
-        _showSnackBar('Please add at least one image');
+        _showSnackBar(
+          locale['imageSection']['errorNoImages'] ??
+              'Please add at least one image',
+        );
         return;
       }
 
@@ -290,7 +307,9 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
         ).pushNamedAndRemoveUntil(AppBottomNavBar.routeName, (_) => false);
       }
     } else {
-      _showSnackBar('Please fill all required fields');
+      _showSnackBar(
+        locale['fields']['requiredError'] ?? 'Please fill all required fields',
+      );
     }
   }
 
@@ -331,14 +350,14 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
               alignment: Alignment.center,
               padding: const EdgeInsets.symmetric(vertical: 8),
               decoration: BoxDecoration(
-                color: Colors.blue.withOpacity(0.1),
+                color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(5),
               ),
               child: Text(
                 value ?? '-',
-                style: const TextStyle(
+                style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: Colors.blue,
+                  color: Theme.of(context).primaryColor,
                 ),
                 overflow: TextOverflow.ellipsis,
               ),
@@ -353,8 +372,8 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Amenities',
+        Text(
+          locale['amenities']['title'] ?? 'Amenities',
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
@@ -410,7 +429,9 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.apartmentToEdit == null ? 'Add Apartment' : 'Edit Apartment',
+          widget.apartmentToEdit == null
+              ? locale['appBarTitle'] ?? 'Add Apartment'
+              : locale['edit Apartment'] ?? 'Edit Apartment',
         ),
       ),
       body: SingleChildScrollView(
@@ -421,15 +442,22 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
             children: [
               _imagesPreview(),
               const SizedBox(height: 16),
-              _field(_titleController, 'Title', Icons.home),
+              _field(
+                _titleController,
+                locale['fields']['title'] ?? 'Title',
+                Icons.home,
+              ),
               _buildFilterRow(
-                label: 'المحافظة',
+                label: locale['location']['governorate'] ?? 'Governorate',
                 value: selectedGov?.name,
                 child: isLoadingGovs
                     ? const CircularProgressIndicator(strokeWidth: 2)
                     : DropdownButton<Governorate>(
                         isExpanded: true,
-                        hint: const Text('اختر محافظة'),
+                        hint: Text(
+                          locale['location']['selectGov'] ??
+                              'Select Governorate',
+                        ),
                         value: selectedGov,
                         items: governorates.map((gov) {
                           return DropdownMenuItem(
@@ -441,7 +469,7 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
                       ),
               ),
               _buildFilterRow(
-                label: 'المدينة',
+                label: locale['location']['city'] ?? 'City',
                 value: selectedCity?.name,
                 child: isLoadingCities
                     ? const LinearProgressIndicator()
@@ -449,8 +477,10 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
                         isExpanded: true,
                         hint: Text(
                           selectedGov == null
-                              ? 'اختر محافظة أولاً'
-                              : 'اختر مدينة',
+                              ? locale['location']['selectGovFirst'] ??
+                                    'Select governorate first'
+                              : locale['location']['selectCity'] ??
+                                    'Select City',
                         ),
                         value: selectedCity,
                         items: cities.map((city) {
@@ -464,7 +494,7 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
               ),
               _field(
                 _priceController,
-                'Price per night',
+                locale['fields']['price'] ?? 'Price per night',
                 Icons.attach_money,
                 inputType: TextInputType.number,
               ),
@@ -473,7 +503,7 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
                   Expanded(
                     child: _field(
                       _bedsController,
-                      'Beds',
+                      locale['fields']['beds'] ?? 'Beds',
                       Icons.bed,
                       inputType: TextInputType.number,
                     ),
@@ -482,7 +512,7 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
                   Expanded(
                     child: _field(
                       _bathsController,
-                      'Baths',
+                      locale['fields']['baths'] ?? 'Baths',
                       Icons.bathtub,
                       inputType: TextInputType.number,
                     ),
@@ -491,13 +521,13 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
               ),
               _field(
                 _areaController,
-                'Area',
+                locale['fields']['area'] ?? 'Area',
                 Icons.square_foot,
                 inputType: TextInputType.number,
               ),
               _field(
                 _descriptionController,
-                'Description',
+                locale['fields']['description'] ?? 'Description',
                 Icons.description,
                 maxlines: 3,
               ),
@@ -509,7 +539,11 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
                 height: 50,
                 child: ElevatedButton(
                   onPressed: _saveApartment,
-                  child: const Text('Save Apartment'),
+                  child: Text(
+                    widget.apartmentToEdit == null
+                        ? locale['buttons']['save'] ?? 'Save Apartment'
+                        : locale['buttons']["update"] ?? 'Update Apartment',
+                  ),
                 ),
               ),
             ],

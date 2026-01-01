@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:staybay/cubits/locale/locale_cubit.dart';
 import '../app_theme.dart';
 import 'custom_primary_button.dart';
 
@@ -10,6 +12,9 @@ class RatingDialog extends StatefulWidget {
 }
 
 class _RatingDialogState extends State<RatingDialog> {
+  Map<String, dynamic> get locale =>
+      context.read<LocaleCubit>().state.localizedStrings['ratingDialog'];
+
   int _selectedRating = 0;
 
   String get _ratingEmoji {
@@ -32,17 +37,17 @@ class _RatingDialogState extends State<RatingDialog> {
   String get _ratingText {
     switch (_selectedRating) {
       case 1:
-        return 'Terrible';
+        return locale['levels']['terrible'] ?? 'Terrible';
       case 2:
-        return 'Poor';
+        return locale['levels']['poor'] ?? 'Poor';
       case 3:
-        return 'Average';
+        return locale['levels']['average'] ?? 'Average';
       case 4:
-        return 'Good';
+        return locale['levels']['good'] ?? 'Good';
       case 5:
-        return 'Excellent';
+        return locale['levels']['excellent'] ?? 'Excellent';
       default:
-        return 'Select a rating';
+        return locale['defaultText'] ?? 'Select a rating';
     }
   }
 
@@ -83,22 +88,19 @@ class _RatingDialogState extends State<RatingDialog> {
               ),
             ),
             Text(
-              'How was your experience?',
+              locale['question'] ?? 'How was your experience?',
               style: AppStyles.titleStyle.copyWith(fontSize: 22),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: AppSizes.paddingMedium),
-            Text(
-              _ratingEmoji,
-              style: const TextStyle(fontSize: 48),
-            ),
+            Text(_ratingEmoji, style: const TextStyle(fontSize: 48)),
             const SizedBox(height: AppSizes.paddingSmall),
             Text(
               _ratingText,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).colorScheme.primary,
+              ),
             ),
             const SizedBox(height: AppSizes.paddingLarge),
             Row(
@@ -109,7 +111,7 @@ class _RatingDialogState extends State<RatingDialog> {
             SizedBox(
               width: double.infinity,
               child: CustomPrimaryButton(
-                text: 'Submit Review',
+                text: locale['submit'] ?? 'Submit Review',
                 onPressed: _selectedRating > 0
                     ? () => Navigator.pop(context, _selectedRating)
                     : null,
