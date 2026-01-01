@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:staybay/cubits/locale/locale_cubit.dart';
 import 'package:staybay/cubits/locale/locale_state.dart';
+import 'package:staybay/models/city_model.dart';
+import 'package:staybay/models/governorate_model.dart';
 import '../app_theme.dart';
 import '../models/apartment_model.dart';
 import '../screens/apartment_details_screen.dart';
@@ -103,7 +105,7 @@ class ApartmentCard extends StatelessWidget {
                           ),
                           const SizedBox(width: AppSizes.paddingSmall / 2),
                           Text(
-                            apartment.location!,
+                            '${apartment.governorate?.localized(context)},${apartment.city?.localized(context)}',
                             style: theme.textTheme.titleSmall?.copyWith(
                               color: theme.colorScheme.onSurfaceVariant,
                             ),

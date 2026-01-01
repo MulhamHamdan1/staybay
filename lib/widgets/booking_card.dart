@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:staybay/constants.dart';
 import 'package:staybay/cubits/locale/locale_cubit.dart';
 import 'package:staybay/models/book_model.dart';
+import 'package:staybay/models/city_model.dart';
+import 'package:staybay/models/governorate_model.dart';
 import 'package:staybay/screens/booking_details_screen.dart';
 import 'package:staybay/services/pay_booking_service.dart';
 import 'package:staybay/services/rate_booking_service.dart';
@@ -109,7 +111,7 @@ class _BookedCardState extends State<BookedCard> {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    widget.book.apartment.location ?? '',
+                    '${widget.book.apartment.governorate?.localized(context)},${widget.book.apartment.city?.localized(context)}',
                     style: const TextStyle(color: Colors.grey, fontSize: 13),
                   ),
                   const SizedBox(height: 10),

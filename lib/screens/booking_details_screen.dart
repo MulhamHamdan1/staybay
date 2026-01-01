@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:staybay/models/apartment_model.dart';
 import 'package:staybay/models/book_model.dart';
+import 'package:staybay/models/city_model.dart';
+import 'package:staybay/models/governorate_model.dart';
 import 'package:staybay/screens/bookings_screen.dart';
 import 'package:staybay/services/create_booking_service.dart';
 import 'package:staybay/services/get_apartment_not_available_dates_service.dart';
@@ -247,7 +249,8 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
           style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
         ),
         Text(
-          apt.location ?? "Unknown location",
+          '${apt.governorate?.localized(context)},${apt.city?.localized(context)}',
+          // ??"Unknown location",
           style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
         ),
       ],

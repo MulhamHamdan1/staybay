@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:staybay/cubits/locale/locale_cubit.dart';
 import 'package:staybay/cubits/locale/locale_state.dart';
+import 'package:staybay/models/city_model.dart';
+import 'package:staybay/models/governorate_model.dart';
 import 'package:staybay/screens/add_apartment_screen.dart';
 import 'package:staybay/services/add_favorite_service.dart';
 import 'package:staybay/services/remove_favorite_service.dart';
@@ -121,7 +123,7 @@ class _CompactApartmentCardState extends State<CompactApartmentCard> {
                             ),
                             const SizedBox(width: AppSizes.paddingSmall / 2),
                             Text(
-                              widget.apartment.location!,
+                              '${widget.apartment.governorate?.localized(context)},${widget.apartment.city?.localized(context)}',
                               style: theme.textTheme.bodyMedium?.copyWith(
                                 color: theme.colorScheme.onSurfaceVariant,
                               ),

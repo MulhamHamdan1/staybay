@@ -1,3 +1,7 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:staybay/cubits/locale/locale_cubit.dart';
+
 class Governorate {
   final int id;
   final String name;
@@ -16,4 +20,17 @@ class Governorate {
 
   @override
   int get hashCode => id.hashCode;
+}
+
+extension GovernorateLocalization on Governorate {
+  String localized(BuildContext context) {
+    final locale = context
+        .read<LocaleCubit>()
+        .state
+        .localizedStrings['searchFilters'];
+
+    final governorates = locale?['governorates'] as Map<String, dynamic>?;
+
+    return governorates?[name.trim()] ?? name;
+  }
 }

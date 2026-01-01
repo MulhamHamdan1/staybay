@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:staybay/cubits/locale/locale_cubit.dart';
 import 'package:staybay/models/apartment_model.dart';
+import 'package:staybay/models/city_model.dart';
+import 'package:staybay/models/governorate_model.dart';
 import 'package:staybay/services/add_favorite_service.dart';
 import 'package:staybay/services/remove_favorite_service.dart';
 import '../app_theme.dart';
@@ -148,7 +150,7 @@ class _ApartmentDetailsScreenState extends State<ApartmentDetailsScreen> {
                       ),
                       const SizedBox(width: AppSizes.paddingSmall / 2),
                       Text(
-                        apartmentDetails.location!,
+                        '${apartmentDetails.governorate?.localized(context)},${apartmentDetails.city?.localized(context)}',
                         style: theme.textTheme.titleMedium?.copyWith(
                           color: theme.colorScheme.onSurfaceVariant,
                         ),

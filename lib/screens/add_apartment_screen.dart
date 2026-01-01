@@ -449,7 +449,7 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
               ),
               _buildFilterRow(
                 label: locale['location']['governorate'] ?? 'Governorate',
-                value: selectedGov?.name,
+                value: selectedGov?.localized(context),
                 child: isLoadingGovs
                     ? const CircularProgressIndicator(strokeWidth: 2)
                     : DropdownButton<Governorate>(
@@ -462,7 +462,7 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
                         items: governorates.map((gov) {
                           return DropdownMenuItem(
                             value: gov,
-                            child: Text(gov.name),
+                            child: Text(gov.localized(context)),
                           );
                         }).toList(),
                         onChanged: _onGovernorateChanged,
@@ -470,7 +470,7 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
               ),
               _buildFilterRow(
                 label: locale['location']['city'] ?? 'City',
-                value: selectedCity?.name,
+                value: selectedCity?.localized(context),
                 child: isLoadingCities
                     ? const LinearProgressIndicator()
                     : DropdownButton<City>(
@@ -486,7 +486,7 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
                         items: cities.map((city) {
                           return DropdownMenuItem(
                             value: city,
-                            child: Text(city.name),
+                            child: Text(city.localized(context)),
                           );
                         }).toList(),
                         onChanged: (val) => setState(() => selectedCity = val),

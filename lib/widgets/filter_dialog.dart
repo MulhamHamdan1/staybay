@@ -121,7 +121,7 @@ class _FilterDialogState extends State<FilterDialog> {
               _buildFilterRow(
                 context,
                 label: locale['governorate'] ?? 'Governorate',
-                value: selectedGov?.name,
+                value: selectedGov?.localized(context),
                 child: isLoadingGovs
                     ? CircularProgressIndicator(strokeWidth: 2)
                     : DropdownButton<Governorate>(
@@ -131,7 +131,7 @@ class _FilterDialogState extends State<FilterDialog> {
                         items: governorates.map((gov) {
                           return DropdownMenuItem(
                             value: gov,
-                            child: Text(gov.name),
+                            child: Text(gov.localized(context)),
                           );
                         }).toList(),
                         onChanged: _onGovernorateChanged,
@@ -141,7 +141,7 @@ class _FilterDialogState extends State<FilterDialog> {
               _buildFilterRow(
                 context,
                 label: locale['city'] ?? 'City',
-                value: selectedCity?.name,
+                value: selectedCity?.localized(context),
                 child: isLoadingCities
                     ? LinearProgressIndicator()
                     : DropdownButton<City>(
@@ -156,7 +156,7 @@ class _FilterDialogState extends State<FilterDialog> {
                         items: cities.map((city) {
                           return DropdownMenuItem(
                             value: city,
-                            child: Text(city.name),
+                            child: Text(city.localized(context)),
                           );
                         }).toList(),
                         onChanged: (val) => setState(() => selectedCity = val),
@@ -254,7 +254,7 @@ class _FilterDialogState extends State<FilterDialog> {
             onPressed: () => Navigator.pop(context, {
               'governorate_id': selectedGov?.id,
               'city_id': selectedCity?.id,
-              'city_name': selectedCity?.name,
+              'city_name': selectedCity?.localized(context),
               'bedrooms': selectedBedrooms,
               'bathrooms': selectedBathrooms,
               'price_min': priceMin,
