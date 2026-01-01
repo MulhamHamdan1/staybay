@@ -162,7 +162,7 @@ class _BookedCardState extends State<BookedCard> {
                         OutlinedButton.icon(
                           onPressed: canRate ? _handleRate : null,
                           icon: const Icon(Icons.star_outline, size: 18),
-                          label: const Text('Rate'),
+                          label: Text(locale['rate'] ?? 'Rate'),
                         ),
                         const SizedBox(height: 8),
 

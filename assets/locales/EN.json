@@ -296,7 +296,8 @@
     "total": "total : ",
     "status": "Status: ",
     "pay": "Pay Now",
-    "chat":"Chat"
+    "chat":"Chat",
+    "rate":"Rate"
   },
   "bottomNav": {
     "home": "Home",
