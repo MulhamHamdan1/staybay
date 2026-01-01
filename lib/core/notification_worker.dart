@@ -11,26 +11,27 @@ class NotificationTaskHandler extends TaskHandler {
 
   @override
   Future<void> onStart(DateTime timestamp, TaskStarter starter) async {
-    _timer = Timer.periodic(const Duration(seconds: 15), (_) async {
-      try {
-        List<NotificationModel> unreadNotificationsBackend =
-            await ApiNotificationService.fetchUnread();
+    log('started service');
+    // _timer = Timer.periodic(const Duration(seconds: 15), (_) async {
+    //   try {
+    //     List<NotificationModel> unreadNotificationsBackend =
+    //         await ApiNotificationService.fetchUnread();
 
-        List<NotificationModel> unreadNotifications =
-            await NotificationCache.getNotShowedNotifications(
-              unreadNotificationsBackend,
-            );
+    //     List<NotificationModel> unreadNotifications =
+    //         await NotificationCache.getNotShowedNotifications(
+    //           unreadNotificationsBackend,
+    //         );
 
-        if (unreadNotifications.isNotEmpty) {
-          LocalNotificationService.show(
-            title: 'You have unread Notifications',
-            body: unreadNotifications.toString(),
-          );
-        }
-      } catch (e) {
-        log('Error in NotificationTaskHandler: $e');
-      }
-    });
+    //     if (unreadNotifications.isNotEmpty) {
+    //       LocalNotificationService.show(
+    //         title: 'You have unread Notifications',
+    //         body: unreadNotifications.toString(),
+    //       );
+    //     }
+    //   } catch (e) {
+    //     log('Error in NotificationTaskHandler: $e');
+    //   }
+    // });
   }
 
   @override
@@ -39,5 +40,25 @@ class NotificationTaskHandler extends TaskHandler {
   }
 
   @override
-  void onRepeatEvent(DateTime timestamp) {}
+  Future<void> onRepeatEvent(DateTime timestamp) async {
+    try {
+      log('repeating');
+      List<NotificationModel> unreadNotificationsBackend =
+          await ApiNotificationService.fetchUnread();
+
+      List<NotificationModel> unreadNotifications =
+          await NotificationCache.getNotShowedNotifications(
+            unreadNotificationsBackend,
+          );
+
+      if (unreadNotifications.isNotEmpty) {
+        LocalNotificationService.show(
+          title: 'StayBay unread Notifications',
+          body: unreadNotifications.toString(),
+        );
+      }
+    } catch (e) {
+      log('Error in NotificationTaskHandler: $e');
+    }
+  }
 }

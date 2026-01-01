@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:staybay/app_theme.dart';
+import 'package:staybay/core/forground_task_service.dart';
 import 'package:staybay/core/notification_controller.dart';
 import 'package:staybay/cubits/apartments/acpartment_state.dart';
 import 'package:staybay/cubits/apartments/aparment_cubit.dart';
@@ -28,6 +29,9 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    Future.microtask(() async {
+      await ForegroundTaskService.start();
+    });
     _notificationCubit = context.read<NotificationCubit>();
     context.read<ApartmentCubit>().fetchApartments();
     _notificationCubit.startPolling();
@@ -82,6 +86,8 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _Refresh() async {
     await context.read<ApartmentCubit>().refreshApartments(filters);
+    _notificationCubit.stopPolling();
+    _notificationCubit.startPolling();
   }
 
   @override

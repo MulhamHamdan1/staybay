@@ -1,14 +1,24 @@
 class NotificationModel {
-  final int id;
+  final String id;
   final String message;
+  final Map<String, dynamic> data;
 
-  NotificationModel({required this.id, required this.message});
+  NotificationModel({
+    required this.id,
+    required this.message,
+    required this.data,
+  });
 
   factory NotificationModel.fromJson(Map<String, dynamic> json) {
-    return NotificationModel(id: json['id'], message: json['message']);
+    return NotificationModel(
+      id: json['id']?.toString() ?? '',
+      message: json['message']?.toString() ?? '',
+      data: json['data'] is Map<String, dynamic>
+          ? Map<String, dynamic>.from(json['data'])
+          : {},
+    );
   }
+
   @override
-  String toString() {
-    return message;
-  }
+  String toString() => message;
 }

@@ -71,6 +71,15 @@ class NotificationCubit extends Cubit<NotificationState> {
     }
   }
 
+  Future<void> markAllAsRead() async {
+    try {
+      await ApiNotificationService.markAllAsRead();
+      emit(state.copyWith(unreadCount: 0));
+    } catch (e) {
+      log('Error fetchAll: $e');
+    }
+  }
+
   @override
   Future<void> close() {
     _timer?.cancel();

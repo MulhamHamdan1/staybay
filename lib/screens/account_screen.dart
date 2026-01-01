@@ -64,6 +64,7 @@ class _AccountScreenState extends State<AccountScreen> {
                           title: 'تسجيل الخروج',
                           onTap: () async {
                             LogoutService.logout();
+
                             Navigator.of(
                               context,
                             ).pushNamed(WelcomeScreen.routeName);

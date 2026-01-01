@@ -1,9 +1,15 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:staybay/constants.dart';
 import 'package:staybay/models/book_model.dart';
+import 'package:staybay/models/chat.dart';
 import 'package:staybay/screens/booking_details_screen.dart';
+import 'package:staybay/screens/chat_screen.dart';
+import 'package:staybay/services/chat_service.dart';
 import 'package:staybay/services/pay_booking_service.dart';
 import 'package:staybay/services/rate_booking_service.dart';
+import 'package:staybay/widgets/chat_button.dart';
 import 'package:staybay/widgets/rating_dialog.dart';
 
 class BookedCard extends StatefulWidget {
@@ -146,16 +152,8 @@ class _BookedCardState extends State<BookedCard> {
                       if (_isActionLoading)
                         const Center(child: CircularProgressIndicator())
                       else ...[
-                        TextButton(onPressed: () {}, child: Text("chat")),
+                        ChatButton(ownerId: widget.book.apartment.ownerId),
                         const SizedBox(height: 8),
-
-                        TextButton.icon(
-                          onPressed: canEdit ? _handleEdit : null,
-                          icon: const Icon(Icons.edit, size: 18),
-                          label: const Text('Edit'),
-                        ),
-                        const SizedBox(height: 8),
-
                         OutlinedButton.icon(
                           onPressed: canRate ? _handleRate : null,
                           icon: const Icon(Icons.star_outline, size: 18),
