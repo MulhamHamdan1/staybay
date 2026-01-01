@@ -19,7 +19,9 @@
         "phoneRequired": "يرجى إدخال رقم الهاتف",
         "phoneLengthError": "يجب أن يكون رقم الهاتف 10 أرقام",
         "passwordRequired": "يرجى إدخال كلمة المرور",
-        "passwordLengthError": "يجب أن تكون كلمة المرور بين 8 و16 حرفًا"
+        "passwordLengthError": "يجب أن تكون كلمة المرور بين 8 و16 حرفًا",
+        "error":"عذراً، حدث خطأ"
+
     },
 
     "singup": {
@@ -46,7 +48,8 @@
         "allRequired": "يرجى تعبئة جميع الحقول المطلوبة",
         "imageSelected": "تم اختيار الصورة بنجاح",
         "No image selected":"لم يتم اختيار صورة",
-        "Image Selected":"تم اختيار الصورة"
+        "Image Selected":"تم اختيار الصورة",
+        "error":"عذراً، حدث خطأ"
     }
     ,
     "Success":{
@@ -56,5 +59,327 @@
         "successfully logged":"لقد سجلت الدخول إلى حسابك بنجاح.",
         "created successfully":"تم إنشاء حسابك بنجاح.",
         "agree":"بالمتابعة، أنت توافق على شروط الخدمة وسياسة الخصوصية الخاصة بنا"
+    },
+        "home": {
+        "searchHint": "ابحث عن...",
+        "noApartments": "لم يتم العثور على شقق",
+        "notifications": "الإشعارات",
+        "filters": "الفلاتر",
+        "loadingMore": "جاري تحميل المزيد..."
+    },
+    "filter": {
+        "title": "تصفية الشقق",
+        "governorate": "المحافظة",
+        "selectGov": "اختر المحافظة",
+        "city": "المنطقة/المدينة",
+        "selectCity": "اختر المدينة",
+        "selectGovFirst": "يرجى اختيار المحافظة أولاً",
+        "bedrooms": "غرف النوم",
+        "bathrooms": "الحمامات",
+        "price": "السعر (ل.س)",
+        "size": "المساحة (م²)",
+        "rating": "التقييم",
+        "min": "الأدنى",
+        "max": "الأقصى",
+        "to": "إلى",
+        "hasPool": "يوجد مسبح",
+        "hasWifi": "يوجد إنترنت (WiFi)",
+        "apply": "تطبيق"
+    },
+    "activeFilters": {
+        "label": "الفلاتر النشطة",
+        "city": "المدينة",
+        "beds": "الغرف",
+        "baths": "الحمامات",
+        "price": "السعر",
+        "pool": "مسبح",
+        "wifi": "إنترنت",
+        "search": "بحث"
+    },
+    "searchFilters": {
+        "searchHint": "ابحث هنا...",
+        "chips": {
+            "location": "الموقع",
+            "beds": "الغرف",
+            "baths": "الحمامات",
+            "area": "المساحة",
+            "price": "السعر"
+        },
+        "sheets": {
+            "any": "الكل",
+            "plus": "+",
+            "moreThan": "أكثر من",
+            "areaUnit": "م²",
+            "currencySymbol": "ل.س"
+            },
+        "governorates": {
+            "Damascus": "دمشق",
+            "Rif Dimashq": "ريف دمشق",
+            "Aleppo": "حلب",
+            "Homs": "حمص",
+            "Hama": "حماة",
+            "Latakia": "اللاذقية",
+            "Tartous": "طرطوس",
+            "Idlib": "إدلب",
+            "Deir ez-Zor": "دير الزور",
+            "Raqqa": "الرقة",
+            "Al-Hasakah": "الحسكة",
+            "Daraa": "درعا",
+            "Sweida": "السويداء",
+            "Quneitra": "القنيطرة"
+        },
+        "cities": {
+            "Mazzeh": "المزة",
+            "Mazzeh Villas": "فيلات مزة",
+            "Rukn Al-Din": "ركن الدين",
+            "Barzeh": "برزة",
+            "Midan": "الميدان",
+            "Kafr Sousa": "كفرسوسة",
+            "Abu Rummaneh": "أبو رمانة",
+            "Malki": "المالكي",
+            "Shaalan": "الشعلان",
+            "Salhieh": "الصالحية",
+            "Muhajreen": "المهاجرين",
+            "Qanawat": "القنوات",
+            "Bab Touma": "باب توما",
+            "Bab Sharqi": "باب شرقي",
+            "Jobar": "جوبر",
+            "Qaboun": "القابون",
+            "Tishreen": "تشرين",
+            "Dummar": "دمر",
+            "Dummar Project": "مشروع دمر",
+            "Mezzeh 86": "مزة 86",
+            "Kafar Souseh": "كفر سوسة",
+            "Zahera": "الزاهرة",
+            "Douma": "دوما",
+            "Darayya": "داريا",
+            "Qudsaya": "قدسيا",
+            "Yabroud": "يبرود",
+            "Al-Tall": "التل",
+            "Zabadani": "الزبداني",
+            "Madaya": "مضايا",
+            "Harasta": "حرستا",
+            "Saqba": "سقبا",
+            "Kafr Batna": "كفر بطنا",
+            "Jaramana": "جرمانا",
+            "Mleiha": "المليحة",
+            "Ein Tarma": "عين ترما",
+            "Nabek": "النبك",
+            "Rankous": "رنكوس",
+            "Aziziya": "العزيزية",
+            "New Aleppo": "حلب الجديدة",
+            "Suleimaniya": "السليمانية",
+            "Hamdaneya": "الحمدانية",
+            "Al-Jamiliyah": "الجميلية",
+            "Al-Sabil": "السبيل",
+            "Al-Midan": "الميدان",
+            "Al-Shaar": "الشعار",
+            "Seif Al-Dawla": "سيف الدولة",
+            "Hanano": "هنانو",
+            "Ramousah": "الراموسة",
+            "Karm Al-Jabal": "كرم الجبل",
+            "Al-Furqan": "الفرقان",
+            "Al-Hamra": "الحمراء",
+            "Al-Zahra": "الزهراء",
+            "Al-Waer": "الوعر",
+            "Inshaat": "الإنشاءات",
+            "Baba Amr": "بابا عمرو",
+            "Karm Al-Zeitoun": "كرم الزيتون",
+            "Khaldiyeh": "الخالدية",
+            "Al-Arman": "الأرمن",
+            "Al-Hader": "الحاضر",
+            "Al-Arbaeen": "الأربعين",
+            "Al-Hamidiya": "الحميدية",
+            "Bab Qibli": "باب قبلي",
+            "Al-Mourabit": "المرابط",
+            "Salamieh": "سلمية",
+            "Masyaf": "مصياف",
+            "Al-Raml Al-Janoubi": "الرمل الجنوبي",
+            "Al-Raml Al-Shamali": "الرمل الشمالي",
+            "Al-Azizieh": "العزيزية",
+            "Project 10": "مشروع 10",
+            "Project 7": "مشروع 7",
+            "Al-Ziraa": "الزراعة",
+            "Jableh": "جبلة",
+            "Qardaha": "القرداحة",
+            "Tartous City": "مدينة طرطوس",
+            "Baniyas": "بانياس",
+            "Safita": "صافيتا",
+            "Sheikh Badr": "الشيخ بدر",
+            "Duraykish": "دريكيش",
+            "Idlib City": "مدينة إدلب",
+            "Ariha": "أريحا",
+            "Saraqib": "سراقب",
+            "Jisr Al-Shughur": "جسر الشغور",
+            "Maarrat Misrin": "معرة مصرين",
+            "Deir ez-Zor City": "مدينة دير الزور",
+            "Al-Mayadin": "الميادين",
+            "Al-Bukamal": "البوكمال",
+            "Ashara": "العشارة",
+            "Raqqa City": "مدينة الرقة",
+            "Tal Abyad": "تل أبيض",
+            "Al-Karamah": "الكرامة",
+            "Hasakah City": "مدينة الحسكة",
+            "Qamishli": "القامشلي",
+            "Ras Al-Ain": "رأس العين",
+            "Malikiyah": "المالكية",
+            "Daraa City": "مدينة درعا",
+            "Daraa Al-Balad": "درعا البلد",
+            "Izraa": "إزرع",
+            "Al-Sanamayn": "الصنمين",
+            "Busra Al-Sham": "بصرى الشام",
+            "Sweida City": "مدينة السويداء",
+            "Shahba": "شهبا",
+            "Salkhad": "صلخد",
+            "Khan Arnabeh": "خان أرنبة",
+            "Baath City": "مدينة البعث"
+        }
+    },
+    "myApartments": {
+        "title": "عقاراتي",
+        "noApartments": "لا توجد عقارات حالياً",
+        "noFavorites": "لا توجد عقارات في المفضلة بعد!",
+        "errorOccurred": "عذراً! حدث خطأ ما",
+        "loading": "جاري تحميل عقاراتك..."
+    },
+    "favorites": {
+        "title": "المفضلة",
+        "noItems": "لا توجد عناصر مفضلة بعد",
+        "noFavoritesYet": "قائمة المفضلة فارغة!",
+        "error": "عذراً، حدث خطأ: ",
+        "loading": "جاري تحميل المفضلة..."
+    },
+    "booking": {
+        "title": "الحجز",
+        "checkIn": "تاريخ الوصول",
+        "checkOut": "تاريخ المغادرة",
+        "paymentMethod": "طريقة الدفع",
+        "cash": "نقداً",
+        "card": "بطاقة ائتمان",
+        "paypal": "بايبال",
+        "total": "الإجمالي",
+        "nights": "ليالي",
+        "confirmBooking": "تأكيد الحجز",
+        "bookingConfirmed": "تم تأكيد الحجز بنجاح",
+        "ratingThankYou": "شكراً لك! لقد منحت تقييماً بـ {} نجوم."
+    },
+    "ratingDialog": {
+        "question": "كيف كانت تجربتك؟",
+        "submit": "إرسال التقييم",
+        "defaultText": "اختر التقييم",
+        "levels": {
+            "terrible": "سيء جداً",
+            "poor": "سيء",
+            "average": "متوسط",
+            "good": "جيد",
+            "excellent": "ممتاز"
+        }
+    },
+    "apartmentDetails": {
+        "perNight": " / ليلة",
+        "bedrooms": "غرف نوم",
+        "bathrooms": "حمامات",
+        "area": "المساحة",
+        "areaUnit": "م²",
+        "owner": "المالك: ",
+        "reviews": "التقييمات",
+        "amenities": "المرافق والخدمات",
+        "description": "الوصف",
+        "bookNow": "احجز الآن"
+    },
+    "amenities": {
+        "wifi": "إنترنت (WiFi)",
+        "pool": "مسبح",
+        "ac": "تكييف",
+        "parking": "موقف سيارات",
+        "kitchen": "مطبخ",
+        "tv": "تلفاز",
+        "gym": "نادي رياضي",
+        "unknown": "مرافق أخرى"
+    },
+    "errors": {
+        "imageLoadError": "تعذر تحميل الصورة"
+    },
+    "apartmentCard": {
+        "imageNotFound": "الصورة غير موجودة: ",
+        "beds": "غرف",
+        "baths": "حمامات",
+        "sqft": "م²",
+        "reviews": "تقييمات",
+        "perNight": " / ليلة",
+        "unknownLocation": "موقع غير معروف"
+    },
+    "bookedCard": {
+        "total": "الإجمالي: ",
+        "reviews": "تقييمات",
+        "start": "البداية: ",
+        "end": "النهاية: ",
+        "status": "الحالة: ",
+        "pay": "دفع",
+        "bookingStatus": {
+            "pending": "قيد الانتظار",
+            "approved": "تمت الموافقة",
+            "rejected": "مرفوض",
+            "cancelled": "ملغي",
+            "completed": "مكتمل",
+            "started": "بدأ",
+            "finished": "انتهى",
+            "failed": "فشل"
+        }
+    },
+    "bottomNav": {
+        "home": "الرئيسية",
+        "add": "إضافة",
+        "favorites": "المفضلة",
+        "account": "حسابي"
+    },
+    "addApartment": {
+        "appBarTitle": "إضافة شقة",
+        "imageSection": {
+            "addImages": "أضف صوراً",
+            "errorNoImages": "يرجى إضافة صورة واحدة على الأقل"
+        },
+        "fields": {
+            "title": "العنوان",
+            "price": "السعر لكل ليلة",
+            "beds": "عدد الغرف",
+            "baths": "عدد الحمامات",
+            "area": "المساحة",
+            "description": "الوصف",
+            "requiredError": "مطلوب"
+            },
+        "location": {
+            "governorate": "المحافظة",
+            "city": "المدينة",
+            "selectGov": "اختر المحافظة",
+            "selectCity": "اختر المدينة",
+            "selectGovFirst": "اختر المحافظة أولاً",
+            "errorSelection": "يرجى اختيار المحافظة والمدينة"
+        },
+        "amenities": {
+            "title": "المرافق",
+            "wifi": "إنترنت (WiFi)",
+            "pool": "مسبح"
+        },
+        "buttons": {
+            "save": "حفظ الشقة"
+        },
+        "messages": {
+            "fillRequired": "يرجى تعبئة كافة الحقول المطلوبة"
+        }
+    },
+    "account": {
+        "appBarTitle": "الملف الشخصي",
+        "refresh": "تحديث",
+        "myApartments": "عقاراتي",
+        "myBookings": "حجوزاتي",
+        "toggleTheme": "تبديل المظهر (ليلي/نهاري)",
+        "logout": "تسجيل الخروج",
+        "changeLanguage": "اللغة",
+        "errors": {
+            "userLoadFailed": "فشل تحميل بيانات المستخدم"
+        }
     }
 }
+
+

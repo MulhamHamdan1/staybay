@@ -55,6 +55,11 @@ class _LoginScreenState extends State<LoginScreen> {
           context,
         ).pushNamed(SuccessScreen.routeName, arguments: true);
       }
+      if (response == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(locale['error']), backgroundColor: Colors.red),
+        );
+      }
     }
   }
 

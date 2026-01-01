@@ -172,6 +172,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
           // ignore: use_build_context_synchronously
           context,
         ).pushNamed(SuccessScreen.routeName, arguments: false);
+      } else if (response == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(locale['error']), backgroundColor: Colors.red),
+        );
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(

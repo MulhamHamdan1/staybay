@@ -19,9 +19,10 @@
         "phoneRequired": "Please enter phone number",
         "phoneLengthError": "Phone Number must be exactly 10 digits",
         "passwordRequired": "Please enter password",
-        "passwordLengthError": "Password must be between 8 and 16 characters"
-    }
-,
+        "passwordLengthError": "Password must be between 8 and 16 characters",
+        "error":"there was an error"
+    },
+
     "singup":{ 
         "title": "Sign Up",
         "firstName": "First Name",
@@ -46,9 +47,11 @@
         "allRequired": "Please fill all required fields",
         "imageSelected": "Image selected successfully",
         "No image selected":"No image selected",
-        "Image Selected":"Image Selected"
-}
-,
+        "Image Selected":"Image Selected",
+        "error":"there was an error"
+
+},
+
     "Success":{
         "login succeeded":"Thank you, login succeeded!",
         "registration succeeded":"Thank you, registration succeeded!",
@@ -56,5 +59,336 @@
         "successfully logged":"You have successfully logged into your account.",
         "created successfully":"Your account has been created successfully.",
         "agree":"By continuing, you agree to our Terms of Service and Privacy Policy"
-    }   
+    },
+
+    "home": {
+        "searchHint": "Search...",
+        "noApartments": "No apartments found",
+        "notifications": "Notifications",
+        "filters": "Filters",
+        "loadingMore": "Loading more..."
+    },
+    "filter": {
+        "title": "Filter Apartments",
+        "governorate": "Governorate",
+        "selectGov": "Select Governorate",
+        "city": "City",
+        "selectCity": "Select City",
+        "selectGovFirst": "Select Governorate First",
+        "bedrooms": "Bedrooms",
+        "bathrooms": "Bathrooms",
+        "price": "Price (SYP)",
+        "size": "Area (m²)",
+        "rating": "Rating",
+        "min": "Min",
+        "max": "Max",
+        "to": "To",
+        "hasPool": "Has Swimming Pool",
+        "hasWifi": "Has WiFi",
+        "apply": "Apply"
+    },
+    "activeFilters": {
+        "label": "Active Filters",
+        "city": "City",
+        "beds": "Beds",
+        "baths": "Baths",
+        "price": "Price",
+        "pool": "Pool",
+        "wifi": "WiFi",
+        "search": "Search"
+    },
+
+    "searchFilters": {
+        "searchHint": "Search...",
+        "chips": {
+            "location": "Location",
+            "beds": "Beds",
+            "baths": "Baths",
+            "area": "Area",
+            "price": "Price"
+        },
+        "sheets": {
+            "any": "Any",
+            "plus": "+",
+            "moreThan": "More than",
+            "areaUnit": "m²",
+            "currencySymbol": "$"
+        },
+        "governorates": {
+            "Damascus": "Damascus",
+            "Rif Dimashq": "Rif Dimashq",
+            "Aleppo": "Aleppo",
+            "Homs": "Homs",
+            "Hama": "Hama",
+            "Latakia": "Latakia",
+            "Tartous": "Tartous",
+            "Idlib": "Idlib",
+            "Deir ez-Zor": "Deir ez-Zor",
+            "Raqqa": "Raqqa",
+            "Al-Hasakah": "Al-Hasakah",
+            "Daraa": "Daraa",
+            "Sweida": "Sweida",
+            "Quneitra": "Quneitra"
+        },
+        "cities": {
+            "Mazzeh": "Mazzeh",
+            "Mazzeh Villas": "Mazzeh Villas",
+            "Rukn Al-Din": "Rukn Al-Din",
+            "Barzeh": "Barzeh",
+            "Midan": "Midan",
+            "Kafr Sousa": "Kafr Sousa",
+            "Abu Rummaneh": "Abu Rummaneh",
+            "Malki": "Malki",
+            "Shaalan": "Shaalan",
+            "Salhieh": "Salhieh",
+            "Muhajreen": "Muhajreen",
+            "Qanawat": "Qanawat",
+            "Bab Touma": "Bab Touma",
+            "Bab Sharqi": "Bab Sharqi",
+            "Jobar": "Jobar",
+            "Qaboun": "Qaboun",
+            "Tishreen": "Tishreen",
+            "Dummar": "Dummar",
+            "Dummar Project": "Dummar Project",
+            "Mezzeh 86": "Mezzeh 86",
+            "Kafar Souseh": "Kafar Souseh",
+            "Zahera": "Zahera",
+            "Douma": "Douma",
+            "Darayya": "Darayya",
+            "Qudsaya": "Qudsaya",
+            "Yabroud": "Yabroud",
+            "Al-Tall": "Al-Tall",
+            "Zabadani": "Zabadani",
+            "Madaya": "Madaya",
+            "Harasta": "Harasta",
+            "Saqba": "Saqba",
+            "Kafr Batna": "Kafr Batna",
+            "Jaramana": "Jaramana",
+            "Mleiha": "Mleiha",
+            "Ein Tarma": "Ein Tarma",
+            "Nabek": "Nabek",
+            "Rankous": "Rankous",
+            "Aziziya": "Aziziya",
+            "New Aleppo": "New Aleppo",
+            "Suleimaniya": "Suleimaniya",
+            "Hamdaneya": "Hamdaneya",
+            "Al-Jamiliyah": "Al-Jamiliyah",
+            "Al-Sabil": "Al-Sabil",
+            "Al-Midan": "Al-Midan",
+            "Al-Shaar": "Al-Shaar",
+            "Seif Al-Dawla": "Seif Al-Dawla",
+            "Hanano": "Hanano",
+            "Ramousah": "Ramousah",
+            "Karm Al-Jabal": "Karm Al-Jabal",
+            "Al-Furqan": "Al-Furqan",
+            "Al-Hamra": "Al-Hamra",
+            "Al-Zahra": "Al-Zahra",
+            "Al-Waer": "Al-Waer",
+            "Inshaat": "Inshaat",
+            "Baba Amr": "Baba Amr",
+            "Karm Al-Zeitoun": "Karm Al-Zeitoun",
+            "Khaldiyeh": "Khaldiyeh",
+            "Al-Arman": "Al-Arman",
+            "Al-Hader": "Al-Hader",
+            "Al-Arbaeen": "Al-Arbaeen",
+            "Al-Hamidiya": "Al-Hamidiya",
+            "Bab Qibli": "Bab Qibli",
+            "Al-Mourabit": "Al-Mourabit",
+            "Salamieh": "Salamieh",
+            "Masyaf": "Masyaf",
+            "Al-Raml Al-Janoubi": "Al-Raml Al-Janoubi",
+            "Al-Raml Al-Shamali": "Al-Raml Al-Shamali",
+            "Al-Azizieh": "Al-Azizieh",
+            "Project 10": "Project 10",
+            "Project 7": "Project 7",
+            "Al-Ziraa": "Al-Ziraa",
+            "Jableh": "Jableh",
+            "Qardaha": "Qardaha",
+            "Tartous City": "Tartous City",
+            "Baniyas": "Baniyas",
+            "Safita": "Safita",
+            "Sheikh Badr": "Sheikh Badr",
+            "Duraykish": "Duraykish",
+            "Idlib City": "Idlib City",
+            "Ariha": "Ariha",
+            "Saraqib": "Saraqib",
+            "Jisr Al-Shughur": "Jisr Al-Shughur",
+            "Maarrat Misrin": "Maarrat Misrin",
+            "Deir ez-Zor City": "Deir ez-Zor City",
+            "Al-Mayadin": "Al-Mayadin",
+            "Al-Bukamal": "Al-Bukamal",
+            "Ashara": "Ashara",
+            "Raqqa City": "Raqqa City",
+            "Tal Abyad": "Tal Abyad",
+            "Al-Karamah": "Al-Karamah",
+            "Hasakah City": "Hasakah City",
+            "Qamishli": "Qamishli",
+            "Ras Al-Ain": "Ras Al-Ain",
+            "Malikiyah": "Malikiyah",
+            "Daraa City": "Daraa City",
+            "Daraa Al-Balad": "Daraa Al-Balad",
+            "Izraa": "Izraa",
+            "Al-Sanamayn": "Al-Sanamayn",
+            "Busra Al-Sham": "Busra Al-Sham",
+            "Sweida City": "Sweida City",
+            "Shahba": "Shahba",
+            "Salkhad": "Salkhad",
+            "Khan Arnabeh": "Khan Arnabeh",
+            "Baath City": "Baath City"
+        }
+    },
+  
+"myApartments": {
+        "title": "My Apartments",
+        "noApartments": "No apartments yet",
+        "noFavorites": "No favorites yet!",
+        "errorOccurred": "Oops! An error occurred",
+        "loading": "Loading your apartments..."
+    },
+    
+    "favorites": {
+        "title": "My Favorites",
+        "noItems": "No Favorite items yet",
+        "noFavoritesYet": "No favorites yet!",
+        "error": "oops Error: ",
+        "loading": "Loading favorites..."
+    },
+    
+    "booking": {
+        "title": "Booking",
+        "checkIn": "Check-in",
+        "checkOut": "Check-out",
+        "paymentMethod": "Payment Method",
+        "cash": "Cash",
+        "card": "Card",
+        "paypal": "PayPal",
+        "total": "Total",
+        "nights": "nights",
+        "confirmBooking": "Confirm Booking",
+        "bookingConfirmed": "Booking confirmed",
+        "ratingThankYou": "Thank you! You gave a rating of {} stars."
+    },
+
+    "ratingDialog": {
+        "question": "How was your experience?",
+        "submit": "Submit Review",
+        "defaultText": "Select a rating",
+        "levels": {
+            "terrible": "Terrible",
+            "poor": "Poor",
+            "average": "Average",
+            "good": "Good",
+            "excellent": "Excellent"
+        }
+    },
+    
+    "apartmentDetails": {
+        "perNight": " / night",
+        "bedrooms": "Bedrooms",
+        "bathrooms": "Bathrooms",
+        "area": "Area",
+        "areaUnit": "Sqft",
+        "owner": "Owner: ",
+        "reviews": "Reviews",
+        "amenities": "Amenities & Services",
+        "description": "Description",
+        "bookNow": "Book Now"
+    },
+"amenities": {
+        "wifi": "WiFi",
+        "pool": "Swimming Pool",
+        "ac": "Air Conditioning",
+        "parking": "Parking",
+        "kitchen": "Kitchen",
+        "tv": "TV",
+        "gym": "Gym",
+        "unknown": "Other Amenity"
+    },
+    "errors": {
+        "imageLoadError": "Could not load image"
+    },
+    "apartmentCard": {
+    "imageNotFound": "Image Not Found: ",
+    "beds": "Beds",
+    "baths": "Baths",
+    "sqft": "Sqft",
+    "reviews": "reviews",
+    "perNight": " / night",
+    "unknownLocation": "Unknown Location"
+  },
+
+  "bookedCard": {
+    "total": "total : ",
+    "reviews": "reviews",
+    "start": "start : ",
+    "end": "end: ",
+    "status": "Status: ",
+    "pay": "pay",
+    "bookingStatus": {
+      "pending": "Pending",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "cancelled": "Cancelled",
+      "completed": "Completed",
+      "started": "Started",
+      "finished": "Finished",
+      "failed": "Failed"
+    }
+  },
+  "bottomNav": {
+    "home": "Home",
+    "add": "Add",
+    "favorites": "Favorites",
+    "account": "Account"
+  },
+  
+  "addApartment": {
+    "appBarTitle": "Add Apartment",
+    "imageSection": {
+      "addImages": "Add images",
+      "errorNoImages": "Please add at least one image"
+    },
+    "fields": {
+      "title": "Title",
+      "price": "Price per night",
+      "beds": "Beds",
+      "baths": "Baths",
+      "area": "Area",
+      "description": "Description",
+      "requiredError": "Required"
+    },
+    "location": {
+      "governorate": "Governorate",
+      "city": "City",
+      "selectGov": "Select Governorate",
+      "selectCity": "Select City",
+      "selectGovFirst": "Select governorate first",
+      "errorSelection": "Please select governorate and city"
+    },
+    "amenities": {
+      "title": "Amenities",
+      "wifi": "WiFi",
+      "pool": "Pool"
+    },
+    "buttons": {
+      "save": "Save Apartment"
+    },
+    "messages": {
+      "fillRequired": "Please fill all required fields"
+    }
+  },
+  
+  "account": {
+    "appBarTitle": "Profile",
+    "refresh": "Refresh",
+    "myApartments": "My Apartments",
+    "myBookings": "My Bookings",
+    "toggleTheme": "Toggle Theme",
+    "logout": "Logout",
+    "changeLanguage": "Language",
+    "errors": {
+      "userLoadFailed": "Failed to load user data"
+    }
+  }
+
 }
