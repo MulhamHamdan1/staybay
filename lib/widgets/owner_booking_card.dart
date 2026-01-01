@@ -230,7 +230,7 @@ class _OwnerBookedCardState extends State<OwnerBookedCard> {
                         ),
                       ),
                     ),
-                  ChatButton(ownerId: widget.book.userId),
+                  ChatButton(receiverId: widget.book.userId),
                 ],
               ),
             ),

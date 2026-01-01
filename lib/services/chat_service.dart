@@ -29,6 +29,7 @@ class ChatApiService {
         '/chat/show',
         queryParameters: {'receiver_id': receiverId},
       );
+      // log(response.toString());
       // Assuming the response contains a valid Chat object
       return Chat.fromJson(response.data);
     } catch (e) {
@@ -41,7 +42,7 @@ class ChatApiService {
   // Get single chat messages
   Future<List<Message>> getMessages(int chatId) async {
     final response = await dio.get('/chat/$chatId');
-
+    // log(response.toString());
     // Make sure data and messages exist
     final data = response.data;
     if (data == null || data['messages'] == null) return [];
@@ -62,6 +63,7 @@ class ChatApiService {
       '/chat/send',
       data: {'chat_id': chatId, 'message': message, 'receiver_id': receiverId},
     );
+    // log(response.toString());
     return Message.fromJson(response.data);
   }
 

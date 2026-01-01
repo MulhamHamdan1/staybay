@@ -152,7 +152,7 @@ class _BookedCardState extends State<BookedCard> {
                       if (_isActionLoading)
                         const Center(child: CircularProgressIndicator())
                       else ...[
-                        ChatButton(ownerId: widget.book.apartment.ownerId),
+                        ChatButton(receiverId: widget.book.apartment.ownerId),
                         const SizedBox(height: 8),
                         OutlinedButton.icon(
                           onPressed: canRate ? _handleRate : null,
