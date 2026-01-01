@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:staybay/constants.dart';
 import 'package:staybay/models/book_model.dart';
 import 'package:staybay/services/owner_update_booking_servcie.dart';
+import 'package:staybay/widgets/chat_button.dart';
 
 class OwnerBookedCard extends StatefulWidget {
   final BookModel book;
@@ -229,6 +230,7 @@ class _OwnerBookedCardState extends State<OwnerBookedCard> {
                         ),
                       ),
                     ),
+                  ChatButton(ownerId: widget.book.userId),
                 ],
               ),
             ),

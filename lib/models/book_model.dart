@@ -17,6 +17,7 @@ class BookModel {
   final bool canOwnerEdit;
   final String createdAt;
   final String updatedAt;
+  final int userId;
 
   BookModel({
     required this.id,
@@ -35,6 +36,7 @@ class BookModel {
     required this.canOwnerEdit,
     required this.createdAt,
     required this.updatedAt,
+    required this.userId,
   });
 
   factory BookModel.fromJson(Map<String, dynamic> json) {
@@ -55,6 +57,7 @@ class BookModel {
       canOwnerEdit: json['can_owner_edit'] ?? false,
       createdAt: json['created_at'] ?? '',
       updatedAt: json['updated_at'] ?? '',
+      userId: json['user_id'] ?? '',
     );
   }
 }
