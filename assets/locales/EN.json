@@ -293,6 +293,17 @@
   },
 
   "bookedCard": {
+     "status_all":{
+      "pending":"pending",
+      "approved":"approved",
+      "rejected":"rejected",
+      "cancelled":"cancelled",
+      "completed":"completed",
+      "started":"started",
+      "finished":"finished",
+      "failed":"failed",
+      "error":"Error"
+    },
     "total": "total : ",
     "status": "Status: ",
     "pay": "Pay Now",

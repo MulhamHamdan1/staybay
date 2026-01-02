@@ -293,6 +293,17 @@
     },
 
     "bookedCard": {
+         "status_all": {
+            "pending": "قيد الانتظار",
+            "approved": "مقبول",
+            "rejected": "مرفوض",
+            "cancelled": "ملغي",
+            "completed": "مكتمل",
+            "started": "بدأ",
+            "finished": "انتهى",
+            "failed": "فشل",
+            "error": "خطأ"
+        },
         "total": "المجموع: ",
         "status": "الحالة: ",
         "pay": "ادفع الآن",

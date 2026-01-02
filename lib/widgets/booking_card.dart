@@ -26,6 +26,28 @@ class _BookedCardState extends State<BookedCard> {
       context.read<LocaleCubit>().state.localizedStrings['bookedCard'];
 
   bool _isActionLoading = false;
+  String _getStatuslabel(String status, Map<String, dynamic> locale) {
+    switch (status.toLowerCase()) {
+      case 'pending':
+        return locale['pending'] ?? 'pending';
+      case 'approved':
+        return locale['approved'] ?? 'approved';
+      case 'rejected':
+        return locale['rejected'] ?? 'rejected';
+      case 'cancelled':
+        return locale['cancelled'] ?? 'cancelled';
+      case 'completed':
+        return locale['completed'] ?? 'completed';
+      case 'started':
+        return locale['started'] ?? 'started';
+      case 'finished':
+        return locale['finished'] ?? 'finished';
+      case 'failed':
+        return locale['failed'] ?? 'failed';
+      default:
+        return locale['error'] ?? 'Error';
+    }
+  }
 
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
@@ -104,7 +126,10 @@ class _BookedCardState extends State<BookedCard> {
                         ),
                       ),
                       _StatusChip(
-                        label: widget.book.status,
+                        label: _getStatuslabel(
+                          widget.book.status,
+                          locale['status_all'],
+                        ),
                         color: _getStatusColor(status),
                       ),
                     ],
