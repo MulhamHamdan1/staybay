@@ -29,7 +29,6 @@ class ChatApiService {
         '/chat/show',
         queryParameters: {'receiver_id': receiverId},
       );
-      // log(response.toString());
       // Assuming the response contains a valid Chat object
       return Chat.fromJson(response.data);
     } catch (e) {

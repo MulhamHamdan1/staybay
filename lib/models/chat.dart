@@ -6,8 +6,8 @@ class Chat {
   Chat({required this.id, required this.senderId, required this.receiverId});
 
   factory Chat.fromJson(Map<String, dynamic> json) => Chat(
-    id: json['id'],
-    senderId: json['sender_id'],
-    receiverId: json['receiver_id'],
+    id: int.parse(json['id'].toString()),
+    senderId: int.parse(json['sender_id'].toString()),
+    receiverId: int.parse(json['receiver_id'].toString()),
   );
 }
