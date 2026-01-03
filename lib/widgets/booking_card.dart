@@ -23,7 +23,7 @@ class BookedCard extends StatefulWidget {
 
 class _BookedCardState extends State<BookedCard> {
   Map<String, dynamic> get locale =>
-      context.read<LocaleCubit>().state.localizedStrings['bookedCard'];
+      context.watch<LocaleCubit>().state.localizedStrings['bookedCard'];
 
   bool _isActionLoading = false;
   String _getStatuslabel(String status, Map<String, dynamic> locale) {

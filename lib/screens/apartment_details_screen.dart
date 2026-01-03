@@ -26,7 +26,7 @@ class ApartmentDetailsScreen extends StatefulWidget {
 
 class _ApartmentDetailsScreenState extends State<ApartmentDetailsScreen> {
   Map<String, dynamic> get locale =>
-      context.read<LocaleCubit>().state.localizedStrings['apartmentDetails'];
+      context.watch<LocaleCubit>().state.localizedStrings['apartmentDetails'];
 
   late bool _isFavorite;
 

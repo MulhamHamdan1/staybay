@@ -16,7 +16,7 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   Map<String, dynamic> get locale =>
-      context.read<LocaleCubit>().state.localizedStrings['ChatScreen'];
+      context.watch<LocaleCubit>().state.localizedStrings['ChatScreen'];
   final TextEditingController _controller = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   late ChatCubit cubit;

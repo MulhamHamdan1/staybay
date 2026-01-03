@@ -24,7 +24,7 @@ class AccountScreen extends StatefulWidget {
 
 class _AccountScreenState extends State<AccountScreen> {
   Map<String, dynamic> get locale =>
-      context.read<LocaleCubit>().state.localizedStrings['account'];
+      context.watch<LocaleCubit>().state.localizedStrings['account'];
 
   @override
   void initState() {

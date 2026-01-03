@@ -34,7 +34,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _dateOfBirthController = TextEditingController();
 
   Map<String, dynamic> get locale =>
-      context.read<LocaleCubit>().state.localizedStrings['singup'];
+      context.watch<LocaleCubit>().state.localizedStrings['singup'];
   @override
   void dispose() {
     _firstNameController.dispose();

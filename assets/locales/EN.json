@@ -415,5 +415,15 @@
   },
   "ChatScreen":{
     "appBarTitle":"Chat"
-  }
+  },
+  "BookingDetails":{
+  "appBarTitle":"Booking Details",
+  "Update":"Update Booking",
+  "Confirm":"Confirm Booking",
+  "Cancel":"Cancel Booking",
+  "Select":"Select Dates",
+  "nights":"nights",
+  "CheckInOut":"Check-in to Check-out",
+  "Total":"Total Price"
+}
 }

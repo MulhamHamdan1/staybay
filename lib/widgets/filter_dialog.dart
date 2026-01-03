@@ -107,7 +107,7 @@ class _FilterDialogState extends State<FilterDialog> {
   }
 
   Map<String, dynamic> get locale =>
-      context.read<LocaleCubit>().state.localizedStrings['filter'];
+      context.watch<LocaleCubit>().state.localizedStrings['filter'];
   @override
   Widget build(BuildContext context) {
     return Directionality(

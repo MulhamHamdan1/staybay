@@ -18,7 +18,7 @@ class AppBottomNavBar extends StatefulWidget {
 
 class _AppBottomNavBarState extends State<AppBottomNavBar> {
   Map<String, dynamic> get locale =>
-      context.read<LocaleCubit>().state.localizedStrings['bottomNav'];
+      context.watch<LocaleCubit>().state.localizedStrings['bottomNav'];
 
   int _currentIndex = 0;
 

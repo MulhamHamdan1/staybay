@@ -13,7 +13,7 @@ class RatingDialog extends StatefulWidget {
 
 class _RatingDialogState extends State<RatingDialog> {
   Map<String, dynamic> get locale =>
-      context.read<LocaleCubit>().state.localizedStrings['ratingDialog'];
+      context.watch<LocaleCubit>().state.localizedStrings['ratingDialog'];
 
   int _selectedRating = 0;
 

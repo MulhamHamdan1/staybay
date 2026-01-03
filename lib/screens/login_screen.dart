@@ -29,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isPasswordVisible = false;
 
   Map<String, dynamic> get locale =>
-      context.read<LocaleCubit>().state.localizedStrings['login'];
+      context.watch<LocaleCubit>().state.localizedStrings['login'];
   @override
   void dispose() {
     _phoneController.dispose();

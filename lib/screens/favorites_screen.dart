@@ -15,7 +15,7 @@ class FavoritesScreen extends StatefulWidget {
 
 class _FavoritesScreenState extends State<FavoritesScreen> {
   Map<String, dynamic> get locale =>
-      context.read<LocaleCubit>().state.localizedStrings['favorites'];
+      context.watch<LocaleCubit>().state.localizedStrings['favorites'];
 
   late Future<List<Apartment>> future;
   @override

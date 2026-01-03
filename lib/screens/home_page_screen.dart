@@ -23,7 +23,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   Map<String, dynamic> get locale =>
-      context.read<LocaleCubit>().state.localizedStrings['home'];
+      context.watch<LocaleCubit>().state.localizedStrings['home'];
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _searchController = TextEditingController();
 

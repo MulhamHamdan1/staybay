@@ -25,7 +25,7 @@ class AddApartmentScreen extends StatefulWidget {
 
 class _AddApartmentScreenState extends State<AddApartmentScreen> {
   Map<String, dynamic> get locale =>
-      context.read<LocaleCubit>().state.localizedStrings['addApartment'];
+      context.watch<LocaleCubit>().state.localizedStrings['addApartment'];
 
   final _formKey = GlobalKey<FormState>();
   final GetGovernatesAndCities _getGovernatesAndCities =

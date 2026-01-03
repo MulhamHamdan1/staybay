@@ -413,5 +413,15 @@
     },
     "ChatScreen": {
         "appBarTitle": "المحادثة"
+    },
+    "BookingDetails": {
+        "appBarTitle": "تفاصيل الحجز",
+        "Update": "تحديث الحجز",
+        "Confirm": "تأكيد الحجز",
+        "Cancel": "إلغاء الحجز",
+        "Select": "اختر التواريخ",
+        "nights": "ليالي",
+        "CheckInOut": "من تاريخ الوصول إلى المغادرة",
+        "Total": "السعر الإجمالي"
     }
 }

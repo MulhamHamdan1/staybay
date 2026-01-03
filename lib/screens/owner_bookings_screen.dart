@@ -18,7 +18,7 @@ class OwnerBookingsScreen extends StatefulWidget {
 
 class _OwnerBookingsScreenState extends State<OwnerBookingsScreen> {
   Map<String, dynamic> get locale =>
-      context.read<LocaleCubit>().state.localizedStrings['OwnerBookings'];
+      context.watch<LocaleCubit>().state.localizedStrings['OwnerBookings'];
 
   late Future<List<BookModel>> future;
 

@@ -16,7 +16,7 @@ class MyApartmentsScreen extends StatefulWidget {
 
 class _MyApartmentsScreenState extends State<MyApartmentsScreen> {
   Map<String, dynamic> get locale =>
-      context.read<LocaleCubit>().state.localizedStrings['myApartments'];
+      context.watch<LocaleCubit>().state.localizedStrings['myApartments'];
 
   late Future<List<Apartment>> future;
   @override

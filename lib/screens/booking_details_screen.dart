@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:staybay/cubits/locale/locale_cubit.dart';
 import 'package:staybay/models/apartment_model.dart';
 import 'package:staybay/models/book_model.dart';
 import 'package:staybay/models/city_model.dart';
@@ -21,6 +23,8 @@ class BookingDetailsScreen extends StatefulWidget {
 }
 
 class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
+  Map<String, dynamic> get locale =>
+      context.watch<LocaleCubit>().state.localizedStrings['BookingDetails'];
   DateTimeRange? _selectedRange;
   // String? _paymentMethod;
   List<DateTime> _blockedDates = [];
@@ -124,7 +128,10 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
     if (apt == null) return const Scaffold(body: Center(child: Text("Error")));
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Booking Details'), centerTitle: true),
+      appBar: AppBar(
+        title: Text(locale['appBarTitle'] ?? 'Booking Details'),
+        centerTitle: true,
+      ),
       body: _isLoadingDates
           ? const Center(child: CircularProgressIndicator())
           : ListView(
@@ -176,7 +183,9 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                             }
                           },
                     child: Text(
-                      isEditing ? 'Update Booking' : 'Confirm Booking',
+                      isEditing
+                          ? locale['Update'] ?? 'Update Booking'
+                          : locale['Confirm'] ?? 'Confirm Booking',
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -213,8 +222,8 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                           );
                         }
                       },
-                      child: const Text(
-                        'Cancel Booking',
+                      child: Text(
+                        locale['Cancel'] ?? 'Cancel Booking',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -282,7 +291,7 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                 Text(
                   hasDate
                       ? "${DateFormat('MMM d').format(_selectedRange!.start)} - ${DateFormat('MMM d, yyyy').format(_selectedRange!.end)}"
-                      : "Select Dates",
+                      : locale['Select'] ?? "Select Dates",
                   style: TextStyle(
                     fontWeight: hasDate ? FontWeight.bold : FontWeight.normal,
                     fontSize: 16,
@@ -290,7 +299,9 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                   ),
                 ),
                 Text(
-                  hasDate ? "$nights nights" : "Check-in to Check-out",
+                  hasDate
+                      ? "$nights ${locale['nights'] ?? 'nights'}"
+                      : locale['CheckInOut'] ?? "Check-in to Check-out",
                   style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
                 ),
               ],
@@ -314,8 +325,8 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text(
-            "Total Price",
+          Text(
+            locale['Total'] ?? "Total Price",
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
           ),
           Text(
