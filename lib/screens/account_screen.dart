@@ -112,7 +112,7 @@ class _AccountScreenState extends State<AccountScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
             child: TextButton(
-              onPressed: () {
+              onPressed: () async {
                 String newLanguage = localeState.currentLanguage == 'EN'
                     ? 'AR'
                     : 'EN';
