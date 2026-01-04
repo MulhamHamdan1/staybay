@@ -9,7 +9,6 @@ class DioClient {
   static Dio? _dio;
   static String? _token;
 
-  /// Call this ONCE at app startup (main)
   static Future<void> init() async {
     final prefs = await SharedPreferences.getInstance();
     _token = prefs.getString(kToken);

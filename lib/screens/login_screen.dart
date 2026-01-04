@@ -39,7 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> saveToken(String token) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(kToken, token);
+    // await prefs.setString(kToken, token);
     await DioClient.setToken(token);
     await ForegroundTaskService.start();
     await prefs.setBool(kIsLoggedIn, true);

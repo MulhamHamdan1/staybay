@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:staybay/constants.dart';
+import 'package:staybay/core/dio_client.dart';
 import 'package:staybay/models/apartment_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -38,9 +39,9 @@ class AddApartmentService {
       return null;
     }
 
-    final Dio dio = Dio();
-    dio.options.baseUrl = kBaseUrl;
-
+    // final Dio dio = Dio();
+    // dio.options.baseUrl = kBaseUrl;
+    final dio = DioClient.dio;
     try {
       // Build multipart form data from Apartment object
       final formData = FormData.fromMap({
@@ -67,17 +68,7 @@ class AddApartmentService {
         ],
       });
 
-      final response = await dio.post(
-        '/apartments',
-        data: formData,
-        options: Options(
-          headers: {
-            'Authorization': 'Bearer $token',
-            'Accept': 'application/json',
-            'Content-Type': 'multipart/form-data',
-          },
-        ),
-      );
+      final response = await dio.post('/apartments', data: formData);
 
       log('Apartment created: ${response.data}');
 
