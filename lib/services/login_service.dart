@@ -14,12 +14,6 @@ class LoginService {
     try {
       final response = await dio.post(
         login,
-        options: Options(
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-        ),
         data: {"phone": phone, "password": password},
       );
 

@@ -1,12 +1,7 @@
 import 'package:dio/dio.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:staybay/constants.dart';
+import 'package:staybay/core/dio_client.dart';
 
 class GetApartmentService {
-  static final Dio _dio = Dio(
-    BaseOptions(baseUrl: kBaseUrl, headers: {'Accept': 'application/json'}),
-  );
-
   static Future<Map<String, dynamic>> getApartments({
     int page = 1,
     int perPage = 10,
@@ -27,10 +22,8 @@ class GetApartmentService {
     String sortBy = 'created_at',
     String sortOrder = 'desc',
   }) async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString(kToken);
-
-    final response = await _dio.get(
+    Dio dio = DioClient.dio;
+    final response = await dio.get(
       '/apartments',
       queryParameters: {
         'page': page,
@@ -52,7 +45,6 @@ class GetApartmentService {
         'sort_by': sortBy,
         'sort_order': sortOrder,
       }..removeWhere((k, v) => v == null),
-      options: Options(headers: {'Authorization': 'Bearer $token'}),
     );
 
     return response.data;

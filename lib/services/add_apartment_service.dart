@@ -1,10 +1,8 @@
 import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:staybay/constants.dart';
 import 'package:staybay/core/dio_client.dart';
 import 'package:staybay/models/apartment_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AddApartmentService {
   static Future<Response?> addApartment({
@@ -12,9 +10,8 @@ class AddApartmentService {
     required Apartment apartment,
     required int cityId,
   }) async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString(kToken);
-
+    final dio = DioClient.dio;
+    final token = DioClient.token;
     if (token == null) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -38,12 +35,7 @@ class AddApartmentService {
       }
       return null;
     }
-
-    // final Dio dio = Dio();
-    // dio.options.baseUrl = kBaseUrl;
-    final dio = DioClient.dio;
     try {
-      // Build multipart form data from Apartment object
       final formData = FormData.fromMap({
         'city_id': cityId,
         'title': apartment.title,

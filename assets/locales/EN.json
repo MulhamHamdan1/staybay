@@ -29,6 +29,7 @@
         "lastName": "Last Name",
         "phone": "Phone Number",
         "password": "Password",
+        "passwordCon":"Password confirmation",
         "dob": "Date of Birth",
         "idImage": "Identity Image",
         "selectImage": "Select Image",
@@ -55,6 +56,7 @@
         "login succeeded":"Thank you, login succeeded!",
         "registration succeeded":"Thank you, registration succeeded!",
         "Home Page":"Go to Home Page",
+        "welcome Page":"Go to Welcome Page",
         "successfully logged":"You have successfully logged into your account.",
         "created successfully":"Your account has been created successfully.",
         "agree":"By continuing, you agree to our Terms of Service and Privacy Policy"

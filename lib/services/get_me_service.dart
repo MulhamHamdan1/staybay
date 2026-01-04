@@ -1,21 +1,14 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:staybay/constants.dart';
+import 'package:staybay/core/dio_client.dart';
 import 'package:staybay/models/user.dart';
 
 class GetMeService {
   static Future<User?> getMe() async {
-    Dio dio = Dio();
-    dio.options.baseUrl = kBaseUrl;
-    final prefs = await SharedPreferences.getInstance();
-    dio.options.headers['Authorization'] = 'Bearer ${prefs.getString(kToken)}';
+    Dio dio = DioClient.dio;
     try {
-      final response = await dio.get(
-        '/user/me',
-        options: Options(headers: {'Accept': 'application/json'}),
-      );
+      final response = await dio.get('/user/me');
       User user = User.fromJson(response.data['data']);
       log('User data: ${user.avatar}  ');
       return user;

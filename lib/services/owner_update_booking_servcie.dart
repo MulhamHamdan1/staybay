@@ -1,8 +1,7 @@
 import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:staybay/constants.dart';
+import 'package:staybay/core/dio_client.dart';
 
 class OwnerUpdateBookingService {
   static Future<bool> updateBooking({
@@ -10,16 +9,7 @@ class OwnerUpdateBookingService {
     required String bookingId,
     String? status,
   }) async {
-    Dio dio = Dio();
-    dio.options.baseUrl = kBaseUrl;
-
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString(kToken);
-
-    dio.options.headers = {
-      'Authorization': 'Bearer $token',
-      'Accept': 'application/json',
-    };
+    Dio dio = DioClient.dio;
 
     Map<String, dynamic> dataMap = {};
 

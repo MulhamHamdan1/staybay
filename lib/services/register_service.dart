@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:staybay/constants.dart';
+import 'package:staybay/core/dio_client.dart';
 
 class RegisterService {
   static Future<Response?> register(
@@ -17,10 +17,7 @@ class RegisterService {
     String birthDate,
     File idCardfile,
   ) async {
-    final Dio dio = Dio();
-
-    final String register = '/user/register';
-    dio.options.baseUrl = kBaseUrl;
+    final Dio dio = DioClient.dio;
     var formData = FormData.fromMap({
       "phone": phone,
       "first_name": firstName,
@@ -32,16 +29,7 @@ class RegisterService {
       "id_card": await MultipartFile.fromFile(idCardfile.path),
     });
     try {
-      final response = await dio.post(
-        register,
-        options: Options(
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            'Accept': 'application/json',
-          },
-        ),
-        data: formData,
-      );
+      final response = await dio.post('/user/register', data: formData);
 
       log('Response data: ${response.data}');
       ScaffoldMessenger.of(context).showSnackBar(

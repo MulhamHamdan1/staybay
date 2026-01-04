@@ -1,16 +1,12 @@
 import 'package:dio/dio.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:staybay/constants.dart';
+import 'package:staybay/core/dio_client.dart';
 import 'package:staybay/models/city_model.dart';
 import 'package:staybay/models/governorate_model.dart';
 
 class GetGovernatesAndCities {
-  final Dio _dio = Dio(BaseOptions(baseUrl: kBaseUrl));
+  final Dio _dio = DioClient.dio;
 
   Future<List<Governorate>> getGovernorates() async {
-    final prefs = await SharedPreferences.getInstance();
-    _dio.options.headers['Authorization'] = 'Bearer ${prefs.getString(kToken)}';
-
     try {
       final response = await _dio.get('/governorates');
       if (response.statusCode == 200) {

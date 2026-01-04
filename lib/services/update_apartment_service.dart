@@ -1,8 +1,7 @@
 import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:staybay/constants.dart';
+import 'package:staybay/core/dio_client.dart';
 import 'package:staybay/models/apartment_model.dart';
 
 class UpdateApartmentService {
@@ -16,16 +15,12 @@ class UpdateApartmentService {
     List<int> deletedImageIds = const [],
     String? newCoverImagePath,
   }) async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString(kToken);
-
+    final Dio dio = DioClient.dio;
+    final token = DioClient.token;
     if (token == null) {
       _showError(context, 'Not authenticated');
       return null;
     }
-
-    final Dio dio = Dio();
-    dio.options.baseUrl = kBaseUrl;
 
     try {
       final Map<String, dynamic> dataMap = {
@@ -85,12 +80,6 @@ class UpdateApartmentService {
       final response = await dio.post(
         '/apartments/${apartment.id}',
         data: formData,
-        options: Options(
-          headers: {
-            'Authorization': 'Bearer $token',
-            'Accept': 'application/json',
-          },
-        ),
       );
 
       if (context.mounted) {

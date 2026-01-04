@@ -1,8 +1,7 @@
 import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:staybay/constants.dart';
+import 'package:staybay/core/dio_client.dart';
 
 class RateBookingService {
   static Future<bool> rateBooking({
@@ -10,16 +9,7 @@ class RateBookingService {
     required String bookingId,
     required double rating,
   }) async {
-    Dio dio = Dio();
-    dio.options.baseUrl = kBaseUrl;
-
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString(kToken);
-
-    dio.options.headers = {
-      'Authorization': 'Bearer $token',
-      'Accept': 'application/json',
-    };
+    Dio dio = DioClient.dio;
 
     try {
       var response = await dio.post(

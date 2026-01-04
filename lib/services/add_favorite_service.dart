@@ -1,14 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:staybay/constants.dart';
+import 'package:staybay/core/dio_client.dart';
 
 class AddFavoriteService {
   static Future<void> addFavorite(context, int apartmentId) async {
-    Dio dio = Dio();
-    dio.options.baseUrl = kBaseUrl;
-    final prefs = await SharedPreferences.getInstance();
-    dio.options.headers['Authorization'] = 'Bearer ${prefs.getString(kToken)}';
+    Dio dio = DioClient.dio;
     try {
       await dio.post('/apartments/favorite/add/$apartmentId');
     } catch (e) {
