@@ -63,8 +63,7 @@ class _EditApartmentScreenState extends State<EditApartmentScreen> {
     _initializeFields();
     _loadInitialLocationData();
   }
-
-// Add this variable to your state class
+ 
   List<int> _existingImageIds = []; 
 
 void _initializeFields() {
