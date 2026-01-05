@@ -91,7 +91,7 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
     } catch (e) {
       if (mounted) setState(() => isLoadingCities = false);
     }
-  } 
+  }
 
   Future<void> _pickCover() async {
     final image = await _imagePicker.pickImage(
@@ -183,19 +183,20 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
 
   // --- UI Helper Widgets (Matches Edit Screen) ---
 
-  Widget _sectionHeader(String title) => Align(
-    alignment: Alignment.centerLeft,
-    child: Padding(
-      padding: const EdgeInsets.only(bottom: 8.0, top: 12.0),
-      child: Text(
-        title,
-        style: const TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.bold,
-          color: Colors.grey,
+  Widget _sectionHeader(String title) => Row(
+    children: [
+      Padding(
+        padding: const EdgeInsets.only(bottom: 8.0, top: 12.0),
+        child: Text(
+          title,
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            color: Colors.grey,
+          ),
         ),
       ),
-    ),
+    ],
   );
 
   Widget _coverPickerUI() {
@@ -206,8 +207,8 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.blue.shade100),
-          color: Colors.blue.withOpacity(0.05),
+          border: Border.all(color: Colors.grey),
+          color: Theme.of(context).primaryColor.withValues(alpha: 0.05),
         ),
         child: _pickedCover != null
             ? ClipRRect(
@@ -217,10 +218,14 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
             : Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.add_a_photo, size: 40, color: Colors.blue),
+                  Icon(
+                    Icons.add_a_photo,
+                    size: 40,
+                    color: Theme.of(context).primaryColor,
+                  ),
                   Text(
                     locale["coverImage"] ?? "Select Cover Image",
-                    style: const TextStyle(color: Colors.blue),
+                    style: TextStyle(color: Theme.of(context).primaryColor),
                   ),
                 ],
               ),
@@ -246,11 +251,12 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
               width: 100,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.grey.shade300),
+                border: Border.all(color: Colors.grey),
+                color: Theme.of(context).primaryColor.withValues(alpha: 0.05),
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.add_photo_alternate_outlined,
-                color: Colors.grey,
+                color: Theme.of(context).primaryColor,
               ),
             ),
           ),
@@ -278,7 +284,7 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
             onTap: onRemove,
             child: const CircleAvatar(
               radius: 10,
-              backgroundColor: Colors.red,
+              backgroundColor: Color.fromARGB(255, 100, 100, 100),
               child: Icon(Icons.close, size: 12, color: Colors.white),
             ),
           ),
@@ -316,7 +322,7 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
               alignment: Alignment.center,
               padding: const EdgeInsets.symmetric(vertical: 8),
               decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor.withOpacity(0.1),
+                color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(5),
               ),
               child: Text(
@@ -351,6 +357,7 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
         decoration: InputDecoration(
           labelText: label,
           prefixIcon: Icon(icon),
+          prefixIconColor: Theme.of(context).primaryColor,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
         ),
       ),

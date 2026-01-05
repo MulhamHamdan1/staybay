@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'dart:developer' as dev; 
+import 'dart:developer' as dev;
 // import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -47,7 +47,6 @@ class _EditApartmentScreenState extends State<EditApartmentScreen> {
   final _descriptionController = TextEditingController();
 
   List<String> _selectedAmenities = [];
-  // final List<String> _allAmenities = ['wifi', 'pool'];
   List<String> get _allAmenities => [
     locale['amenities']['wifi'] ?? 'wifi',
     locale['amenities']['pool'] ?? 'pool',
@@ -170,14 +169,14 @@ class _EditApartmentScreenState extends State<EditApartmentScreen> {
       }
       dev.log('new cover image:  ${_pickedCover?.path} ?? "no image selected"');
       setState(() => isSaving = true);
- 
+
       List<String> newGalleryPaths = _pickedImages.map((e) => e.path).toList();
- 
+
       Apartment updatedApartment = Apartment(
         id: widget.apartment.id,
         title: _titleController.text,
         pricePerNight: double.tryParse(_priceController.text) ?? 0.0,
-        imagePath: _pickedCover?.path ?? _existingCoverUrl!,  
+        imagePath: _pickedCover?.path ?? _existingCoverUrl!,
         rating: widget.apartment.rating,
         ratingCount: widget.apartment.ratingCount,
         beds: int.tryParse(_bedsController.text) ?? 0,
@@ -196,7 +195,7 @@ class _EditApartmentScreenState extends State<EditApartmentScreen> {
           context: context,
           apartment: updatedApartment,
           cityId: selectedCity!.id,
-          deletedImageIds: _deletedImageIds, 
+          deletedImageIds: _deletedImageIds,
           newCoverPath: _pickedCover?.path,
           newGalleryPaths: newGalleryPaths,
         );
@@ -287,8 +286,7 @@ class _EditApartmentScreenState extends State<EditApartmentScreen> {
                   ),
                   _field(
                     _descriptionController,
-                    locale['fields']['description'] ??
-                        'Description',
+                    locale['fields']['description'] ?? 'Description',
                     Icons.description,
                     maxlines: 3,
                   ),
@@ -385,7 +383,7 @@ class _EditApartmentScreenState extends State<EditApartmentScreen> {
       fit: BoxFit.cover,
       errorBuilder: (context, error, stackTrace) => Container(
         color: Colors.grey[200],
-        child: const Icon(Icons.broken_image, color: Colors.red),
+        child: Icon(Icons.broken_image, color: Colors.red),
       ),
     );
   }
@@ -404,7 +402,7 @@ class _EditApartmentScreenState extends State<EditApartmentScreen> {
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.blue.shade100),
+          border: Border.all(color: Colors.grey),
         ),
         child: _pickedCover != null
             ? ClipRRect(
@@ -447,15 +445,21 @@ class _EditApartmentScreenState extends State<EditApartmentScreen> {
                   () => _pickedImages.addAll(imgs.map((img) => File(img.path))),
                 );
               }
-             
             },
-            child: Container(
-              width: 100,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.grey.shade300),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Container(
+                width: 100,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor.withValues(alpha: 0.05),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.grey),
+                ),
+                child: Icon(
+                  Icons.add_photo_alternate_outlined,
+                  color: Theme.of(context).primaryColor,
+                ),
               ),
-              child: const Icon(Icons.add_photo_alternate_outlined),
             ),
           ),
         ],
@@ -478,26 +482,27 @@ class _EditApartmentScreenState extends State<EditApartmentScreen> {
           onTap: onRem,
           child: const CircleAvatar(
             radius: 10,
-            backgroundColor: Colors.red,
+            backgroundColor: Color.fromARGB(255, 100, 100, 100),
             child: Icon(Icons.close, size: 12, color: Colors.white),
           ),
         ),
       ),
     ],
   );
-  Widget _sectionHeader(String t) => Align(
-    alignment: Alignment.centerLeft,
-    child: Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: Text(
-        t,
-        style: const TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.bold,
-          color: Colors.grey,
+  Widget _sectionHeader(String t) => Row(
+    children: [
+      Padding(
+        padding: const EdgeInsets.only(bottom: 8.0),
+        child: Text(
+          t,
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            color: Colors.grey,
+          ),
         ),
       ),
-    ),
+    ],
   );
   Widget _buildFilterRow({
     required String label,
@@ -527,14 +532,14 @@ class _EditApartmentScreenState extends State<EditApartmentScreen> {
             alignment: Alignment.center,
             padding: const EdgeInsets.symmetric(vertical: 8),
             decoration: BoxDecoration(
-              color: Colors.blue.withOpacity(0.1),
+              color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(5),
             ),
             child: Text(
               value ?? '-',
-              style: const TextStyle(
+              style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: Colors.blue,
+                color: Theme.of(context).primaryColor,
               ),
               overflow: TextOverflow.ellipsis,
             ),
@@ -562,21 +567,22 @@ class _EditApartmentScreenState extends State<EditApartmentScreen> {
     ],
   );
   Widget _field(
-    TextEditingController c,
-    String l,
-    IconData i, {
+    TextEditingController controller,
+    String label,
+    IconData icon, {
     TextInputType inputType = TextInputType.text,
     int maxlines = 1,
   }) => Padding(
     padding: const EdgeInsets.only(bottom: 14),
     child: TextFormField(
-      controller: c,
+      controller: controller,
       keyboardType: inputType,
       maxLines: maxlines,
       validator: (v) => v == null || v.isEmpty ? 'Required' : null,
       decoration: InputDecoration(
-        labelText: l,
-        prefixIcon: Icon(i),
+        labelText: label,
+        prefixIcon: Icon(icon),
+        prefixIconColor: Theme.of(context).primaryColor,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
       ),
     ),
