@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'dart:developer' as dev;
+import 'dart:developer' as dev; 
 // import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -44,9 +44,9 @@ class _EditApartmentScreenState extends State<EditApartmentScreen> {
   List<String> _selectedAmenities = [];
   final List<String> _allAmenities = ['wifi', 'pool'];
 
-  XFile? _pickedCover;
+  File? _pickedCover;
   String? _existingCoverUrl;
-  final List<XFile> _pickedImages = [];
+  final List<File> _pickedImages = [];
   List<String> _existingImageUrls = [];
   final List<int> _deletedImageIds = [];
 
@@ -160,42 +160,37 @@ class _EditApartmentScreenState extends State<EditApartmentScreen> {
         _showSnackBar('Please select a city');
         return;
       }
-
+      dev.log('new cover image:  ${_pickedCover?.path} ?? "no image selected"');
       setState(() => isSaving = true);
-
-      String coverPath = _pickedCover?.path ?? _existingCoverUrl!;
-
-      List<String> combinedGalleryPaths = [
-        ..._existingImageUrls,
-        ..._pickedImages.map((e) => e.path),
-      ];
-
+ 
+      List<String> newGalleryPaths = _pickedImages.map((e) => e.path).toList();
+ 
       Apartment updatedApartment = Apartment(
         id: widget.apartment.id,
         title: _titleController.text,
         pricePerNight: double.tryParse(_priceController.text) ?? 0.0,
-        imagePath: coverPath,
+        imagePath: _pickedCover?.path ?? _existingCoverUrl!,  
         rating: widget.apartment.rating,
         ratingCount: widget.apartment.ratingCount,
         beds: int.tryParse(_bedsController.text) ?? 0,
         baths: int.tryParse(_bathsController.text) ?? 0,
         areaSqft: double.tryParse(_areaController.text) ?? 0.0,
         description: _descriptionController.text,
-        imagesPaths: combinedGalleryPaths,
+        imagesPaths: [..._existingImageUrls, ...newGalleryPaths],
         amenities: _selectedAmenities,
         city: selectedCity,
         governorate: selectedGov,
         imagesIDs: widget.apartment.imagesIDs,
       );
 
-      dev.log("FINAL DELETE LIST: $_deletedImageIds");
-
       try {
         final response = await UpdateApartmentService.updateApartment(
           context: context,
           apartment: updatedApartment,
           cityId: selectedCity!.id,
-          deletedImageIds: _deletedImageIds,
+          deletedImageIds: _deletedImageIds, 
+          newCoverPath: _pickedCover?.path,
+          newGalleryPaths: newGalleryPaths,
         );
 
         if (response != null &&
@@ -367,7 +362,7 @@ class _EditApartmentScreenState extends State<EditApartmentScreen> {
           source: ImageSource.gallery,
           imageQuality: 70,
         );
-        if (img != null) setState(() => _pickedCover = img);
+        if (img != null) setState(() => _pickedCover = File(img.path));
       },
       child: Container(
         height: 150,
@@ -412,7 +407,12 @@ class _EditApartmentScreenState extends State<EditApartmentScreen> {
           GestureDetector(
             onTap: () async {
               final imgs = await ImagePicker().pickMultiImage(imageQuality: 70);
-              if (imgs.isNotEmpty) setState(() => _pickedImages.addAll(imgs));
+              if (imgs.isNotEmpty) {
+                setState(
+                  () => _pickedImages.addAll(imgs.map((img) => File(img.path))),
+                );
+              }
+             
             },
             child: Container(
               width: 100,

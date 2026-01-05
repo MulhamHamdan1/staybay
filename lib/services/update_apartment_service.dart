@@ -11,6 +11,8 @@ class UpdateApartmentService {
     required Apartment apartment,
     required int cityId,
     required List<int> deletedImageIds,
+    String? newCoverPath,
+    List<String>? newGalleryPaths, 
   }) async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString(kToken);
@@ -19,7 +21,10 @@ class UpdateApartmentService {
 
     final Dio dio = Dio();
     dio.options.baseUrl = kBaseUrl;
-
+    dio.options.headers = {
+      'Authorization': 'Bearer $token',
+      'Accept': 'application/json',
+    };
     try {
       final Map<String, dynamic> data = {
         '_method': 'PUT',
@@ -33,44 +38,41 @@ class UpdateApartmentService {
         'has_pool': apartment.amenities.contains('pool') ? 1 : 0,
         'has_wifi': apartment.amenities.contains('wifi') ? 1 : 0,
       };
- 
-      if (!apartment.imagePath.startsWith('http')) {
-        data['cover_image'] = await MultipartFile.fromFile(
-          apartment.imagePath,
-          filename: apartment.imagePath.split('/').last,
-        );
+
+      if (newCoverPath != null &&
+          newCoverPath.isNotEmpty &&
+          !newCoverPath.startsWith('http')) {
+        log(newCoverPath);
+        data['cover_image'] = await MultipartFile.fromFile(newCoverPath);
       }
  
-      List<MultipartFile> galleryFiles = [];
-      for (String path in apartment.imagesPaths) { 
-        if (!path.startsWith('http')) {
+      if (newGalleryPaths != null && newGalleryPaths.isNotEmpty) {
+        List<MultipartFile> galleryFiles = [];
+        for (String path in newGalleryPaths) {
           galleryFiles.add(
-            await MultipartFile.fromFile(path, filename: path.split('/').last),
+            await MultipartFile.fromFile(path),
           );
         }
-      }
-      
-      if (galleryFiles.isNotEmpty) {
         data['new_images[]'] = galleryFiles;
       }
  
       if (deletedImageIds.isNotEmpty) {
-        data['deleted_images[]'] = deletedImageIds;
+        data['delete_images[]'] = deletedImageIds; //! its delete not deletd :)
       }
-
+      log('Update Apartment Data: $data');
       final formData = FormData.fromMap(data);
 
       final response = await dio.post(
         '/apartments/${apartment.id}',
         data: formData,
-        options: Options(
-          headers: {
-            'Authorization': 'Bearer $token',
-            'Accept': 'application/json',
-          },
-        ),
+        // options: Options(
+        //   headers: {
+        //     'Authorization': 'Bearer $token',
+        //     'Accept': 'application/json',
+        //   },
+        // ),
       );
-
+      log(response.data.toString());
       return response;
     } on DioException catch (e) {
       log('Update Error Response: ${e.response?.data}');
