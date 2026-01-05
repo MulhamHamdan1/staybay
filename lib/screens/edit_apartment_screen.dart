@@ -78,17 +78,14 @@ void _initializeFields() {
       _selectedAmenities = List.from(a.amenities);
 
       _existingCoverUrl = a.imagePath;
-
-      // Reset lists
+ 
       _existingImageUrls = [];
       _existingImageIds = [];
 
-      if (a.imagesPaths.isNotEmpty && a.imagesIDs != null) {
-        // We start loop at index 1 to SKIP the first image
+      if (a.imagesPaths.isNotEmpty && a.imagesIDs != null) { 
         for (int i = 1; i < a.imagesPaths.length; i++) {
           _existingImageUrls.add(a.imagesPaths[i]);
-
-          // Ensure we don't go out of bounds for IDs
+ 
           if (i < a.imagesIDs!.length) {
             _existingImageIds.add(a.imagesIDs![i]);
           }
