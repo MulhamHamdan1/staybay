@@ -2,7 +2,9 @@ import 'dart:io';
 import 'dart:developer' as dev; 
 // import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:staybay/cubits/locale/locale_cubit.dart';
 import 'package:staybay/models/apartment_model.dart';
 import 'package:staybay/models/city_model.dart';
 import 'package:staybay/models/governorate_model.dart';
@@ -21,6 +23,9 @@ class EditApartmentScreen extends StatefulWidget {
 }
 
 class _EditApartmentScreenState extends State<EditApartmentScreen> {
+  Map<String, dynamic> get locale =>
+      context.watch<LocaleCubit>().state.localizedStrings['addApartment'];
+
   final _formKey = GlobalKey<FormState>();
   final GetGovernatesAndCities _getService = GetGovernatesAndCities();
 
@@ -42,8 +47,11 @@ class _EditApartmentScreenState extends State<EditApartmentScreen> {
   final _descriptionController = TextEditingController();
 
   List<String> _selectedAmenities = [];
-  final List<String> _allAmenities = ['wifi', 'pool'];
-
+  // final List<String> _allAmenities = ['wifi', 'pool'];
+  List<String> get _allAmenities => [
+    locale['amenities']['wifi'] ?? 'wifi',
+    locale['amenities']['pool'] ?? 'pool',
+  ];
   File? _pickedCover;
   String? _existingCoverUrl;
   final List<File> _pickedImages = [];
@@ -157,7 +165,7 @@ class _EditApartmentScreenState extends State<EditApartmentScreen> {
   void _saveApartment() async {
     if (_formKey.currentState?.validate() ?? false) {
       if (selectedCity == null) {
-        _showSnackBar('Please select a city');
+        _showSnackBar(locale['location']['selectCity'] ?? 'select a city');
         return;
       }
       dev.log('new cover image:  ${_pickedCover?.path} ?? "no image selected"');
@@ -204,7 +212,9 @@ class _EditApartmentScreenState extends State<EditApartmentScreen> {
           _showSnackBar("Failed: ${response?.data['message'] ?? 'Error'}");
         }
       } catch (e) {
-        _showSnackBar("Connection error");
+        _showSnackBar(
+          locale['errors']['connectionError'] ?? 'Connection error',
+        );
       } finally {
         if (mounted) setState(() => isSaving = false);
       }
@@ -221,7 +231,7 @@ class _EditApartmentScreenState extends State<EditApartmentScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Edit Apartment')),
+      appBar: AppBar(title: Text(locale['editApartment'] ?? 'Edit Apartment')),
       body: Stack(
         children: [
           SingleChildScrollView(
@@ -230,17 +240,21 @@ class _EditApartmentScreenState extends State<EditApartmentScreen> {
               key: _formKey,
               child: Column(
                 children: [
-                  _sectionHeader("Cover Image"),
+                  _sectionHeader(locale["coverImage"] ?? "Cover Image"),
                   _coverPickerUI(),
                   const SizedBox(height: 20),
-                  _sectionHeader("Gallery Images"),
+                  _sectionHeader(locale["galleryImages"] ?? "Gallery Images"),
                   _galleryPickerUI(),
                   const SizedBox(height: 16),
-                  _field(_titleController, 'Title', Icons.home),
+                  _field(
+                    _titleController,
+                    locale['fields']['title'] ?? 'title',
+                    Icons.home,
+                  ),
                   _buildLocationSelectors(),
                   _field(
                     _priceController,
-                    'Price',
+                    locale['fields']['price'] ?? 'Price',
                     Icons.attach_money,
                     inputType: TextInputType.number,
                   ),
@@ -249,7 +263,7 @@ class _EditApartmentScreenState extends State<EditApartmentScreen> {
                       Expanded(
                         child: _field(
                           _bedsController,
-                          'Beds',
+                          locale['fields']['beds'] ?? 'Beds',
                           Icons.bed,
                           inputType: TextInputType.number,
                         ),
@@ -258,7 +272,7 @@ class _EditApartmentScreenState extends State<EditApartmentScreen> {
                       Expanded(
                         child: _field(
                           _bathsController,
-                          'Baths',
+                          locale['fields']['baths'] ?? 'Baths',
                           Icons.bathtub,
                           inputType: TextInputType.number,
                         ),
@@ -267,13 +281,14 @@ class _EditApartmentScreenState extends State<EditApartmentScreen> {
                   ),
                   _field(
                     _areaController,
-                    'Area',
+                    locale['fields']['area'] ?? 'Area',
                     Icons.square_foot,
                     inputType: TextInputType.number,
                   ),
                   _field(
                     _descriptionController,
-                    'Description',
+                    locale['fields']['description'] ??
+                        'Description',
                     Icons.description,
                     maxlines: 3,
                   ),
@@ -284,7 +299,9 @@ class _EditApartmentScreenState extends State<EditApartmentScreen> {
                     height: 50,
                     child: ElevatedButton(
                       onPressed: isSaving ? null : _saveApartment,
-                      child: const Text('Update Apartment'),
+                      child: Text(
+                        locale['buttons']['update'] ?? 'Update Apartment',
+                      ),
                     ),
                   ),
                 ],
@@ -305,26 +322,38 @@ class _EditApartmentScreenState extends State<EditApartmentScreen> {
     return Column(
       children: [
         _buildFilterRow(
-          label: 'المحافظة',
-          value: selectedGov?.name,
+          label: locale['location']['governorate'] ?? 'governorate',
+          // value: selectedGov?.name,
+          // selectedGov?.name,
+          value: selectedGov?.localized(context),
           child: isLoadingGovs
               ? const LinearProgressIndicator()
               : DropdownButton<Governorate>(
                   isExpanded: true,
+                  hint: Text(
+                    locale['location']['selectGov'] ?? 'Select Governorate',
+                  ),
                   value: governorates.contains(selectedGov)
                       ? selectedGov
                       : null,
-                  items: governorates
-                      .map(
-                        (g) => DropdownMenuItem(value: g, child: Text(g.name)),
-                      )
-                      .toList(),
+                  // items: governorates
+                  //     .map(
+                  //       (g) => DropdownMenuItem(value: g, child: Text(g.name)),
+                  //     )
+                  //     .toList(),
+                  items: governorates.map((gov) {
+                    return DropdownMenuItem(
+                      value: gov,
+                      child: Text(gov.localized(context)),
+                    );
+                  }).toList(),
                   onChanged: _onGovernorateChanged,
                 ),
         ),
         _buildFilterRow(
-          label: 'المدينة',
-          value: selectedCity?.name,
+          label: locale['location']['city'] ?? 'City',
+          // value: selectedCity?.name,
+          value: selectedCity?.localized(context),
           child: isLoadingCities
               ? const LinearProgressIndicator()
               : DropdownButton<City>(
@@ -332,11 +361,17 @@ class _EditApartmentScreenState extends State<EditApartmentScreen> {
                   value: (cities.isNotEmpty && cities.contains(selectedCity))
                       ? selectedCity
                       : null,
-                  items: cities
-                      .map(
-                        (c) => DropdownMenuItem(value: c, child: Text(c.name)),
-                      )
-                      .toList(),
+                  // items: cities
+                  //     .map(
+                  //       (c) => DropdownMenuItem(value: c, child: Text(c.name)),
+                  //     )
+                  //     .toList(),
+                  items: cities.map((city) {
+                    return DropdownMenuItem(
+                      value: city,
+                      child: Text(city.localized(context)),
+                    );
+                  }).toList(),
                   onChanged: (v) => setState(() => selectedCity = v),
                 ),
         ),
@@ -511,8 +546,8 @@ class _EditApartmentScreenState extends State<EditApartmentScreen> {
   Widget _amenitiesSection() => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      const Text(
-        'Amenities',
+      Text(
+        locale['amenities']['title'] ?? 'Amenities',
         style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
       ),
       ..._allAmenities.map(

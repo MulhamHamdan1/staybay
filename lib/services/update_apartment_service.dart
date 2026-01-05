@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:staybay/core/dio_client.dart';
 import 'package:staybay/constants.dart';
 import 'package:staybay/models/apartment_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
 
 class UpdateApartmentService {
   static Future<Response?> updateApartment({
@@ -22,7 +22,7 @@ class UpdateApartmentService {
       return null;
     }
 
-    final prefs = await SharedPreferences.getInstance();
+    // final prefs = await SharedPreferences.getInstance();
     // final token = prefs.getString(kToken);
 
     if (token == null) return null;

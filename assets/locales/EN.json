@@ -1,4 +1,7 @@
 {
+  "snackbars": {
+    "errorOccurred": "An error occurred. Please try again."
+  },
     "welcome":{
         "WELCOME": "WELCOME",
         "des1": "Find your next space, Feel at home",
@@ -320,12 +323,14 @@
   },
   
   "addApartment": {
-    "edit Apartment":"Edit Apartment",
+    "editApartment": "Edit Apartment",
     "appBarTitle": "Add Apartment",
-    
+    "coverImage": "Cover Image",
+    "galleryImages": "Gallery Images",
     "imageSection": {
       "addImages": "Add images",
-      "errorNoImages": "Please add at least one image"
+      "errorNoImages": "Please add at least one image",
+      "errorNoCoverImage": "Please add a cover image"
     },
     "fields": {
       "title": "Title",
@@ -355,7 +360,14 @@
     },
     "messages": {
       "fillRequired": "Please fill all required fields"
-    }
+    },
+    "snackbars": {
+      "errorOccurred": "An error occurred. Please try again.",
+      "failedToAddApartment": "Failed to add apartment."
+    },
+    "errors": {
+      "connectionError": "خطأ في الاتصال"
+        }
   },
   
   "account": {
@@ -368,7 +380,8 @@
     "logout": "Logout",
     "changeLanguage": "Language",
     "errors": {
-      "userLoadFailed": "Failed to load user data"
+      "userLoadFailed": "Failed to load user data",
+      "connectionError": "Connection error"
     }
   },
   "OwnerBookings":{

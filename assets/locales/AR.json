@@ -1,4 +1,5 @@
 {
+   
     "welcome": {
         "WELCOME": "مرحباً",
         "des1": "ابحث عن مساحتك القادمة، اشعر بالبيت",
@@ -320,12 +321,14 @@
     },
     
     "addApartment": {
-        "edit Apartment": "تعديل الشقة",
+        "editApartment": "تعديل الشقة",
         "appBarTitle": "إضافة شقة",
-        
+        "coverImage": "صورة الغلاف",
+        "galleryImages": "صور المعرض",
         "imageSection": {
             "addImages": "إضافة صور",
-            "errorNoImages": "الرجاء إضافة صورة واحدة على الأقل"
+            "errorNoImages": "الرجاء إضافة صورة واحدة على الأقل",
+            "errorNoCoverImage": "الرجاء إضافة صورة غلاف"
         },
         "fields": {
             "title": "العنوان",
@@ -355,6 +358,13 @@
         },
         "messages": {
             "fillRequired": "الرجاء تعبئة جميع الحقول المطلوبة"
+        },
+        "snackbars": {
+            "errorOccurred": "An error occurred. Please try again.",
+            "failedToAddApartment": "فشل في إضافة الشقة."
+        },
+        "errors": {
+            "connectionError": "خطأ في الاتصال"
         }
     },
     
@@ -368,7 +378,8 @@
         "logout": "تسجيل الخروج",
         "changeLanguage": "اللغة",
         "errors": {
-            "userLoadFailed": "فشل تحميل بيانات المستخدم"
+            "userLoadFailed": "فشل تحميل بيانات المستخدم",
+            "connectionError": "خطأ في الاتصال"
         }
     },
     "OwnerBookings": {
