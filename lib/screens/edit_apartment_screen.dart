@@ -64,7 +64,10 @@ class _EditApartmentScreenState extends State<EditApartmentScreen> {
     _loadInitialLocationData();
   }
 
-  void _initializeFields() {
+// Add this variable to your state class
+  List<int> _existingImageIds = []; 
+
+void _initializeFields() {
     try {
       final a = widget.apartment;
       _titleController.text = a.title;
@@ -77,15 +80,47 @@ class _EditApartmentScreenState extends State<EditApartmentScreen> {
 
       _existingCoverUrl = a.imagePath;
 
-      if (a.imagesPaths.isNotEmpty) {
-        _existingImageUrls = a.imagesPaths
-            .where((path) => path != a.imagePath)
-            .toList();
+      // Reset lists
+      _existingImageUrls = [];
+      _existingImageIds = [];
+
+      if (a.imagesPaths.isNotEmpty && a.imagesIDs != null) {
+        // We start loop at index 1 to SKIP the first image
+        for (int i = 1; i < a.imagesPaths.length; i++) {
+          _existingImageUrls.add(a.imagesPaths[i]);
+
+          // Ensure we don't go out of bounds for IDs
+          if (i < a.imagesIDs!.length) {
+            _existingImageIds.add(a.imagesIDs![i]);
+          }
+        }
       }
     } catch (e) {
       dev.log("ERROR in _initializeFields: $e");
     }
   }
+  // void _initializeFields() {
+  //   try {
+  //     final a = widget.apartment;
+  //     _titleController.text = a.title;
+  //     _priceController.text = a.pricePerNight.toString();
+  //     _bedsController.text = a.beds.toString();
+  //     _bathsController.text = a.baths.toString();
+  //     _areaController.text = a.areaSqft.toString();
+  //     _descriptionController.text = a.description;
+  //     _selectedAmenities = List.from(a.amenities);
+
+  //     _existingCoverUrl = a.imagePath;
+
+  //     if (a.imagesPaths.isNotEmpty) {
+  //       _existingImageUrls = a.imagesPaths
+  //           .where((path) => path != a.imagePath)
+  //           .toList();
+  //     }
+  //   } catch (e) {
+  //     dev.log("ERROR in _initializeFields: $e");
+  //   }
+  // }
 
   Future<void> _loadInitialLocationData() async {
     try {
@@ -147,17 +182,29 @@ class _EditApartmentScreenState extends State<EditApartmentScreen> {
     }
   }
 
+  // void _removeExistingGalleryImage(int index) {
+  //   setState(() {
+  //     if (widget.apartment.imagesIDs != null) {
+  //       int idToPull = index + 1;
+  //       if (idToPull < widget.apartment.imagesIDs!.length) {
+  //         int imageId = widget.apartment.imagesIDs![idToPull];
+  //         _deletedImageIds.add(imageId);
+  //         dev.log("Image marked for deletie: $imageId");
+  //       }
+  //     }
+  //     _existingImageUrls.removeAt(index);
+  //   });
+  // }
+
   void _removeExistingGalleryImage(int index) {
     setState(() {
-      if (widget.apartment.imagesIDs != null) {
-        int idToPull = index + 1;
-        if (idToPull < widget.apartment.imagesIDs!.length) {
-          int imageId = widget.apartment.imagesIDs![idToPull];
-          _deletedImageIds.add(imageId);
-          dev.log("Image marked for deletion: $imageId");
-        }
-      }
+      int imageId = _existingImageIds[index];
+
+      _deletedImageIds.add(imageId);
+      dev.log("Image marked for delete: $imageId");
+
       _existingImageUrls.removeAt(index);
+      _existingImageIds.removeAt(index);
     });
   }
 
