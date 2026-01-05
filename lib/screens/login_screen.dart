@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:staybay/constants.dart';
 import 'package:staybay/core/dio_client.dart';
 import 'package:staybay/core/forground_task_service.dart';
 import 'package:staybay/cubits/locale/locale_cubit.dart';
@@ -38,11 +36,10 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> saveToken(String token) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(kToken, token);
+    // final prefs = await SharedPreferences.getInstance();
+    // await prefs.setString(kToken, token);
     await DioClient.setToken(token);
     await ForegroundTaskService.start();
-    await prefs.setBool(kIsLoggedIn, true);
   }
 
   void _handleLogin() async {
@@ -58,6 +55,11 @@ class _LoginScreenState extends State<LoginScreen> {
         Navigator.of(
           context,
         ).pushNamed(SuccessScreen.routeName, arguments: true);
+      }
+      if (response == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(locale['error']), backgroundColor: Colors.red),
+        );
       }
     }
   }
@@ -125,7 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               radius: screenHeight * 0.06,
                               backgroundColor: Theme.of(
                                 context,
-                              ).primaryColor.withOpacity(0.1),
+                              ).primaryColor.withValues(alpha: 0.1),
                               child: Icon(
                                 Icons.home_work_rounded,
                                 size: screenHeight * 0.06,

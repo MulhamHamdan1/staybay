@@ -20,16 +20,6 @@ class ApiNotificationService {
         return [];
       }
 
-      final dio = Dio(
-        BaseOptions(
-          baseUrl: kBaseUrl,
-          headers: {
-            'Accept': 'application/json',
-            'Authorization': 'Bearer $token',
-          },
-        ),
-      );
-
       final response = await dio.get('/user/notifications');
 
       if (response.data == null ||

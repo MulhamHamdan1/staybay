@@ -23,6 +23,9 @@ class AccountScreen extends StatefulWidget {
 }
 
 class _AccountScreenState extends State<AccountScreen> {
+  Map<String, dynamic> get locale =>
+      context.watch<LocaleCubit>().state.localizedStrings['account'];
+
   @override
   void initState() {
     context.read<UserCubit>().getMe();
@@ -61,7 +64,7 @@ class _AccountScreenState extends State<AccountScreen> {
                         _profileTile(
                           context,
                           icon: Icons.logout,
-                          title: 'تسجيل الخروج',
+                          title: locale['logout'] ?? 'logout',
                           onTap: () async {
                             LogoutService.logout();
 
@@ -102,14 +105,14 @@ class _AccountScreenState extends State<AccountScreen> {
         backgroundColor: theme.appBarTheme.backgroundColor,
         centerTitle: true,
         title: Text(
-          'الملف الشخصي',
+          locale['appBarTitle'] ?? 'Profile',
           style: TextStyle(fontWeight: FontWeight.w600),
         ),
         actions: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
             child: TextButton(
-              onPressed: () {
+              onPressed: () async {
                 String newLanguage = localeState.currentLanguage == 'EN'
                     ? 'AR'
                     : 'EN';
@@ -145,34 +148,10 @@ class _AccountScreenState extends State<AccountScreen> {
                 child: Column(
                   children: [
                     /// Profile Image
-                    Stack(
-                      alignment: Alignment.bottomRight,
-                      children: [
-                        CircleAvatar(
-                          radius: 68,
-                          backgroundImage: NetworkImage(user.avatar),
-                        ),
-                        InkWell(
-                          borderRadius: BorderRadius.circular(30),
-                          onTap: () {
-                            // تغيير الصورة لاحقًا
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(9),
-                            decoration: BoxDecoration(
-                              color: theme.primaryColor,
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(
-                              Icons.camera_alt,
-                              size: 20,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ],
+                    CircleAvatar(
+                      radius: 68,
+                      backgroundImage: NetworkImage(user.avatar),
                     ),
-
                     const SizedBox(height: 16),
 
                     /// Name
@@ -212,7 +191,7 @@ class _AccountScreenState extends State<AccountScreen> {
                     _profileTile(
                       context,
                       icon: Icons.favorite_border,
-                      title: 'شققي',
+                      title: locale['myApartments'] ?? 'My Apartments',
                       onTap: () {
                         Navigator.of(
                           context,
@@ -223,7 +202,7 @@ class _AccountScreenState extends State<AccountScreen> {
                     _profileTile(
                       context,
                       icon: Icons.request_page_outlined,
-                      title: 'طلبات الحجز الواردة',
+                      title: locale['bookingsRequest'] ?? 'Bookings Request',
                       onTap: () {
                         Navigator.of(
                           context,
@@ -234,7 +213,7 @@ class _AccountScreenState extends State<AccountScreen> {
                     _profileTile(
                       context,
                       icon: Icons.bookmark_border,
-                      title: 'حجوزاتي',
+                      title: locale['myBookings'] ?? 'My Bookings',
                       onTap: () {
                         Navigator.of(
                           context,
@@ -245,7 +224,7 @@ class _AccountScreenState extends State<AccountScreen> {
                     _profileTile(
                       context,
                       icon: Icons.dark_mode_outlined,
-                      title: 'تبديل الوضع',
+                      title: locale['toggleTheme'] ?? 'Toggle Theme',
                       onTap: () async {
                         context.read<ThemeCubit>().toggleTheme();
                       },
@@ -254,7 +233,7 @@ class _AccountScreenState extends State<AccountScreen> {
                     _profileTile(
                       context,
                       icon: Icons.logout,
-                      title: 'تسجيل الخروج',
+                      title: locale['logout'] ?? 'Logout',
                       onTap: () async {
                         LogoutService.logout();
                         Navigator.of(context).pushNamedAndRemoveUntil(

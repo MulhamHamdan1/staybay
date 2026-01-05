@@ -20,6 +20,8 @@ class SuccessScreen extends StatelessWidget {
     final primaryColor = theme.primaryColor;
     return BlocBuilder<LocaleCubit, LocaleState>(
       builder: (context, state) {
+        Map<String, dynamic> locale = state.localizedStrings['Success'];
+
         return Scaffold(
           body: Center(
             child: Padding(
@@ -49,9 +51,9 @@ class SuccessScreen extends StatelessWidget {
 
                   Text(
                     isLoginSuccess
-                        ? state.localizedStrings['Success']['login succeeded'] ??
+                        ? locale['login succeeded'] ??
                               'Thank you, login succeeded!'
-                        : state.localizedStrings['Success']['registration succeeded'] ??
+                        : locale['registration succeeded'] ??
                               'Thank you, registration succeeded!',
                     textAlign: TextAlign.center,
                     style: AppStyles.titleStyle.copyWith(
@@ -63,9 +65,9 @@ class SuccessScreen extends StatelessWidget {
 
                   Text(
                     isLoginSuccess
-                        ? state.localizedStrings['Success']['successfully logged'] ??
+                        ? locale['successfully logged'] ??
                               'You have successfully logged into your account.'
-                        : state.localizedStrings['Success']['created successfully'] ??
+                        : locale['created successfully'] ??
                               'Your account has been created successfully.',
                     textAlign: TextAlign.center,
                     style: TextStyle(
@@ -77,9 +79,9 @@ class SuccessScreen extends StatelessWidget {
                   SizedBox(height: screenHeight * 0.08),
 
                   CustomPrimaryButton(
-                    text:
-                        state.localizedStrings['Success']['go to home page'] ??
-                        'Go to Home Page',
+                    text: isLoginSuccess
+                        ? locale['Home Page'] ?? 'Go to Home Page'
+                        : locale['welcome Page'] ?? 'Go to Welcome Page',
                     onPressed: () {
                       if (isLoginSuccess) {
                         Navigator.of(context).pushNamedAndRemoveUntil(
@@ -102,7 +104,7 @@ class SuccessScreen extends StatelessWidget {
                       horizontal: AppSizes.paddingMedium,
                     ),
                     child: Text(
-                      state.localizedStrings['Success']['agree'] ??
+                      locale['agree'] ??
                           'By continuing, you agree to our Terms of Service and Privacy Policy',
                       textAlign: TextAlign.center,
                       style: TextStyle(

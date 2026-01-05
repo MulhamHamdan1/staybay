@@ -9,6 +9,7 @@ import 'package:staybay/core/forground_task_service.dart';
 import 'package:staybay/core/notification_controller.dart';
 import 'package:staybay/cubits/apartments/aparment_cubit.dart';
 import 'package:staybay/cubits/user/user_cubit.dart';
+import 'package:staybay/screens/loading_screen.dart';
 import 'package:staybay/screens/my_apartments_screen.dart';
 import 'package:staybay/screens/owner_bookings_screen.dart';
 import 'package:staybay/services/local_notification_service.dart';
@@ -90,8 +91,10 @@ class MyApp extends StatelessWidget {
                               ? ThemeMode.dark
                               : ThemeMode.light
                         : ThemeMode.light,
-                    // home: Test(),
-                    initialRoute: islogin
+                    // home: LoadingScreen(),
+                    initialRoute: !localeState.isLoaded
+                        ? LoadingScreen.routeName
+                        : islogin
                         ? AppBottomNavBar.routeName
                         : WelcomeScreen.routeName,
                     routes: _buildAppRoutes(),
@@ -108,6 +111,7 @@ class MyApp extends StatelessWidget {
   /// Returns a map of all application routes
   Map<String, WidgetBuilder> _buildAppRoutes() {
     return {
+      LoadingScreen.routeName: (context) => const LoadingScreen(),
       WelcomeScreen.routeName: (context) => const WelcomeScreen(),
       LoginScreen.routeName: (context) => const LoginScreen(),
       SignUpScreen.routeName: (context) => const SignUpScreen(),

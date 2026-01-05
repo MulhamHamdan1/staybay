@@ -9,7 +9,6 @@ class DioClient {
   static Dio? _dio;
   static String? _token;
 
-  /// Call this ONCE at app startup (main)
   static Future<void> init() async {
     final prefs = await SharedPreferences.getInstance();
     _token = prefs.getString(kToken);
@@ -34,7 +33,7 @@ class DioClient {
 
   /// Always use this Dio instance
   static Dio get dio {
-    log(_token!);
+    // log(_token!);
     if (_dio == null) {
       throw Exception(
         'DioClient not initialized. Call DioClient.init() in main().',
@@ -52,6 +51,7 @@ class DioClient {
     _token = token;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(kToken, token);
+    await prefs.setBool(kIsLoggedIn, true);
   }
 
   /// Call this when user logs out
@@ -59,5 +59,6 @@ class DioClient {
     _token = null;
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(kToken);
+    await prefs.setBool(kIsLoggedIn, false);
   }
 }

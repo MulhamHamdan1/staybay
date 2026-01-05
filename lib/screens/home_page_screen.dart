@@ -6,6 +6,7 @@ import 'package:staybay/core/forground_task_service.dart';
 import 'package:staybay/core/notification_controller.dart';
 import 'package:staybay/cubits/apartments/acpartment_state.dart';
 import 'package:staybay/cubits/apartments/aparment_cubit.dart';
+import 'package:staybay/cubits/locale/locale_cubit.dart';
 import 'package:staybay/models/apartment_model.dart';
 import 'package:staybay/widgets/active_filters_bar.dart';
 import 'package:staybay/widgets/apartment_card.dart';
@@ -21,6 +22,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  Map<String, dynamic> get locale =>
+      context.watch<LocaleCubit>().state.localizedStrings['home'];
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _searchController = TextEditingController();
 
@@ -84,7 +87,7 @@ class _HomePageState extends State<HomePage> {
     return cleaned;
   }
 
-  Future<void> _Refresh() async {
+  Future<void> _refresh() async {
     await context.read<ApartmentCubit>().refreshApartments(filters);
     _notificationCubit.stopPolling();
     _notificationCubit.startPolling();
@@ -104,7 +107,7 @@ class _HomePageState extends State<HomePage> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: _buildAppBar(theme),
+      appBar: _buildAppBar(theme, locale['searchHint'] ?? 'Search...'),
       body: BlocBuilder<ApartmentCubit, ApartmentState>(
         builder: (context, state) {
           if (state is ApartmentLoading &&
@@ -123,13 +126,15 @@ class _HomePageState extends State<HomePage> {
 
             if (apartments.isEmpty) {
               return RefreshIndicator(
-                onRefresh: _Refresh,
-                child: const Center(child: Text('No apartments found')),
+                onRefresh: _refresh,
+                child: Center(
+                  child: Text(locale['noApartments'] ?? 'No apartments found'),
+                ),
               );
             }
 
             return RefreshIndicator(
-              onRefresh: _Refresh,
+              onRefresh: _refresh,
               child: Column(
                 children: [
                   /// ===== Active Filters =====
@@ -190,7 +195,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   // ================= AppBar =================
-  PreferredSizeWidget _buildAppBar(ThemeData theme) {
+  PreferredSizeWidget _buildAppBar(ThemeData theme, String searchHint) {
     return PreferredSize(
       preferredSize: Size.fromHeight(AppSizes.paddingExtraLarge * 2.5),
       child: Container(
@@ -212,9 +217,9 @@ class _HomePageState extends State<HomePage> {
                 Expanded(
                   child: TextField(
                     controller: _searchController,
-                    decoration: const InputDecoration(
-                      hintText: 'Search...',
-                      prefixIcon: Icon(Icons.search),
+                    decoration: InputDecoration(
+                      hintText: searchHint,
+                      prefixIcon: const Icon(Icons.search),
                       border: InputBorder.none,
                     ),
                     onSubmitted: (value) {
@@ -237,11 +242,11 @@ class _HomePageState extends State<HomePage> {
                     },
                   ),
                 ),
-                const NotificationBell(),
                 IconButton(
                   icon: const Icon(Icons.filter_alt_outlined),
                   onPressed: _openFilterDialog,
                 ),
+                const NotificationBell(),
               ],
             ),
           ),

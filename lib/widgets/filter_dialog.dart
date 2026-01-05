@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:staybay/cubits/locale/locale_cubit.dart';
 import 'package:staybay/models/city_model.dart';
 import 'package:staybay/models/governorate_model.dart';
 import 'package:staybay/services/get_governorates_and_cities_service.dart';
@@ -104,29 +106,32 @@ class _FilterDialogState extends State<FilterDialog> {
     }
   }
 
+  Map<String, dynamic> get locale =>
+      context.watch<LocaleCubit>().state.localizedStrings['filter'];
   @override
   Widget build(BuildContext context) {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: AlertDialog(
-        title: Text('فلترة الشقق السكنية'),
+        title: Text(locale['title'] ?? 'Filter Apartments'),
         content: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               _buildFilterRow(
-                label: 'المحافظة',
-                value: selectedGov?.name,
+                context,
+                label: locale['governorate'] ?? 'Governorate',
+                value: selectedGov?.localized(context),
                 child: isLoadingGovs
                     ? CircularProgressIndicator(strokeWidth: 2)
                     : DropdownButton<Governorate>(
                         isExpanded: true,
-                        hint: Text('اختر محافظة'),
+                        hint: Text(locale['selectGov'] ?? 'Select Governorate'),
                         value: selectedGov,
                         items: governorates.map((gov) {
                           return DropdownMenuItem(
                             value: gov,
-                            child: Text(gov.name),
+                            child: Text(gov.localized(context)),
                           );
                         }).toList(),
                         onChanged: _onGovernorateChanged,
@@ -134,22 +139,24 @@ class _FilterDialogState extends State<FilterDialog> {
               ),
 
               _buildFilterRow(
-                label: 'المدينة',
-                value: selectedCity?.name,
+                context,
+                label: locale['city'] ?? 'City',
+                value: selectedCity?.localized(context),
                 child: isLoadingCities
                     ? LinearProgressIndicator()
                     : DropdownButton<City>(
                         isExpanded: true,
                         hint: Text(
                           selectedGov == null
-                              ? 'اختر محافظة أولاً'
-                              : 'اختر مدينة',
+                              ? locale['selectGovFirst'] ??
+                                    'Select Governorate First'
+                              : locale['selectCity'] ?? 'Select City',
                         ),
                         value: selectedCity,
                         items: cities.map((city) {
                           return DropdownMenuItem(
                             value: city,
-                            child: Text(city.name),
+                            child: Text(city.localized(context)),
                           );
                         }).toList(),
                         onChanged: (val) => setState(() => selectedCity = val),
@@ -157,7 +164,8 @@ class _FilterDialogState extends State<FilterDialog> {
               ),
 
               _buildFilterRow(
-                label: 'غرف النوم',
+                context,
+                label: locale['bedrooms'] ?? 'Bedrooms',
                 value: selectedBedrooms,
                 child: DropdownButton<String>(
                   isExpanded: true,
@@ -169,7 +177,8 @@ class _FilterDialogState extends State<FilterDialog> {
               ),
 
               _buildFilterRow(
-                label: 'دورات المياه',
+                context,
+                label: locale['bathrooms'] ?? 'Bathrooms',
                 value: selectedBathrooms,
                 child: DropdownButton<String>(
                   isExpanded: true,
@@ -183,37 +192,47 @@ class _FilterDialogState extends State<FilterDialog> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  "السعر (ليرة)",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-              _buildRangeRow('price', priceOptions, priceMin, priceMax),
-
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  "المساحة (م²)",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-              _buildRangeRow('size', sizeOptions, sizeMin, sizeMax),
-
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  "التقييم",
+                  locale['price'] ?? 'Price (SYP)',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
               _buildRangeRow(
-                'rating',
+                locale['price'] ?? 'Price (SYP)',
+                priceOptions,
+                priceMin,
+                priceMax,
+              ),
+
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  locale['size'] ?? 'Area (m²)',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              _buildRangeRow(
+                locale['size'] ?? 'Area (m²)',
+                sizeOptions,
+                sizeMin,
+                sizeMax,
+              ),
+
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  locale['rating'] ?? 'Rating',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              _buildRangeRow(
+                locale['rating'] ?? 'Rating',
                 [1.0, 2.0, 3.0, 4.0, 5.0],
                 ratingMin,
                 ratingMax,
               ),
 
               CheckboxListTile(
-                title: Text("يوجد مسبح"),
+                title: Text(locale['hasPool'] ?? 'Has Swimming Pool'),
                 value: hasPool,
                 onChanged: (val) => setState(() => hasPool = val!),
                 secondary: Icon(Icons.pool),
@@ -221,7 +240,7 @@ class _FilterDialogState extends State<FilterDialog> {
               ),
 
               CheckboxListTile(
-                title: Text("يوجد واي فاي"),
+                title: Text(locale['hasWifi'] ?? 'Has WiFi'),
                 value: hasWifi,
                 onChanged: (val) => setState(() => hasWifi = val!),
                 secondary: Icon(Icons.wifi),
@@ -235,7 +254,7 @@ class _FilterDialogState extends State<FilterDialog> {
             onPressed: () => Navigator.pop(context, {
               'governorate_id': selectedGov?.id,
               'city_id': selectedCity?.id,
-              'city_name': selectedCity?.name,
+              'city_name': selectedCity?.localized(context),
               'bedrooms': selectedBedrooms,
               'bathrooms': selectedBathrooms,
               'price_min': priceMin,
@@ -248,7 +267,7 @@ class _FilterDialogState extends State<FilterDialog> {
               'has_wifi': hasWifi,
             }),
 
-            child: Text('تطبيق'),
+            child: Text(locale['apply'] ?? 'Apply'),
           ),
         ],
       ),
@@ -265,7 +284,7 @@ class _FilterDialogState extends State<FilterDialog> {
       children: [
         Expanded(
           child: DropdownButton<double>(
-            hint: Text("الأدنى"),
+            hint: Text(locale['min'] ?? 'Min'),
             isExpanded: true,
             value: minVal,
             items: options
@@ -278,11 +297,11 @@ class _FilterDialogState extends State<FilterDialog> {
         ),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 8),
-          child: Text("إلى"),
+          child: Text(locale['to'] ?? 'To'),
         ),
         Expanded(
           child: DropdownButton<double>(
-            hint: Text("الأقصى"),
+            hint: Text(locale['max'] ?? 'Max'),
             isExpanded: true,
             value: maxVal,
             items: options
@@ -298,7 +317,8 @@ class _FilterDialogState extends State<FilterDialog> {
   }
 }
 
-Widget _buildFilterRow({
+Widget _buildFilterRow(
+  context, {
   required String label,
   required String? value,
   required Widget child,
@@ -324,12 +344,15 @@ Widget _buildFilterRow({
             alignment: Alignment.center,
             padding: EdgeInsets.symmetric(vertical: 8),
             decoration: BoxDecoration(
-              color: Colors.blue.withOpacity(0.1),
+              color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(5),
             ),
             child: Text(
               value ?? '-',
-              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).primaryColor,
+              ),
               overflow: TextOverflow.ellipsis,
             ),
           ),

@@ -13,7 +13,7 @@ class ChatButton extends StatelessWidget {
   const ChatButton({
     super.key,
     required this.receiverId,
-    this.buttonText = "Chat",
+    required this.buttonText,
     this.buttonColor,
     this.textStyle,
   });

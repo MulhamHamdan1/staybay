@@ -1,21 +1,17 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:staybay/constants.dart';
+import 'package:staybay/core/dio_client.dart';
 import 'package:staybay/models/apartment_model.dart';
 
-class GetFavoriteApartmentService {
+class GetApartmentService {
+  static Dio dio = DioClient.dio;
+
   static Future<List<Apartment>> getFavorites() async {
     List<Apartment> favoriteApartments = [];
-    final prefs = await SharedPreferences.getInstance();
 
     try {
-      Dio dio = Dio();
-      dio.options.headers['Authorization'] =
-          'Bearer ${prefs.getString(kToken)}';
-
-      var response = await dio.get('${kBaseUrl}/apartments/favorite');
+      var response = await dio.get('/apartments/favorite');
       dynamic jsonData = response.data;
       List<dynamic> apartmentsJson = jsonData['data'];
       for (var apartmentJson in apartmentsJson) {
@@ -33,14 +29,8 @@ class GetFavoriteApartmentService {
 
   static Future<List<Apartment>> getMy() async {
     List<Apartment> favoriteApartments = [];
-    final prefs = await SharedPreferences.getInstance();
-
     try {
-      Dio dio = Dio();
-      dio.options.headers['Authorization'] =
-          'Bearer ${prefs.getString(kToken)}';
-
-      var response = await dio.get('${kBaseUrl}/apartments/my');
+      var response = await dio.get('/apartments/my');
       dynamic jsonData = response.data;
       List<dynamic> apartmentsJson = jsonData['data'];
       for (var apartmentJson in apartmentsJson) {

@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:staybay/cubits/locale/locale_cubit.dart';
 import 'package:staybay/models/apartment_model.dart';
 import 'package:staybay/models/book_model.dart';
+import 'package:staybay/models/city_model.dart';
+import 'package:staybay/models/governorate_model.dart';
 import 'package:staybay/screens/bookings_screen.dart';
 import 'package:staybay/services/create_booking_service.dart';
 import 'package:staybay/services/get_apartment_not_available_dates_service.dart';
@@ -19,6 +23,8 @@ class BookingDetailsScreen extends StatefulWidget {
 }
 
 class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
+  Map<String, dynamic> get locale =>
+      context.watch<LocaleCubit>().state.localizedStrings['BookingDetails'];
   DateTimeRange? _selectedRange;
   // String? _paymentMethod;
   List<DateTime> _blockedDates = [];
@@ -51,7 +57,7 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
     });
   }
 
-  bool _isDayAvailable(DateTime date) { 
+  bool _isDayAvailable(DateTime date) {
     bool isBlocked = _blockedDates.any(
       (blocked) => DateUtils.isSameDay(blocked, date),
     );
@@ -122,7 +128,10 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
     if (apt == null) return const Scaffold(body: Center(child: Text("Error")));
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Booking Details'), centerTitle: true),
+      appBar: AppBar(
+        title: Text(locale['appBarTitle'] ?? 'Booking Details'),
+        centerTitle: true,
+      ),
       body: _isLoadingDates
           ? const Center(child: CircularProgressIndicator())
           : ListView(
@@ -143,9 +152,6 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       backgroundColor: Theme.of(context).cardColor,
                       foregroundColor: Theme.of(context).primaryColor,
-                      //! colors need fix here
-                      // backgroundColor: Theme.of(context).primaryColor,
-                      // foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -173,16 +179,13 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                             }
 
                             if (success && mounted) {
-                              Navigator.pushNamedAndRemoveUntil(
-                                context,
-                                BookingsScreen.routeName,
-                                (route) => route.isFirst,
-                              );
-                              //! i think should not go back but go to the bookin page
+                              Navigator.pop(context);
                             }
                           },
                     child: Text(
-                      isEditing ? 'Update Booking' : 'Confirm Booking',
+                      isEditing
+                          ? locale['Update'] ?? 'Update Booking'
+                          : locale['Confirm'] ?? 'Confirm Booking',
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -219,8 +222,8 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                           );
                         }
                       },
-                      child: const Text(
-                        'Cancel Booking',
+                      child: Text(
+                        locale['Cancel'] ?? 'Cancel Booking',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -255,7 +258,8 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
           style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
         ),
         Text(
-          apt.location ?? "Unknown location",
+          '${apt.governorate?.localized(context)},${apt.city?.localized(context)}',
+          // ??"Unknown location",
           style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
         ),
       ],
@@ -264,21 +268,22 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
 
   Widget _buildDateRangePickerTile() {
     final bool hasDate = _selectedRange != null;
+    var theme = Theme.of(context);
     return InkWell(
       onTap: _pickDateRange,
       borderRadius: BorderRadius.circular(12),
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.grey.shade50,
+          color: theme.cardColor,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: hasDate ? Colors.blue : Colors.grey.shade300,
+            color: hasDate ? theme.primaryColor : theme.cardColor,
           ),
         ),
         child: Row(
           children: [
-            const Icon(Icons.calendar_today, color: Colors.blue),
+            Icon(Icons.calendar_today, color: theme.primaryColor),
             const SizedBox(width: 16),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -286,15 +291,17 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                 Text(
                   hasDate
                       ? "${DateFormat('MMM d').format(_selectedRange!.start)} - ${DateFormat('MMM d, yyyy').format(_selectedRange!.end)}"
-                      : "Select Dates",
+                      : locale['Select'] ?? "Select Dates",
                   style: TextStyle(
                     fontWeight: hasDate ? FontWeight.bold : FontWeight.normal,
                     fontSize: 16,
-                    color: Theme.of(context).primaryColor,
+                    color: theme.primaryColor,
                   ),
                 ),
                 Text(
-                  hasDate ? "$nights nights" : "Check-in to Check-out",
+                  hasDate
+                      ? "$nights ${locale['nights'] ?? 'nights'}"
+                      : locale['CheckInOut'] ?? "Check-in to Check-out",
                   style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
                 ),
               ],
@@ -308,25 +315,26 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
   }
 
   Widget _buildPriceSummary() {
+    var theme = Theme.of(context);
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.blue.withOpacity(0.05),
+        color: theme.primaryColor.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text(
-            "Total Price",
+          Text(
+            locale['Total'] ?? "Total Price",
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
           ),
           Text(
             "\$${total.toStringAsFixed(2)}",
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
-              color: Colors.blue,
+              color: theme.primaryColor,
             ),
           ),
         ],

@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:staybay/cubits/locale/locale_cubit.dart';
+import 'package:staybay/cubits/locale/locale_state.dart';
+import 'package:staybay/models/city_model.dart';
+import 'package:staybay/models/governorate_model.dart';
 import '../app_theme.dart';
 import '../models/apartment_model.dart';
 import '../screens/apartment_details_screen.dart';
@@ -32,140 +37,155 @@ class ApartmentCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return InkWell(
-      onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => ApartmentDetailsScreen(apartment: apartment),
-          ),
-        );
-      },
-      borderRadius: BorderRadius.circular(AppSizes.borderRadiusLarge),
-      child: Card(
-        color: theme.cardColor,
-        elevation: 3,
-        shape: RoundedRectangleBorder(
+    return BlocBuilder<LocaleCubit, LocaleState>(
+      builder: (context, state) {
+        Map<String, dynamic> locale = state.localizedStrings['apartmentCard'];
+        return InkWell(
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) =>
+                    ApartmentDetailsScreen(apartment: apartment),
+              ),
+            );
+          },
           borderRadius: BorderRadius.circular(AppSizes.borderRadiusLarge),
-        ),
-        margin: const EdgeInsets.only(bottom: AppSizes.paddingMedium),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ClipRRect(
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(AppSizes.borderRadiusLarge),
-              ),
-
-              child: Image.network(
-                apartment.imagePath,
-                fit: BoxFit.cover,
-                height: 200,
-                width: double.infinity,
-                errorBuilder: (context, error, stackTrace) => Container(
-                  height: 200,
-                  color: Colors.grey[300],
-                  alignment: Alignment.center,
-                  child: Text('Image Not Found: ${apartment.imagePath}'),
-                ),
-              ),
+          child: Card(
+            color: theme.cardColor,
+            elevation: 3,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppSizes.borderRadiusLarge),
             ),
+            margin: const EdgeInsets.only(bottom: AppSizes.paddingMedium),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ClipRRect(
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(AppSizes.borderRadiusLarge),
+                  ),
 
-            Padding(
-              padding: const EdgeInsets.all(AppSizes.paddingMedium),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    apartment.title,
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: theme.colorScheme.onSurface,
+                  child: Image.network(
+                    apartment.imagePath,
+                    fit: BoxFit.cover,
+                    height: 200,
+                    width: double.infinity,
+                    errorBuilder: (context, error, stackTrace) => Container(
+                      height: 200,
+                      color: Colors.grey[300],
+                      alignment: Alignment.center,
+                      child: Text(
+                        '${locale['imageNotFound'] ?? 'Image Not Found: '}${apartment.imagePath}',
+                      ),
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: AppSizes.paddingSmall / 2),
-                  Row(
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.all(AppSizes.paddingMedium),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(
-                        Icons.location_on,
-                        size: 18,
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
-                      const SizedBox(width: AppSizes.paddingSmall / 2),
                       Text(
-                        apartment.location!,
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
+                        apartment.title,
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: theme.colorScheme.onSurface,
                         ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                    ],
-                  ),
-                  const Divider(height: AppSizes.paddingMedium * 2),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      _buildDetailItem(
-                        context,
-                        icon: Icons.king_bed,
-                        value: '${apartment.beds} Beds',
-                      ),
-                      _buildDetailItem(
-                        context,
-                        icon: Icons.bathtub,
-                        value: '${apartment.baths} Baths',
-                      ),
-                      _buildDetailItem(
-                        context,
-                        icon: Icons.square_foot,
-                        value: '${apartment.areaSqft} Sqft',
-                      ),
+                      const SizedBox(height: AppSizes.paddingSmall / 2),
                       Row(
                         children: [
-                          const Icon(Icons.star, size: 18, color: Colors.amber),
+                          Icon(
+                            Icons.location_on,
+                            size: 18,
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
                           const SizedBox(width: AppSizes.paddingSmall / 2),
                           Text(
-                            '${apartment.rating} (${apartment.ratingCount})',
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: theme.colorScheme.onSurface,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-
-                  const SizedBox(height: AppSizes.paddingMedium),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Text.rich(
-                      TextSpan(
-                        children: [
-                          TextSpan(
-                            text: '\$${apartment.pricePerNight}',
-                            style: theme.textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.w900,
-                              color: theme.colorScheme.primary,
-                              fontSize: 24,
-                            ),
-                          ),
-                          TextSpan(
-                            text: ' / night',
+                            '${apartment.governorate?.localized(context)},${apartment.city?.localized(context)}',
                             style: theme.textTheme.titleSmall?.copyWith(
                               color: theme.colorScheme.onSurfaceVariant,
                             ),
                           ),
                         ],
                       ),
-                    ),
+                      const Divider(height: AppSizes.paddingMedium * 2),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          _buildDetailItem(
+                            context,
+                            icon: Icons.king_bed,
+                            value:
+                                '${apartment.beds} ${locale['beds'] ?? 'Beds'}',
+                          ),
+                          _buildDetailItem(
+                            context,
+                            icon: Icons.bathtub,
+                            value:
+                                '${apartment.baths} ${locale['baths'] ?? 'Baths'}',
+                          ),
+                          _buildDetailItem(
+                            context,
+                            icon: Icons.square_foot,
+                            value:
+                                '${apartment.areaSqft} ${locale['sqft'] ?? 'Sqft'}',
+                          ),
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.star,
+                                size: 18,
+                                color: Colors.amber,
+                              ),
+                              const SizedBox(width: AppSizes.paddingSmall / 2),
+                              Text(
+                                '${apartment.rating} (${apartment.ratingCount})',
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: theme.colorScheme.onSurface,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+
+                      const SizedBox(height: AppSizes.paddingMedium),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Text.rich(
+                          TextSpan(
+                            children: [
+                              TextSpan(
+                                text: '\$${apartment.pricePerNight}',
+                                style: theme.textTheme.titleLarge?.copyWith(
+                                  fontWeight: FontWeight.w900,
+                                  color: theme.colorScheme.primary,
+                                  fontSize: 24,
+                                ),
+                              ),
+                              TextSpan(
+                                text: locale['perNight'] ?? ' / night',
+                                style: theme.textTheme.titleSmall?.copyWith(
+                                  color: theme.colorScheme.onSurfaceVariant,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

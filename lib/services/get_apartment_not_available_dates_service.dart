@@ -1,18 +1,14 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:staybay/constants.dart';
+import 'package:staybay/core/dio_client.dart';
 
 class GetApartmentNotAvailableDatesService {
   static Future<List<DateTime>> getDisabledDates(String? apartmentId) async {
     final List<DateTime> disabledDates = [];
-    final prefs = await SharedPreferences.getInstance();
-
     try {
-      Dio dio = Dio();
-      dio.options.headers['Authorization'] =
-          'Bearer ${prefs.getString(kToken)}';
+      Dio dio = DioClient.dio;
 
       var response = await dio.get(
         '$kBaseUrl/apartments/$apartmentId/not-avaliable-dates',

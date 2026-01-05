@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:staybay/core/dio_client.dart';
 import 'package:staybay/constants.dart';
 import 'package:staybay/models/apartment_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,14 +13,21 @@ class UpdateApartmentService {
     required int cityId,
     required List<int> deletedImageIds,
     String? newCoverPath,
-    List<String>? newGalleryPaths, 
+    List<String>? newGalleryPaths,
   }) async {
+    final Dio dio = DioClient.dio;
+    final token = DioClient.token;
+    if (token == null) {
+      // _showError(context, 'Not authenticated'); //! will solve it later
+      return null;
+    }
+
     final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString(kToken);
+    // final token = prefs.getString(kToken);
 
     if (token == null) return null;
 
-    final Dio dio = Dio();
+    // final Dio dio = Dio();
     dio.options.baseUrl = kBaseUrl;
     dio.options.headers = {
       'Authorization': 'Bearer $token',
@@ -45,17 +53,15 @@ class UpdateApartmentService {
         log(newCoverPath);
         data['cover_image'] = await MultipartFile.fromFile(newCoverPath);
       }
- 
+
       if (newGalleryPaths != null && newGalleryPaths.isNotEmpty) {
         List<MultipartFile> galleryFiles = [];
         for (String path in newGalleryPaths) {
-          galleryFiles.add(
-            await MultipartFile.fromFile(path),
-          );
+          galleryFiles.add(await MultipartFile.fromFile(path));
         }
         data['new_images[]'] = galleryFiles;
       }
- 
+
       if (deletedImageIds.isNotEmpty) {
         data['delete_images[]'] = deletedImageIds; //! its delete not deletd :)
       }
