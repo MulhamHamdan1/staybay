@@ -133,12 +133,13 @@ class _AccountScreenState extends State<AccountScreen> {
       body: RefreshIndicator(
         onRefresh: _refreshFavorites,
         child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
           child: Column(
             children: [
               /// ===== PROFILE HEADER =====
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 32),
+                padding: const EdgeInsets.only(top: 32, bottom: 16),
                 decoration: BoxDecoration(
                   color: theme.scaffoldBackgroundColor,
                   borderRadius: BorderRadius.vertical(
@@ -173,13 +174,23 @@ class _AccountScreenState extends State<AccountScreen> {
                         color: Colors.grey.shade600,
                       ),
                     ),
+                    const SizedBox(height: 16),
+                    Text(
+                      '${user.balance.ceil().toString()} \$',
+                      style: TextStyle(fontSize: 16),
+                    ),
                   ],
                 ),
               ),
 
               // const SizedBox(height: 30),
               Padding(
-                padding: const EdgeInsets.only(bottom: 15, left: 20, right: 20),
+                padding: const EdgeInsets.only(
+                  // top: -10,
+                  bottom: 15,
+                  left: 20,
+                  right: 20,
+                ),
                 child: Divider(color: theme.primaryColor, thickness: 2),
               ),
 
