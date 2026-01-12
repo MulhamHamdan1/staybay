@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
+import 'package:staybay/core/dio_client.dart';
 import 'package:staybay/core/notification_cache.dart';
 import 'package:staybay/models/notification_model.dart';
 import 'package:staybay/services/api_notifications_service.dart';
@@ -12,6 +13,7 @@ class NotificationTaskHandler extends TaskHandler {
   @override
   Future<void> onStart(DateTime timestamp, TaskStarter starter) async {
     log('started service');
+    await DioClient.init();
     // _timer = Timer.periodic(const Duration(seconds: 15), (_) async {
     //   try {
     //     List<NotificationModel> unreadNotificationsBackend =
@@ -42,6 +44,9 @@ class NotificationTaskHandler extends TaskHandler {
   @override
   Future<void> onRepeatEvent(DateTime timestamp) async {
     try {
+      if (!DioClient.isInitialized) {
+        await DioClient.init();
+      }
       log('repeating');
       List<NotificationModel> unreadNotificationsBackend =
           await ApiNotificationService.fetchUnread();

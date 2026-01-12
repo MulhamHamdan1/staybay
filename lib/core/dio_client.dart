@@ -54,6 +54,8 @@ class DioClient {
     await prefs.setBool(kIsLoggedIn, true);
   }
 
+  static bool get isInitialized => _dio != null;
+
   /// Call this when user logs out
   static Future<void> clearToken() async {
     _token = null;
