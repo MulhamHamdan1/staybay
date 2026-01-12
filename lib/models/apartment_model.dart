@@ -98,6 +98,7 @@ class Apartment {
       governorate: json['governorate'] != null
           ? Governorate.fromJson(json['governorate'])
           : null,
+      ownerId: json['owner_id'],
     );
   }
 }
