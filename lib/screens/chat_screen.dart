@@ -64,11 +64,22 @@ class _ChatScreenState extends State<ChatScreen> {
                               padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
                                 color: msg.senderId == widget.receiverId
-                                    ? Colors.grey[300]
-                                    : Colors.blue[200],
+                                    ? Colors.lightBlue
+                                    : Colors.lightGreen,
                                 borderRadius: BorderRadius.circular(8),
                               ),
-                              child: Text(msg.body),
+                              child: Text(
+                                msg.body,
+                                style: TextStyle(
+                                  color:
+                                      Theme.of(
+                                            context,
+                                          ).primaryColor.computeLuminance() <
+                                          0.5
+                                      ? Colors.black
+                                      : Colors.white,
+                                ),
+                              ),
                             ),
                           ),
                         );

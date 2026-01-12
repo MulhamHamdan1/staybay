@@ -5,6 +5,7 @@ import 'notification_task_callback.dart';
 
 class ForegroundTaskService {
   static Future<void> init() async {
+    log('Initializing Foreground Task Service');
     FlutterForegroundTask.init(
       androidNotificationOptions: AndroidNotificationOptions(
         channelId: 'staybay_notifications',
